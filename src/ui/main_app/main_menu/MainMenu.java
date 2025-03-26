@@ -19,13 +19,6 @@ public class MainMenu extends JPanel {
     JButton hide = new JButton();
 
     public MainMenu(WatchedList<UMLComponent> components) {
-        this.setMaximumSize(new Dimension(10000, Integer.MAX_VALUE));
-
-        this.add(button);
-
-        this.add(button2);
-
-        button.addActionListener(e -> {
         this.setMaximumSize(new Dimension(400,Short.MAX_VALUE));
         this.setPreferredSize(new Dimension(400, Short.MAX_VALUE));
         this.setMinimumSize(new Dimension(400, Short.MAX_VALUE));
@@ -51,9 +44,10 @@ public class MainMenu extends JPanel {
         });
 
         button2.addActionListener(e -> {
-            AssociationModel model = new AssociationModel("");
-            AssociationRender association = new AssociationRender(model);
-            components.addElement(association);
+                    AssociationModel model = new AssociationModel("");
+                    AssociationRender association = new AssociationRender(model);
+                    components.addElement(association);
+                });
         hide.addActionListener(
                 e -> {
                     dynamicMenu.setVisible(!dynamicMenu.isVisible());
@@ -64,7 +58,6 @@ public class MainMenu extends JPanel {
         );
 
 
-        });
         // Remove button borders and background for a clean look
         hide.setFocusPainted(false);
         hide.setBorderPainted(false);
@@ -74,6 +67,7 @@ public class MainMenu extends JPanel {
 
         fixedMenu.add(hide);
         dynamicMenu.add(button);
+        dynamicMenu.add(button2);
         this.add(fixedMenu);
         this.add(dynamicMenu);
 
