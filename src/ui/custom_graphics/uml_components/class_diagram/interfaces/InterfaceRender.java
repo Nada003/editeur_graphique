@@ -11,11 +11,7 @@ public class InterfaceRender extends UMLComponent {
     int elements;
 
     public InterfaceRender(InterfaceModel model) {
-        super();
-        super.setId(UMLComponent.getCount());
-        UMLComponent.setCount(UMLComponent.getCount()+1);
         this.model = model;
-
         elements = 3 + (model.att.length == 0 ? 0: model.att.length-1 )+ (model.functions.length == 0 ? 0: model.functions.length-1 );
         super.setHeight((32) * (elements-1) + 65);
 

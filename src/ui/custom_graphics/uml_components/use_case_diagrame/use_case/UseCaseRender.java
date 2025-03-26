@@ -12,8 +12,6 @@ public class UseCaseRender extends UMLComponent {
     UseCaseModel model;
 
     public UseCaseRender(UseCaseModel model) {
-        super.setId(UMLComponent.getCount());
-        UMLComponent.increaseCount();
         this.model = model;
         this.setOpaque(false);
 
@@ -35,6 +33,4 @@ public class UseCaseRender extends UMLComponent {
 
 
     }
-
-
 }

@@ -9,10 +9,8 @@ public class AssociationRender extends UMLComponent {
     AssociationModel model;
     public AssociationRender(AssociationModel model) {
         super.setId(UMLComponent.getCount());
-        UMLComponent.increaseCount();
         this.model = model;
         this.setOpaque(false);
-
     }
 
     @Override

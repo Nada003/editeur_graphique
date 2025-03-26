@@ -1,6 +1,8 @@
 package ui.custom_graphics.uml_components.class_diagram.interfaces;
 
-public class InterfaceModel {
+import ui.custom_graphics.uml_components.UMLModel;
+
+public class InterfaceModel implements UMLModel {
     public String name;
     public String[] att = new String[]{};
     public String[] functions= new String[]{};

@@ -1,6 +1,8 @@
 package ui.custom_graphics.uml_components.connect_components.associations;
 
-public class AssociationModel {
+import ui.custom_graphics.uml_components.UMLModel;
+
+public class AssociationModel implements UMLModel {
 
     public String line;
     public AssociationModel(String line) {

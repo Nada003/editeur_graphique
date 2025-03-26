@@ -1,6 +1,8 @@
 package ui.custom_graphics.uml_components.connect_components.generalization;
 
-public class GeneralizationModel{
+import ui.custom_graphics.uml_components.UMLModel;
+
+public class GeneralizationModel implements UMLModel {
 
     public String arrow;
     public GeneralizationModel(String arrow) {

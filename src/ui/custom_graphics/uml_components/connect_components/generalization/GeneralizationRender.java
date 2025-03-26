@@ -10,7 +10,6 @@ public class GeneralizationRender extends UMLComponent {
 
     public GeneralizationRender(GeneralizationModel model) {
         super.setId(UMLComponent.getCount());
-        UMLComponent.increaseCount();
         this.model = model;
         this.setOpaque(false);
     }
