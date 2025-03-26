@@ -7,5 +7,7 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" name="java-cup-11b (3)" level="application" />
+    <orderEntry type="library" name="java-cup-11b-runtime (4)" level="application" />
   </component>
 </module>
