@@ -4,6 +4,8 @@ import ui.custom_graphics.uml_components.UMLComponent;
 
 import java.awt.*;
 
+import static utils.TextUtils.getTextWidth;
+
 public class InterfaceRender extends UMLComponent {
     private final InterfaceModel model ;
     int elements;
@@ -15,7 +17,8 @@ public class InterfaceRender extends UMLComponent {
         this.model = model;
 
         elements = 3 + (model.att.length == 0 ? 0: model.att.length-1 )+ (model.functions.length == 0 ? 0: model.functions.length-1 );
-        super.setHeight((32) * elements+8);
+        super.setHeight((32) * (elements-1) + 65);
+
     }
 
     @Override
@@ -23,11 +26,13 @@ public class InterfaceRender extends UMLComponent {
         super.paintComponent(g);
         Graphics2D graphics2D = (Graphics2D) g;
 
-        Rectangle outerBorer = new Rectangle(4,4, super.getWidth()-10,(32) * elements);
+       final String str = "<interface>";
+
+        Rectangle outerBorer = new Rectangle(4,4, super.getWidth()-10,(32) * (elements-1) + 50);
         graphics2D.draw(outerBorer);
 
         graphics2D.setColor(Color.BLUE);
-        Rectangle innerBorder = new Rectangle(outerBorer.x+5,outerBorer.y+5, ((int) outerBorer.getWidth())-10,25);
+        Rectangle innerBorder = new Rectangle(outerBorer.x+5,outerBorer.y+5, ((int) outerBorer.getWidth())-10,40);
         graphics2D.draw(innerBorder);
 
         Rectangle innerBorderAtt = new Rectangle(outerBorer.x+5,innerBorder.height+ innerBorder.y+5,(int) outerBorer.getWidth()-10,model.att.length == 0 ? 25 : model.att.length * 25);
@@ -36,7 +41,11 @@ public class InterfaceRender extends UMLComponent {
         Rectangle innerBorderFunctions = new Rectangle(outerBorer.x+5,innerBorderAtt.height+ innerBorderAtt.y+5,(int) outerBorer.getWidth()-10,model.functions.length == 0 ? 25 : model.functions.length * 25);
         graphics2D.draw(innerBorderFunctions);
 
-        graphics2D.drawString(model.name, (int) ((10+innerBorder.getWidth()-model.name.length())/2),innerBorder.y+18);
+        graphics2D.drawString(model.name, (int) ((10+innerBorder.getWidth()-getTextWidth(model.name))/2),innerBorder.y+25);
+
+        graphics2D.drawString(str, (int) ((10+innerBorder.getWidth()-getTextWidth(str))/2),innerBorder.y+9);
+
+
 
         var t1 = new Thread(()->{
             for (int i = 0; i < model.att.length; i++)

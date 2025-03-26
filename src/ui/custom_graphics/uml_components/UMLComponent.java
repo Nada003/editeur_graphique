@@ -89,4 +89,11 @@ public abstract class UMLComponent extends JPanel {
         this.width = width;
         this.setBounds(positionX,positionY,width,height);
     }
+
+    public static void increaseCount(){
+        count++;
+    }
+    public static void decreaseCount(){
+        count--;
+    }
 }
