@@ -14,8 +14,10 @@ public class MainMenu extends JPanel {
 
     JButton button = new JButton("Add class");
     JButton button2 = new JButton("Add Association");
+    JButton button3 = new JButton("Add héritage");
 
-    ImageIcon icon = new ImageIcon("C:/Users/ng263/IdeaProjects/UML_desinger/src/assets/Screenshot_20250326_180752.png");
+
+    ImageIcon icon = new ImageIcon("C:/Users/ng263/IdeaProjects/UML_desinger/src/assets/containers.png");
     JButton hide = new JButton();
 
     public MainMenu(WatchedList<UMLComponent> components) {
@@ -56,6 +58,9 @@ public class MainMenu extends JPanel {
                     this.setMinimumSize(new Dimension(dynamicMenu.isVisible() ? 400 : 80,Integer.MAX_VALUE));
                 }
         );
+        button3.addActionListener(e ->{
+
+        });
 
 
         // Remove button borders and background for a clean look

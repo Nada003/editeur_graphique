@@ -48,12 +48,12 @@ public class MainBoard extends JPanel implements ListListener {
 
     public MainBoard(WatchedList<UMLComponent> components){
         this.components = components;
-        this.setBackground(Color.lightGray);
+        this.setBackground(Color.white);
         this.setMinimumSize(new Dimension(750,600));
         this.setLayout(null);
         components.addListener(this);
-
         new PanelDropListener(this);
+
     }
 
     public void paintAll(){
