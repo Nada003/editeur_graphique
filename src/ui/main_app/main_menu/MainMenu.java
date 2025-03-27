@@ -15,7 +15,7 @@ public class MainMenu extends JPanel {
     JButton button = new JButton("Add class");
     JButton button2 = new JButton("Add Association");
 
-    ImageIcon icon = new ImageIcon("C:/Users/hiche/Downloads/editeur_graphique-main/editeur_graphique-main/src/assets/Screenshot_20250326_180752.png");
+    ImageIcon icon = new ImageIcon("src/assets/Screenshot_20250326_180752.png");
     JButton hide = new JButton();
 
     public MainMenu(WatchedList<UMLComponent> components) {

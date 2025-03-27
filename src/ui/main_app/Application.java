@@ -14,9 +14,8 @@ public class Application extends JFrame {
     private static final WatchedList<UMLComponent> components = new WatchedList<>();
     private JToolBar toolBar;
     private JButton toggleGridButton;
-    private boolean showGrid = false;
     private Color currentColor = Color.BLACK;
-    private DrawingPanel canvas;
+    private MainBoard board;
 
     public Application() {
         this.setTitle("UML Editor");
@@ -39,12 +38,9 @@ public class Application extends JFrame {
 
         main.setLayout(new BoxLayout(main, BoxLayout.X_AXIS));
         main.add(new MainMenu(components));
-        main.add(new MainBoard(components));
 
-        canvas = new DrawingPanel();
-        canvas.setPreferredSize(new Dimension(600, 600));
-
-        main.add(canvas, BorderLayout.CENTER); // Ajout correct du canvas
+        board = new MainBoard(components);
+        main.add(board, BorderLayout.CENTER); // Ajout correct du canvas
 
 
         return main;
@@ -141,32 +137,12 @@ public class Application extends JFrame {
 
         // Action Listener pour afficher/masquer la grille
         toggleGridButton.addActionListener(e -> {
-            showGrid = !showGrid;
-            canvas.repaint();
+            board.toggle();
         });
 
         return toolBar;
     }
 
-    private class DrawingPanel extends JPanel {
-        @Override
-        protected void paintComponent(Graphics g) {
-            super.paintComponent(g);
-            if (showGrid) {
-                dessinerGrille(g);
-            }
-        }
-
-        private void dessinerGrille(Graphics g) {
-            g.setColor(Color.LIGHT_GRAY);
-            for (int i = 0; i < getWidth(); i += 20) {
-                g.drawLine(i, 0, i, getHeight());
-            }
-            for (int j = 0; j < getHeight(); j += 20) {
-                g.drawLine(0, j, getWidth(), j);
-            }
-        }
-    }
 
     private void getComponentFromFile(File file) {
         var interpreter = new MyInterpreter();
