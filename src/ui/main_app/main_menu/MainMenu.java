@@ -13,15 +13,20 @@ import java.awt.*;
 public class MainMenu extends JPanel {
 
     JButton buttonClass = new JButton("Add class");
-    JButton connectButton = new JButton("C");
-    JButton containersButton = new JButton("Co");
+
+
     JButton associationButton = new JButton("Association");
     JButton triangleButton = new JButton("Triangle");
     JButton circleButton = new JButton("Circle");
     JButton pillButton = new JButton("Pill");
 
-    ImageIcon icon = new ImageIcon("C:/Users/hiche/Downloads/editeur_graphique-main/editeur_graphique-main/src/assets/Screenshot_20250326_180752.png");
+    ImageIcon icon = new ImageIcon("C:/Users/ng263/IdeaProjects/UML_desinger/src/assets/containers2.png");
+    ImageIcon icon2 = new ImageIcon("C:/Users/ng263/IdeaProjects/UML_desinger/src/assets/connect_components.png");
+    ImageIcon icon3 = new ImageIcon("C:/Users/ng263/IdeaProjects/UML_desinger/src/assets/shapes.png");
+
     JButton hide = new JButton();
+    JButton connectButton = new JButton();
+    JButton containersButton = new JButton();
 
     JPanel dynamicMenu = new JPanel();
     JPanel dynamicPanelConnect = new JPanel();
@@ -36,8 +41,8 @@ public class MainMenu extends JPanel {
 
         // Panel fixe (50px de large)
         JPanel fixedMenu = new JPanel();
-        fixedMenu.setBackground(Color.WHITE);
-        fixedMenu.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
+        fixedMenu.setBackground(Color.white);
+        fixedMenu.setBorder(BorderFactory.createLineBorder(Color.lightGray, 2));
         setPanelSize(fixedMenu, FIXED_PANEL_WIDTH);
 
         // Définition de la largeur des panels dynamiques (300px)
@@ -73,22 +78,30 @@ public class MainMenu extends JPanel {
             components.addElement(association);
         });
 
-        triangleButton.addActionListener(e -> System.out.println("Triangle Container ajouté"));
-        circleButton.addActionListener(e -> System.out.println("Circle Container ajouté"));
-        pillButton.addActionListener(e -> System.out.println("Pill Container ajouté"));
+
 
         // Stylisation du bouton hide avec une icône
         hide.setFocusPainted(false);
         hide.setBorderPainted(false);
         hide.setContentAreaFilled(false);
         hide.setIcon(new ImageIcon(icon.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH)));
+        connectButton.setFocusPainted(false);
+        connectButton.setBorderPainted(false);
+        connectButton.setContentAreaFilled(false);
+        connectButton.setIcon(new ImageIcon(icon2.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH)));
+        containersButton.setFocusPainted(false);
+        containersButton.setBorderPainted(false);
+        containersButton.setContentAreaFilled(false);
+        containersButton.setIcon(new ImageIcon(icon3.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH)));
+
 
         // Ajout des boutons dans le panel fixe avec des espaces
         fixedMenu.setLayout(new BoxLayout(fixedMenu, BoxLayout.Y_AXIS));
         fixedMenu.add(hide);
-        fixedMenu.add(Box.createVerticalStrut(10)); // Espace de 10px
+        fixedMenu.add(Box.createVerticalStrut(30));
+        fixedMenu.setLayout(new BoxLayout(fixedMenu, BoxLayout.Y_AXIS));
         fixedMenu.add(connectButton);
-        fixedMenu.add(Box.createVerticalStrut(10)); // Espace de 10px
+        fixedMenu.add(Box.createVerticalStrut(30));
         fixedMenu.add(containersButton);
 
         // Ajout des boutons dans les panels dynamiques
