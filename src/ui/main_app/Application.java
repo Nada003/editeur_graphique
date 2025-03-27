@@ -99,49 +99,60 @@ public class Application extends JFrame {
     }
 
     private JToolBar initToolBar() {
-        toolBar = new JToolBar(JToolBar.HORIZONTAL);
-        toolBar.setBackground(Color.WHITE);
+            toolBar = new JToolBar(JToolBar.HORIZONTAL);
+            toolBar.setBackground(Color.WHITE);
 
-        JButton undoButton = new JButton("↩");
-        JButton redoButton = new JButton("↪");
-        JButton boldButton = new JButton("𝐁");
-        JButton italicButton = new JButton("𝘐");
-        JButton underlineButton = new JButton("U̲");
-        JButton colorButton = new JButton("🎨");
-        toggleGridButton = new JButton("Grille");
+            JButton undoButton = new JButton("↩");
+            JButton redoButton = new JButton("↪");
+            JButton boldButton = new JButton("𝐁");
+            JButton italicButton = new JButton("𝘐");
+            JButton underlineButton = new JButton("U̲");
+            JButton colorButton = new JButton("🎨");
+            toggleGridButton = new JButton("Grille");
+            JButton textButton = new JButton("📝 Texte"); // Bouton pour ajouter du texte
 
-        String[] fontSizes = {"8pt", "10pt", "12pt", "14pt", "16pt"};
-        JComboBox<String> fontSizeBox = new JComboBox<>(fontSizes);
+            String[] fontSizes = {"8pt", "10pt", "12pt", "14pt", "16pt"};
+            JComboBox<String> fontSizeBox = new JComboBox<>(fontSizes);
 
-        JSlider thicknessSlider = new JSlider(1, 10, 2);
+            JSlider thicknessSlider = new JSlider(1, 10, 2);
 
-        toolBar.add(undoButton);
-        toolBar.add(redoButton);
-        toolBar.addSeparator();
-        toolBar.add(fontSizeBox);
-        toolBar.add(boldButton);
-        toolBar.add(italicButton);
-        toolBar.add(underlineButton);
-        toolBar.addSeparator();
-        toolBar.add(colorButton);
-        toolBar.add(thicknessSlider);
-        toolBar.add(toggleGridButton);
+            toolBar.add(undoButton);
+            toolBar.add(redoButton);
+            toolBar.addSeparator();
+            toolBar.add(fontSizeBox);
+            toolBar.add(boldButton);
+            toolBar.add(italicButton);
+            toolBar.add(underlineButton);
+            toolBar.addSeparator();
+            toolBar.add(colorButton);
+            toolBar.add(thicknessSlider);
+            toolBar.add(toggleGridButton);
+            toolBar.addSeparator();
+            toolBar.add(textButton);
 
-        // Action Listener pour le choix des couleurs
-        colorButton.addActionListener(e -> {
-            Color newColor = JColorChooser.showDialog(this, "Choisir une couleur", currentColor);
-            if (newColor != null) {
-                currentColor = newColor;
-            }
-        });
 
-        // Action Listener pour afficher/masquer la grille
-        toggleGridButton.addActionListener(e -> {
-            board.toggle();
-        });
+            // Action pour le choix des couleurs
+            colorButton.addActionListener(e -> {
+                Color newColor = JColorChooser.showDialog(this, "Choisir une couleur", currentColor);
+                if (newColor != null) {
+                    currentColor = newColor;
+                }
+            });
 
-        return toolBar;
-    }
+            // Action pour afficher/masquer la grille
+            toggleGridButton.addActionListener(e -> {
+                board.toggle();
+            });
+
+            // Action pour ajouter du texte (Tu peux modifier cette partie)
+            textButton.addActionListener(e -> {
+                JOptionPane.showMessageDialog(this, "Ajout d'un texte (fonction à implémenter) !");
+            });
+
+
+            return toolBar;
+        }
+
 
 
     private void getComponentFromFile(File file) {

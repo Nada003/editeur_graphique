@@ -49,7 +49,7 @@ public class MainBoard extends JPanel implements ListListener {
 
     public MainBoard(WatchedList<UMLComponent> components){
         this.components = components;
-        this.setBackground(Color.lightGray);
+        this.setBackground(Color.WHITE);
         this.setMinimumSize(new Dimension(750,600));
         this.setLayout(null);
         components.addListener(this);
@@ -90,7 +90,7 @@ public class MainBoard extends JPanel implements ListListener {
     }
 
     private void dessinerGrille(Graphics g) {
-        g.setColor(Color.black);
+        g.setColor(Color.LIGHT_GRAY);
         for (int i = 0; i < getWidth(); i += 20) {
             g.drawLine(i, 0, i, getHeight());
         }

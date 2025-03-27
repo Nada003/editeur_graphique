@@ -12,26 +12,27 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.IOException;
 
-public abstract class UMLComponent extends JPanel implements MouseListener, DragGestureListener{
+public abstract class UMLComponent extends JPanel implements MouseListener, DragGestureListener {
     private static int count = 0;
     private int Id;
     private Color colorStroke = Color.BLACK, backgroundColor = Color.white;
-    private int positionX = 25, positionY = 25, height = 110 , width = 210;
+    private int positionX = 25, positionY = 25, height = 110, width = 210;
 
     private DragSource dragSource;
     private UMLComponent instance;
 
-    protected UMLComponent(){
+
+    protected UMLComponent() {
         positionX += count * 20;
         positionY += count * 20;
-        this.setBounds(positionX,positionY,width,height);
+        this.setBounds(positionX, positionY, width, height);
         this.addMouseListener(this);
         this.Id = count;
         increaseCount();
 
         instance = this;
         dragSource = new DragSource();
-        dragSource.createDefaultDragGestureRecognizer(this, DnDConstants.ACTION_MOVE,this);
+        dragSource.createDefaultDragGestureRecognizer(this, DnDConstants.ACTION_MOVE, this);
     }
 
     @Override
@@ -79,7 +80,7 @@ public abstract class UMLComponent extends JPanel implements MouseListener, Drag
 
     public void setPositionX(int positionX) {
         this.positionX = positionX;
-        this.setBounds(positionX,positionY,width,height);
+        this.setBounds(positionX, positionY, width, height);
     }
 
     public int getPositionY() {
@@ -88,7 +89,7 @@ public abstract class UMLComponent extends JPanel implements MouseListener, Drag
 
     public void setPositionY(int positionY) {
         this.positionY = positionY;
-        this.setBounds(positionX,positionY,width,height);
+        this.setBounds(positionX, positionY, width, height);
     }
 
     @Override
@@ -98,7 +99,7 @@ public abstract class UMLComponent extends JPanel implements MouseListener, Drag
 
     public void setHeight(int height) {
         this.height = height;
-        this.setBounds(positionX,positionY,width,height);
+        this.setBounds(positionX, positionY, width, height);
     }
 
     @Override
@@ -108,13 +109,14 @@ public abstract class UMLComponent extends JPanel implements MouseListener, Drag
 
     public void setWidth(int width) {
         this.width = width;
-        this.setBounds(positionX,positionY,width,height);
+        this.setBounds(positionX, positionY, width, height);
     }
 
-    public static void increaseCount(){
+    public static void increaseCount() {
         count++;
     }
-    public static void decreaseCount(){
+
+    public static void decreaseCount() {
         count--;
     }
 
@@ -129,12 +131,12 @@ public abstract class UMLComponent extends JPanel implements MouseListener, Drag
         Transferable transferable = new Transferable() {
             @Override
             public DataFlavor[] getTransferDataFlavors() {
-                return new DataFlavor[]{new DataFlavor(UMLComponent.class,"UMLComponent")};
+                return new DataFlavor[]{new DataFlavor(UMLComponent.class, "UMLComponent")};
             }
 
             @Override
             public boolean isDataFlavorSupported(DataFlavor flavor) {
-                return flavor.equals(new DataFlavor(UMLComponent.class,"UMLComponent"));
+                return flavor.equals(new DataFlavor(UMLComponent.class, "UMLComponent"));
             }
 
             @Override
@@ -147,7 +149,8 @@ public abstract class UMLComponent extends JPanel implements MouseListener, Drag
                 dge,
                 DragSource.DefaultMoveDrop,
                 transferable,
-                new DragSourceAdapter(){}
+                new DragSourceAdapter() {
+                }
         );
         instance.getParent().remove(instance);
 
@@ -179,3 +182,5 @@ public abstract class UMLComponent extends JPanel implements MouseListener, Drag
 
     }
 }
+
+
