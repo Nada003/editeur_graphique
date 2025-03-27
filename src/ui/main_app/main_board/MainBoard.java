@@ -14,6 +14,7 @@ import java.awt.dnd.DropTargetDropEvent;
 
 public class MainBoard extends JPanel implements ListListener {
     private final WatchedList<UMLComponent> components ;
+    private boolean showGrid = false;
 
     private static class PanelDropListener extends DropTargetAdapter {
         private final DropTarget dropTarget;
@@ -75,6 +76,34 @@ public class MainBoard extends JPanel implements ListListener {
                 return true;
 
         return false;
+    }
+
+
+
+
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        if (showGrid) {
+            dessinerGrille(g);
+        }
+    }
+
+    private void dessinerGrille(Graphics g) {
+        g.setColor(Color.black);
+        for (int i = 0; i < getWidth(); i += 20) {
+            g.drawLine(i, 0, i, getHeight());
+        }
+        for (int j = 0; j < getHeight(); j += 20) {
+            g.drawLine(0, j, getWidth(), j);
+        }
+    }
+
+
+    public void toggle(){
+        showGrid = !showGrid;
+        this.revalidate();
+        this.repaint();
     }
 
     @Override
