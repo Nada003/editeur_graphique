@@ -13,16 +13,17 @@ import java.awt.*;
 public class MainMenu extends JPanel {
 
     JButton buttonClass = new JButton("Add class");
-
-
-    JButton associationButton = new JButton("Association");
-    JButton triangleButton = new JButton("Triangle");
-    JButton circleButton = new JButton("Circle");
-    JButton pillButton = new JButton("Pill");
+    JButton associationButton = new JButton();
+    JButton triangleButton = new JButton("...");
+    JButton circleButton = new JButton("...");
+    JButton pillButton = new JButton("...");
 
     ImageIcon icon = new ImageIcon("C:/Users/ng263/IdeaProjects/UML_desinger/src/assets/containers2.png");
     ImageIcon icon2 = new ImageIcon("C:/Users/ng263/IdeaProjects/UML_desinger/src/assets/connect_components.png");
     ImageIcon icon3 = new ImageIcon("C:/Users/ng263/IdeaProjects/UML_desinger/src/assets/shapes.png");
+    ImageIcon icon4 = new ImageIcon("C:/Users/ng263/IdeaProjects/UML_desinger/src/assets/association.png");
+    ImageIcon icon5 = new ImageIcon("C:/Users/ng263/IdeaProjects/UML_desinger/src/assets/generalization(heritage).png");
+    ImageIcon icon6 = new ImageIcon("C:/Users/ng263/IdeaProjects/UML_desinger/src/assets/aggregation.png");
 
     JButton hide = new JButton();
     JButton connectButton = new JButton();
@@ -77,6 +78,10 @@ public class MainMenu extends JPanel {
             AssociationRender association = new AssociationRender(model);
             components.addElement(association);
         });
+        associationButton.setToolTipText("Association");
+        connectButton.setToolTipText("Connect");
+        containersButton.setToolTipText("containers");
+        hide.setToolTipText("class");
 
 
 
@@ -93,6 +98,11 @@ public class MainMenu extends JPanel {
         containersButton.setBorderPainted(false);
         containersButton.setContentAreaFilled(false);
         containersButton.setIcon(new ImageIcon(icon3.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH)));
+        associationButton.setFocusPainted(false);
+        associationButton.setBorderPainted(false);
+        associationButton.setContentAreaFilled(false);
+        associationButton.setIcon(new ImageIcon(icon4.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH)));
+
 
 
         // Ajout des boutons dans le panel fixe avec des espaces
@@ -103,6 +113,7 @@ public class MainMenu extends JPanel {
         fixedMenu.add(connectButton);
         fixedMenu.add(Box.createVerticalStrut(30));
         fixedMenu.add(containersButton);
+
 
         // Ajout des boutons dans les panels dynamiques
         dynamicMenu.add(buttonClass);
