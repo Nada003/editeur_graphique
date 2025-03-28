@@ -232,6 +232,7 @@ public class MainBoard extends JPanel implements ListListener {
                 textModeActive = false;
             }
         });
+
     }
 
     @Override

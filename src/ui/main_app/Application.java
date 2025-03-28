@@ -3,6 +3,7 @@ package ui.main_app;
 import interpreter.MyInterpreter;
 import ui.custom_graphics.uml_components.UMLComponent;
 import ui.main_app.history.UserAction;
+import ui.main_app.home_page.Home;
 import ui.main_app.main_board.MainBoard;
 import ui.main_app.main_menu.MainMenu;
 import ui.main_app.main_topmenu.MainTopMenu;
@@ -21,6 +22,8 @@ public class Application extends JFrame implements ListListener {
     private static final WatchedList<UserAction> undoFlow = new WatchedList<>();
     private static File currentFile;
     private MainBoard board;
+    private JPanel main;
+
 
 
     public Application() {
@@ -31,9 +34,16 @@ public class Application extends JFrame implements ListListener {
         this.setLayout(new BorderLayout());
         mainFlow.addListener(this);
 
-        this.setJMenuBar(new MainTopMenu(mainFlow, undoFlow,currentFile));
-        this.add(initMain(), BorderLayout.CENTER);
-        this.add(new TopToolBar(board, mainFlow, undoFlow), BorderLayout.NORTH);
+        JPanel home = new Home(e->{
+            this.remove(main);
+            this.setJMenuBar(new MainTopMenu(mainFlow, undoFlow,currentFile));
+            this.add(initMain(), BorderLayout.CENTER);
+            this.add(new TopToolBar(board, mainFlow, undoFlow), BorderLayout.NORTH);
+            this.revalidate();
+            this.repaint();
+        });
+        main = home;
+        this.add(home);
         this.pack();
         this.setVisible(true);
     }
