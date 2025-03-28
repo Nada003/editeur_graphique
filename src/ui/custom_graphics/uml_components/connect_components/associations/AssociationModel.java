@@ -6,6 +6,7 @@ public class AssociationModel implements UMLModel {
 
     public String line;
     public AssociationModel(String line) {
+
         this.line = line;
     }
 }

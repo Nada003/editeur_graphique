@@ -23,7 +23,7 @@ public class UseCaseRender extends UMLComponent {
         super.paintComponent(g);
         Graphics2D graphics2D = (Graphics2D) g;
         graphics2D.setPaint(Color.black);
-        graphics2D.setStroke(new BasicStroke(2));
+        graphics2D.setStroke(new BasicStroke(5));
         graphics2D.drawOval(10, 10, getWidth()-20, getHeight()-20);
         graphics2D.setPaint(Color.white);
         graphics2D.fillOval(10, 10, getWidth()-20, getHeight()-20);

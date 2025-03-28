@@ -6,6 +6,7 @@ public class UseCaseModel implements UMLModel {
    public  String scenario;
 
     public UseCaseModel(String scenario) {
+
         this.scenario = scenario;
     }
 }
