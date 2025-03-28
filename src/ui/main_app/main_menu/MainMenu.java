@@ -5,6 +5,7 @@ import ui.custom_graphics.uml_components.class_diagram.classes.ClassModel;
 import ui.custom_graphics.uml_components.class_diagram.classes.ClassRender;
 import ui.custom_graphics.uml_components.connect_components.associations.AssociationModel;
 import ui.custom_graphics.uml_components.connect_components.associations.AssociationRender;
+import ui.main_app.history.UserAction;
 import utils.custom_list.WatchedList;
 
 import javax.swing.*;
@@ -18,12 +19,12 @@ public class MainMenu extends JPanel {
     JButton circleButton = new JButton("...");
     JButton pillButton = new JButton("...");
 
-    ImageIcon icon = new ImageIcon("C:/Users/ng263/IdeaProjects/UML_desinger/src/assets/containers2.png");
-    ImageIcon icon2 = new ImageIcon("C:/Users/ng263/IdeaProjects/UML_desinger/src/assets/connect_components.png");
-    ImageIcon icon3 = new ImageIcon("C:/Users/ng263/IdeaProjects/UML_desinger/src/assets/shapes.png");
-    ImageIcon icon4 = new ImageIcon("C:/Users/ng263/IdeaProjects/UML_desinger/src/assets/association.png");
-    ImageIcon icon5 = new ImageIcon("C:/Users/ng263/IdeaProjects/UML_desinger/src/assets/generalization(heritage).png");
-    ImageIcon icon6 = new ImageIcon("C:/Users/ng263/IdeaProjects/UML_desinger/src/assets/aggregation.png");
+    ImageIcon icon = new ImageIcon("src/assets/containers2.png");
+    ImageIcon icon2 = new ImageIcon("src/assets/connect_components.png");
+    ImageIcon icon3 = new ImageIcon("src/assets/shapes.png");
+    ImageIcon icon4 = new ImageIcon("src/assets/association.png");
+    ImageIcon icon5 = new ImageIcon("src/assets/generalization(heritage).png");
+    ImageIcon icon6 = new ImageIcon("src/assets/aggregation.png");
 
     JButton hide = new JButton();
     JButton connectButton = new JButton();
@@ -37,7 +38,11 @@ public class MainMenu extends JPanel {
     private static final int DYNAMIC_PANEL_WIDTH = 300; // Largeur des panels dynamiques
     private static final int BUTTON_HEIGHT = 50;       // Hauteur des boutons
 
-    public MainMenu(WatchedList<UMLComponent> components) {
+
+    private final WatchedList<UserAction> mainFlow;
+    private final WatchedList<UserAction> undoFlow;
+
+    public MainMenu(WatchedList<UMLComponent> components, WatchedList<UserAction> mainFlow, WatchedList<UserAction> undoFlow) {
         this.setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
 
         // Panel fixe (50px de large)
@@ -66,6 +71,7 @@ public class MainMenu extends JPanel {
         buttonClass.addActionListener(e -> {
             ClassModel model = new ClassModel("", new String[]{}, new String[]{});
             ClassRender render = new ClassRender(model);
+            mainFlow.addElement(new UserAction("Ajouter une class",render)); //save to user action
             components.addElement(render);
         });
 
@@ -76,6 +82,7 @@ public class MainMenu extends JPanel {
         associationButton.addActionListener(e -> {
             AssociationModel model = new AssociationModel("");
             AssociationRender association = new AssociationRender(model);
+            mainFlow.addElement(new UserAction("Ajouter Association",association)); //save to user action
             components.addElement(association);
         });
         associationButton.setToolTipText("Association");
@@ -127,6 +134,11 @@ public class MainMenu extends JPanel {
         this.add(dynamicMenu);
         this.add(dynamicPanelConnect);
         this.add(dynamicPanelContainers);
+
+
+        this.mainFlow = mainFlow;
+        this.undoFlow = undoFlow;
+
     }
 
     private void togglePanel(JPanel panel) {

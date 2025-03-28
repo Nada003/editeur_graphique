@@ -78,28 +78,19 @@ public class MainBoard extends JPanel implements ListListener {
         return false;
     }
 
-
-
-
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         if (showGrid) {
-            dessinerGrille(g);
+            g.setColor(Color.LIGHT_GRAY);
+            for (int i = 0; i < getWidth(); i += 20) {
+                g.drawLine(i, 0, i, getHeight());
+            }
+            for (int j = 0; j < getHeight(); j += 20) {
+                g.drawLine(0, j, getWidth(), j);
+            }
         }
     }
-
-    private void dessinerGrille(Graphics g) {
-        g.setColor(Color.LIGHT_GRAY);
-        for (int i = 0; i < getWidth(); i += 20) {
-            g.drawLine(i, 0, i, getHeight());
-        }
-        for (int j = 0; j < getHeight(); j += 20) {
-            g.drawLine(0, j, getWidth(), j);
-        }
-    }
-
-
     public void toggle(){
         showGrid = !showGrid;
         this.revalidate();
