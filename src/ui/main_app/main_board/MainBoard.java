@@ -19,7 +19,7 @@ import java.util.List;
 public class MainBoard extends JPanel implements ListListener {
     private final WatchedList<UMLComponent> components;
     private boolean showGrid = false;
-    private List<TextEntry> texts = new ArrayList<>();
+    private final List<TextEntry> texts = new ArrayList<>();
     private Color textColor = Color.BLACK;
     private boolean isBold = false;
     private boolean isItalic = false;
@@ -31,6 +31,7 @@ public class MainBoard extends JPanel implements ListListener {
     private static class TextEntry {
         String text;
         int x, y;
+
         public TextEntry(String text, int x, int y) {
             this.text = text;
             this.x = x;
@@ -38,13 +39,12 @@ public class MainBoard extends JPanel implements ListListener {
         }
     }
 
-    private static class PanelDropListener extends DropTargetAdapter {
-        private final DropTarget dropTarget;
+    private class PanelDropListener extends DropTargetAdapter {
         private final MainBoard targetPanel;
 
         public PanelDropListener(MainBoard targetPanel) {
             this.targetPanel = targetPanel;
-            dropTarget = new DropTarget(targetPanel, DnDConstants.ACTION_MOVE, this, true, null);
+            new DropTarget(targetPanel, DnDConstants.ACTION_MOVE, this, true, null);
         }
 
         @Override
@@ -55,13 +55,12 @@ public class MainBoard extends JPanel implements ListListener {
                         .getTransferData(new DataFlavor(UMLComponent.class, DataFlavor.javaJVMLocalObjectMimeType));
 
                 Point dropPoint = dtde.getLocation();
-                dropPoint.x -= draggedPanel.getWidth() / 2;
-                dropPoint.y -= draggedPanel.getHeight() / 2;
+                dropPoint.translate(-draggedPanel.getWidth() / 2, -draggedPanel.getHeight() / 2);
 
                 draggedPanel.setLocation(dropPoint);
-
                 targetPanel.components.removeElement(draggedPanel);
                 targetPanel.components.addElement(draggedPanel);
+                targetPanel.repaint(); // Ensure repaint after drop
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
@@ -70,15 +69,17 @@ public class MainBoard extends JPanel implements ListListener {
 
     public MainBoard(WatchedList<UMLComponent> components) {
         this.components = components;
-        this.setBackground(Color.white);
-        this.setMinimumSize(new Dimension(750, 600));
-        this.setLayout(null);
-        components.addListener(this);
+        setBackground(Color.WHITE);
+        setMinimumSize(new Dimension(750, 600));
+        setPreferredSize(new Dimension(1200, 800)); // Ajuste selon la taille de ta fenêtre
+        setSize(new Dimension(1200, 800));
 
+        setLayout(null);
+        components.addListener(this);
         new PanelDropListener(this);
 
-        // Ajout du MouseListener pour gérer le texte
-        this.addMouseListener(new MouseAdapter() {
+        // MouseListener for text handling
+        addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 if (textModeActive) {
@@ -94,7 +95,7 @@ public class MainBoard extends JPanel implements ListListener {
                 this.add(m);
             }
         }
-        this.repaint();
+        repaint();
     }
 
     private void removeAllPainted() {
@@ -107,7 +108,7 @@ public class MainBoard extends JPanel implements ListListener {
     }
 
     private boolean checkChild(Component child) {
-        for (var c : this.getComponents()) {
+        for (var c : getComponents()) {
             if (c.equals(child)) {
                 return true;
             }
@@ -165,6 +166,7 @@ public class MainBoard extends JPanel implements ListListener {
 
     public void setFontSize(int size) {
         this.currentFontSize = size;
+        repaint(); // Ensure repaint when changing font size
     }
 
     public int getFontSize() {
@@ -213,26 +215,12 @@ public class MainBoard extends JPanel implements ListListener {
         add(textField);
         textField.requestFocus();
 
-        textField.addActionListener(ev -> {
-            if (!textField.getText().trim().isEmpty()) {
-                addText(textField.getText(), x, y);
-            }
+        textField.addActionListener(e -> {
+            String text = textField.getText();
+            addText(text, x, y);
             remove(textField);
-            revalidate();
             repaint();
-            textModeActive = false;
         });
-
-        textField.addFocusListener(new java.awt.event.FocusAdapter() {
-            @Override
-            public void focusLost(java.awt.event.FocusEvent evt) {
-                remove(textField);
-                revalidate();
-                repaint();
-                textModeActive = false;
-            }
-        });
-
     }
 
     @Override

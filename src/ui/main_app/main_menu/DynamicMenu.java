@@ -14,7 +14,7 @@ public class DynamicMenu extends JPanel {
 
     JButton buttonClass = new JButton();
     public DynamicMenu(WatchedList<UMLComponent> components, WatchedList<UserAction> mainFlow){
-        this.setBackground(Color.red);
+
         buttonClass.setFocusPainted(false);
         buttonClass.setBorderPainted(false);
         buttonClass.setContentAreaFilled(false);

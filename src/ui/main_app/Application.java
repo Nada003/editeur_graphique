@@ -13,8 +13,6 @@ import utils.custom_list.WatchedList;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
 import java.io.File;
 
 public class Application extends JFrame implements ListListener {
@@ -51,36 +49,12 @@ public class Application extends JFrame implements ListListener {
     }
 
     private JPanel initMain() {
-        JPanel main = new JPanel(new BorderLayout());
+        JPanel main = new JPanel();
+        main.setLayout(new BoxLayout(main, BoxLayout.X_AXIS));
+        main.add(new MainMenu(components, mainFlow, undoFlow));
 
-        JLayeredPane layeredPane = new JLayeredPane();
-        main.add(layeredPane, BorderLayout.CENTER);
-
-        // Ajout du MainBoard
         board = new MainBoard(components);
-        board.setBounds(0, 0, 800, 600); // Valeur initiale, mais sera redimensionnée dynamiquement
-        layeredPane.add(board, JLayeredPane.DEFAULT_LAYER);
-
-        // Ajout du MainMenu
-        MainMenu menu = new MainMenu(components, mainFlow, undoFlow);
-        menu.setBounds(0, 0, 350, 600); // Largeur fixe du menu
-        layeredPane.add(menu, JLayeredPane.PALETTE_LAYER);
-
-
-
-        // Gestion du redimensionnement automatique
-        layeredPane.addComponentListener(new ComponentAdapter() {
-            @Override
-            public void componentResized(ComponentEvent e) {
-                int width = layeredPane.getWidth();
-                int height = layeredPane.getHeight();
-
-                board.setBounds(0, 0, width, height); // Board prend toute la place
-                menu.setBounds(0, 0, 350, height); // Menu reste à gauche avec hauteur dynamique
-            }
-        });
-
-        main.add(layeredPane, BorderLayout.CENTER);
+        main.add(board, BorderLayout.CENTER); // Ajout correct du canvas
         return main;
     }
 
@@ -92,13 +66,13 @@ public class Application extends JFrame implements ListListener {
 
     @Override
     public void notifyListChanged() {
-       if (mainFlow.isNewElementAdded()){
-           // when user click redo (the removed item will return
-          components.addElement(mainFlow.getList().getLast().getComponent());
-       }else{
-           // when user click undo remove item
-           components.removeElement(components.getList().getLast());
-       }
+        if (mainFlow.isNewElementAdded()){
+            // when user click redo (the removed item will return
+            components.addElement(mainFlow.getList().getLast().getComponent());
+        }else{
+            // when user click undo remove item
+            components.removeElement(components.getList().getLast());
+        }
 
     }
 }

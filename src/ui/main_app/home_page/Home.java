@@ -62,7 +62,7 @@ public class Home extends JPanel{
         JPanel splitPanel = new JPanel(new GridLayout(2, 1));
 
         JPanel blankDocumentPanel = new JPanel(new BorderLayout());
-        blankDocumentPanel.setBackground(Color.WHITE);
+        blankDocumentPanel.setBackground(Color.LIGHT_GRAY);
 
         JLabel titleLabel = new JLabel("Nouveau", SwingConstants.LEFT);
         titleLabel.setFont(new Font("Arial", Font.BOLD, 16));
