@@ -84,6 +84,40 @@ public class Home extends JPanel{
         JButton recentButton = new JButton("Récent");
 
         JButton pinnedButton = new JButton("Épinglé");
+
+        recentButton.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
+        pinnedButton.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
+
+        recentButton.setContentAreaFilled(false);
+        pinnedButton.setContentAreaFilled(false);
+
+        recentButton.setFocusPainted(false);
+        pinnedButton.setFocusPainted(false);
+
+// Hover effect - underline
+        recentButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                recentButton.setBorder(BorderFactory.createMatteBorder(0, 0, 2, 0, Color.BLACK));
+            }
+
+            @Override
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                recentButton.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
+            }
+        });
+
+        pinnedButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                pinnedButton.setBorder(BorderFactory.createMatteBorder(0, 0, 2, 0, Color.BLACK));
+            }
+
+            @Override
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                pinnedButton.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
+            }
+        });
         buttonPanel.add(recentButton);
         buttonPanel.add(pinnedButton);
 
