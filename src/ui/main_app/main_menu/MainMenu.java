@@ -6,9 +6,10 @@ import utils.custom_list.WatchedList;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.LinkedList;
 
 public class MainMenu extends JPanel {
-
+    private static final LinkedList<MenuExpandingListener> listeners = new LinkedList<>();
     private final JButton hideButton;
     private final JButton connectButton;
     private final JButton containersButton;
@@ -17,8 +18,8 @@ public class MainMenu extends JPanel {
     private final JPanel dynamicPanelConnect;
     private final JPanel dynamicPanelContainers;
 
-    private static final int FIXED_PANEL_WIDTH = 50;
-    private static final int DYNAMIC_PANEL_WIDTH = 300;
+    public static final int FIXED_PANEL_WIDTH = 50;
+    public static final int DYNAMIC_PANEL_WIDTH = 300;
     private static final int BUTTON_HEIGHT = 50;
 
     private final WatchedList<UserAction> mainFlow;
@@ -92,6 +93,7 @@ public class MainMenu extends JPanel {
             setAllDynamicPanelsVisibility(false);
             panel.setVisible(true);
         }
+        notifyListeners();
         updateSize();
         revalidate(); // Important to revalidate after changing visibility
         repaint();    // Important to repaint the component
@@ -110,8 +112,7 @@ public class MainMenu extends JPanel {
     }
 
     private void updateSize() {
-        boolean isExpanded = dynamicMenu.isVisible() || dynamicPanelConnect.isVisible() || dynamicPanelContainers.isVisible();
-        this.setPreferredSize(new Dimension(FIXED_PANEL_WIDTH + (isExpanded ? DYNAMIC_PANEL_WIDTH : 0), Integer.MAX_VALUE));
+        this.setPreferredSize(new Dimension(FIXED_PANEL_WIDTH + (isExpanded() ? DYNAMIC_PANEL_WIDTH : 0), Integer.MAX_VALUE));
         revalidate(); // Notify layout manager to re-layout components
     }
 
@@ -119,5 +120,19 @@ public class MainMenu extends JPanel {
         button.setMaximumSize(size);
         button.setPreferredSize(size);
         button.setMinimumSize(size);
+    }
+
+    public boolean isExpanded() {
+        return dynamicMenu.isVisible() || dynamicPanelConnect.isVisible() || dynamicPanelContainers.isVisible() ;
+    }
+
+    public void addListener(MenuExpandingListener listener){
+        if(!listeners.contains(listener))
+            listeners.add(listener);
+    }
+
+    public void notifyListeners(){
+        for (var v : listeners)
+            v.doAction();
     }
 }
