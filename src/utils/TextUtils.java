@@ -14,4 +14,10 @@ public class TextUtils {
         g2d.dispose();
         return width;
     }
+
+    public static int getTextWidth(Graphics g ,String text, Font font) {
+        FontMetrics metrics = g.getFontMetrics(font);
+        int textWidth = metrics.stringWidth(text);
+        return textWidth;
+    }
 }

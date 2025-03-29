@@ -1,13 +1,13 @@
 package ui.main_app.main_topmenu;
 
+import ui.custom_graphics.uml_components.text_and_comments.CommentRender;
 import ui.main_app.history.UserAction;
 import ui.main_app.main_board.MainBoard;
 import utils.custom_list.WatchedList;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 
 public class TopToolBar extends JToolBar {
     private final WatchedList<UserAction> mainFlow;
@@ -15,6 +15,47 @@ public class TopToolBar extends JToolBar {
     private Color currentColor = Color.BLACK;
     private JButton toggleGridButton;
     private MainBoard board;
+    private boolean bool = false;
+    private MouseListener textModeMouseListener = new MouseAdapter() {
+        @Override
+        public void mouseClicked(MouseEvent e) {
+            JTextField textField = new JTextField();
+            textField.setBounds(e.getX(), e.getY(), 100, 30);
+            textField.setFont(new Font("Arial", Font.PLAIN, 14));
+
+            textField.addFocusListener(new FocusListener() {
+                @Override
+                public void focusGained(FocusEvent e) {
+
+                }
+
+                @Override
+                public void focusLost(FocusEvent f) {
+                    var label = new CommentRender(textField.getText());
+                    label.setClickListener(new MouseAdapter() {
+                        @Override
+                        public void mouseClicked(MouseEvent e) {
+                            super.mouseClicked(e);
+                            board.setSelectedComment(label);
+                        }
+                    });
+                    label.setHeight(30);
+                    label.setPositionX(e.getX());
+                    label.setPositionY(e.getY());
+                    board.components.addElement(label);
+                    board.remove(textField);
+                    board.revalidate();
+                    board.repaint();
+                }
+            });
+            board.add(textField);
+            board.repaint();
+            textField.requestFocus();
+
+
+        }
+    };
+
 
     public TopToolBar(MainBoard board, WatchedList<UserAction> mainFlow, WatchedList<UserAction> undoFlow) {
         super(JToolBar.HORIZONTAL);
@@ -66,10 +107,14 @@ public class TopToolBar extends JToolBar {
         this.add(textButton);
 
         fontSizeBox.addActionListener(e -> {
+            CommentRender selecedComment =  board.getSelectedComment();
+            if (selecedComment == null) return;
+
             String selectedSize = (String) fontSizeBox.getSelectedItem();
+            assert selectedSize != null;
             int fontSize = Integer.parseInt(selectedSize.replace("pt", ""));
-            board.setFontSize(fontSize);
-            board.repaint();
+            selecedComment.setFontSize(fontSize);
+            selecedComment.repaint();
         });
         // Action pour le choix des couleurs
         colorButton.addActionListener(e -> {
@@ -83,51 +128,51 @@ public class TopToolBar extends JToolBar {
         toggleGridButton.addActionListener(e -> board.toggleGrid());
 
         // Action pour activer le mode texte
-        textButton.addActionListener(e -> activateTextMode());
+        textButton.addActionListener(e -> {
+            if (!bool) {
+                activateTextMode();
+            } else {
+               disactivateTextMode();
+            }
+            bool = !bool;
+        });
 
         // Styles : Gras, Italique, Souligné
         boldButton.addActionListener(e -> {
-            board.toggleBold();
-            board.repaint();
+            CommentRender selecedComment =  board.getSelectedComment();
+            if (selecedComment == null) return;
+            selecedComment.toggleBold();
+            selecedComment.repaint();
         });
 
         italicButton.addActionListener(e -> {
-            board.toggleItalic();
-            board.repaint();
+            CommentRender selecedComment =  board.getSelectedComment();
+            if (selecedComment == null) return;
+            selecedComment.toggleItalic();
+            selecedComment.repaint();
         });
 
         underlineButton.addActionListener(e -> {
-            board.toggleUnderline();
-            board.repaint();
+            CommentRender selecedComment =  board.getSelectedComment();
+            if (selecedComment == null) return;
+            selecedComment.toggleUnderline();
+            selecedComment.repaint();
         });
 
         // Appliquer la police sélectionnée
         fontBox.addActionListener(e -> {
+            CommentRender selecedComment =  board.getSelectedComment();
+            if (selecedComment == null) return;
             String selectedFont = (String) fontBox.getSelectedItem();
-            board.setCurrentFont(selectedFont);
+            selecedComment.setCurrentFont(selectedFont);
         });
     }
 
     private void activateTextMode() {
-        board.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                JTextField textField = new JTextField();
-                textField.setBounds(e.getX(), e.getY(), 100, 30);
-                textField.setFont(new Font(board.getCurrentFont(), Font.PLAIN, 14));
-
-                board.setLayout(null); // Important pour le positionnement
-                board.add(textField);
-                board.repaint();
-                textField.requestFocus();
-
-                textField.addActionListener(ev -> {
-                    board.addText(textField.getText(), e.getX(), e.getY());
-                    board.remove(textField);
-                    board.repaint();
-                });
-            }
-        });
+        board.addMouseListener(textModeMouseListener);
+    }
+    private void disactivateTextMode() {
+        board.removeMouseListener(textModeMouseListener);
     }
 
     private void undoAction() {
