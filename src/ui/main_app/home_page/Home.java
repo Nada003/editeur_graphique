@@ -24,17 +24,26 @@ public class Home extends JPanel{
         JPanel sidePanel = new JPanel(new GridLayout(3, 1));
         sidePanel.setBackground(Color.DARK_GRAY);
 
-        String[] sideOptions = {"Accueil", "Nouveau", "Ouvrir"};
-        for (String option : sideOptions) {
-            JButton button = new JButton(option);
+        String[][] sideOptions = {{"acceuil","src/assets/acceuil.png"},
+                {"nouveau","src/assets/nouveau.png"},
+                {"ouvrir", "src/assets/folder.png"}};
+
+        for (String[] option : sideOptions) {
+
+            ImageIcon iconoption = new ImageIcon(option[1]);
+            JButton button = new JButton(iconoption);
+
+
             button.setBackground(Color.LIGHT_GRAY);
             button.setForeground(Color.WHITE);
 
+
             button.addActionListener(e -> {
                 CardLayout cl = (CardLayout) mainPanel.getLayout();
-                if (option.equals("Accueil")) {
+                if (option[0].equals("acceuil")) {
+
                     cl.show(mainPanel, "HomePanel");
-                } else if (option.equals("Ouvrir")) {
+                } else if (option[0].equals("ouvrir")) {
                     cl.show(mainPanel, "OpenPanel");
                 }
             });
@@ -60,14 +69,20 @@ public class Home extends JPanel{
         blankDocumentPanel.add(titleLabel, BorderLayout.NORTH);
 
         JPanel documentButtonPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        JButton documentButton = new JButton("Document");
+        JButton documentButton = new JButton();
+        ImageIcon icondoc = new ImageIcon("src/assets/new.png");
 
         documentButton.addActionListener(openDocument);
         documentButtonPanel.add(documentButton);
         blankDocumentPanel.add(documentButtonPanel, BorderLayout.WEST);
+        documentButton.setIcon(icondoc);
+        documentButton.setBorderPainted(false);
+        documentButton.setFocusPainted(false);
+        documentButton.setContentAreaFilled(false);
 
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         JButton recentButton = new JButton("Récent");
+
         JButton pinnedButton = new JButton("Épinglé");
         buttonPanel.add(recentButton);
         buttonPanel.add(pinnedButton);
@@ -92,6 +107,7 @@ public class Home extends JPanel{
         openPanel.add(scrollPane, BorderLayout.CENTER);
 
         JButton openFileButton = new JButton("Ouvrir un fichier");
+        ImageIcon iconopen = new ImageIcon("src/assets/ouvrir.png");
         openFileButton.addActionListener(e -> {
             JFileChooser fileChooser = new JFileChooser();
             int returnValue = fileChooser.showOpenDialog(null);
@@ -100,6 +116,12 @@ public class Home extends JPanel{
                 JOptionPane.showMessageDialog(null, "Fichier ouvert : " + selectedFile.getName());
             }
         });
+
+        openFileButton.setIcon(iconopen);
+        openFileButton.setBorderPainted(false);
+        openFileButton.setFocusPainted(false);
+        openFileButton.setContentAreaFilled(false);
+
 
         openPanel.add(openFileButton, BorderLayout.SOUTH);
         loadFiles(listModel);
