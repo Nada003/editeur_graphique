@@ -1,8 +1,9 @@
 package utils.custom_list;
 
+import java.io.Serializable;
 import java.util.LinkedList;
 
-public class WatchedList<T> {
+public class WatchedList<T> implements Serializable {
     private int oldSize = 0;
     private final LinkedList<T> list = new LinkedList<>();
     private final LinkedList<ListListener> listListeners = new LinkedList<>();

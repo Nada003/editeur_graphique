@@ -3,6 +3,7 @@ package ui.main_app.main_topmenu;
 import ui.custom_graphics.uml_components.text_and_comments.CommentRender;
 import ui.main_app.history.UserAction;
 import ui.main_app.main_board.MainBoard;
+import utils.CommentClickedHandel;
 import utils.custom_list.WatchedList;
 
 import javax.swing.*;
@@ -32,14 +33,7 @@ public class TopToolBar extends JToolBar {
                 @Override
                 public void focusLost(FocusEvent f) {
                     var label = new CommentRender(textField.getText());
-                    label.setClickListener(new MouseAdapter() {
-                        @Override
-                        public void mouseClicked(MouseEvent e) {
-                            super.mouseClicked(e);
-                            board.setSelectedComment(label);
-                        }
-                    });
-                    label.setHeight(30);
+                    label.setClickListener(new CommentClickedHandel(board,label));
                     label.setPositionX(e.getX());
                     label.setPositionY(e.getY());
                     board.components.addElement(label);

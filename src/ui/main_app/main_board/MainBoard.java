@@ -18,7 +18,7 @@ public class MainBoard extends JPanel implements ListListener {
     private boolean showGrid = false;
     private CommentRender selectedComment ;
 
-    private class PanelDropListener extends DropTargetAdapter {
+    private static class PanelDropListener extends DropTargetAdapter {
         private final MainBoard targetPanel;
 
         public PanelDropListener(MainBoard targetPanel) {
@@ -36,10 +36,13 @@ public class MainBoard extends JPanel implements ListListener {
                 Point dropPoint = dtde.getLocation();
                 dropPoint.translate(-draggedPanel.getWidth() / 2, -draggedPanel.getHeight() / 2);
 
+                if (draggedPanel instanceof CommentRender obj) targetPanel.setSelectedComment(obj);
                 draggedPanel.setLocation(dropPoint);
                 targetPanel.components.removeElement(draggedPanel);
                 targetPanel.components.addElement(draggedPanel);
                 targetPanel.repaint(); // Ensure repaint after drop
+
+                System.out.println("new position : " + dropPoint);
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
@@ -92,6 +95,9 @@ public class MainBoard extends JPanel implements ListListener {
     }
 
     public void setSelectedComment(CommentRender selectedComment) {
+        if (this.selectedComment != null)
+            this.selectedComment.setSelected(false);
+        selectedComment.setSelected(true);
         this.selectedComment = selectedComment;
     }
 

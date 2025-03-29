@@ -17,7 +17,10 @@ public class TextUtils {
 
     public static int getTextWidth(Graphics g ,String text, Font font) {
         FontMetrics metrics = g.getFontMetrics(font);
-        int textWidth = metrics.stringWidth(text);
-        return textWidth;
+        return metrics.stringWidth(text);
+    }
+    public static int getTextHight(Graphics g , Font font) {
+        FontMetrics metrics = g.getFontMetrics(font);
+        return metrics.getHeight();
     }
 }

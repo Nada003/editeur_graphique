@@ -1,10 +1,14 @@
 package ui.custom_graphics.uml_components.text_and_comments;
 
 import ui.custom_graphics.uml_components.UMLComponent;
+import utils.CommentClickedHandel;
+import utils.SerializableStroke;
 import utils.TextUtils;
 
+import javax.swing.*;
+import javax.swing.border.Border;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class CommentRender extends UMLComponent {
     private Color textColor = Color.BLACK;
@@ -13,11 +17,14 @@ public class CommentRender extends UMLComponent {
     private boolean isUnderline = false;
     private String fontFamily = "Arial";
     private int currentFontSize = 14;
-    private String value;
+    private final String value;
+    private boolean isSelected = false;
+    private CommentClickedHandel mouseAdapter ;
 
 
     public CommentRender(String value){
         this.value = value;
+        super.setHeight(30);
     }
 
     @Override
@@ -33,12 +40,12 @@ public class CommentRender extends UMLComponent {
         g2.setFont(font);
         g2.setColor(textColor);
 
-        g2.drawString(value,2, 20);
+        g2.drawString(value,10, 20);
         if (isUnderline) {
-            g2.drawLine(2, 22, TextUtils.getTextWidth(g,value,font),  22);
+            g2.drawLine(13, 22, TextUtils.getTextWidth(g,value,font)+6,  22);
         }
 
-        super.setWidth((int) TextUtils.getTextWidth(g,value,font)+4);
+        super.setWidth(TextUtils.getTextWidth(g,value,font) + 20);
 
     }
 
@@ -90,8 +97,31 @@ public class CommentRender extends UMLComponent {
         return currentFontSize;
     }
 
-    public void setClickListener(MouseAdapter mouseAdapter) {
-        this.addMouseListener(mouseAdapter);
+    public void setClickListener(CommentClickedHandel mouseAdapter) {
+        this.mouseAdapter = mouseAdapter;
+    }
 
+    public void setSelected(boolean selected) {
+        isSelected = selected;
+        if (selected) {
+            float[] dashPattern = {10, 5}; // 10px dash, 5px gap
+            Border dashedBorder = BorderFactory.createStrokeBorder(
+                    new SerializableStroke(2, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 1, dashPattern, 0),
+                    Color.BLACK
+            );
+            this.setBorder(dashedBorder);
+        }else {
+            this.setBorder(null);
+        }
+    }
+
+    @Override
+    public void mouseClicked(MouseEvent e) {
+        super.mouseClicked(e);
+        mouseAdapter.mouseClicked(e);
+    }
+
+    public CommentClickedHandel getMouseAdapter() {
+        return mouseAdapter;
     }
 }

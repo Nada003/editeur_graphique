@@ -21,7 +21,6 @@ public abstract class UMLComponent extends JPanel implements MouseListener, Drag
     private DragSource dragSource;
     private UMLComponent instance;
 
-
     protected UMLComponent() {
         positionX += count * 20;
         positionY += count * 20;
@@ -81,6 +80,7 @@ public abstract class UMLComponent extends JPanel implements MouseListener, Drag
     public void setPositionX(int positionX) {
         this.positionX = positionX;
         this.setBounds(positionX, positionY, width, height);
+        System.out.println("x" +positionX);
     }
 
     public int getPositionY() {
@@ -90,6 +90,8 @@ public abstract class UMLComponent extends JPanel implements MouseListener, Drag
     public void setPositionY(int positionY) {
         this.positionY = positionY;
         this.setBounds(positionX, positionY, width, height);
+        System.out.println("y" +positionY);
+
     }
 
     @Override
@@ -158,8 +160,8 @@ public abstract class UMLComponent extends JPanel implements MouseListener, Drag
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        if (e.getButton() != 3) return;
-        UMLComponentParamPopup popup = new UMLComponentParamPopup();
+        if (e.getButton() == 3)
+            new UMLComponentParamPopup();
     }
 
     @Override
@@ -180,6 +182,13 @@ public abstract class UMLComponent extends JPanel implements MouseListener, Drag
     @Override
     public void mouseExited(MouseEvent e) {
 
+    }
+
+    @Override
+    public void setLocation(Point p) {
+        super.setLocation(p);
+        this.positionY = p.y;
+        this.positionX = p.x;
     }
 }
 
