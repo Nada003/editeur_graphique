@@ -28,7 +28,7 @@ public class ClassRender extends UMLComponent {
         Rectangle innerBorder = new Rectangle(outerBorer.x + 5, outerBorer.y + 5, ((int) outerBorer.getWidth()) - 10, 25);
         graphics2D.draw(innerBorder);
 
-        Rectangle innerBorderAtt = new Rectangle(outerBorer.x + 5, innerBorder.height + innerBorder.y + 5, (int) outerBorer.getWidth() - 10, model.att.length == 0 ? 25 : model.att.length * 25);
+        Rectangle innerBorderAtt = new Rectangle(outerBorer.x + 5, innerBorder.height + innerBorder.y + 5, (int) outerBorer.getWidth() - 10, model.att.length == 0 ? 25 :  model.att.length * 25);
         graphics2D.draw(innerBorderAtt);
 
         Rectangle innerBorderFunctions = new Rectangle(outerBorer.x + 5, innerBorderAtt.height + innerBorderAtt.y + 5, (int) outerBorer.getWidth() - 10, model.functions.length == 0 ? 25 : model.functions.length * 25);
@@ -36,66 +36,41 @@ public class ClassRender extends UMLComponent {
 
         graphics2D.drawString(model.name, (int) ((10 + innerBorder.getWidth() - model.name.length()) / 2), innerBorder.y + 18);
 
-        // ✅ Afficher le nom de la classe
+
         graphics2D.drawString(model.name, (int) ((10 + innerBorder.getWidth() - model.name.length()) / 2), innerBorder.y + 18);
 
-        // ✅ Afficher les attributs (chaque attribut sur une ligne)
-        int yOffset = innerBorderAtt.y + 18;
+
+        int yOffset = innerBorderAtt.y + 20;
         for (String attribute : model.att) {
-            graphics2D.drawString(attribute, innerBorderAtt.x + 20, yOffset);
-            yOffset += 20; // Décalage vers le bas pour chaque attribut
+            graphics2D.drawString(attribute, innerBorderAtt.x + 3, yOffset);
+
         }
 
-        // ✅ Afficher les fonctions (chaque fonction sur une ligne)
-        yOffset = innerBorderFunctions.y + 18;
+
+        yOffset = innerBorderFunctions.y + 20;
         for (String function : model.functions) {
-            graphics2D.drawString(function, innerBorderFunctions.x + 20, yOffset);
-            yOffset += 20; // Décalage vers le bas pour chaque fonction
+            graphics2D.drawString(function, innerBorderFunctions.x + 3, yOffset);
+
         }
 
 
 
-        var t1 = new Thread(() -> {
-            for (int i = 0; i < model.att.length; i++)
-                graphics2D.drawString(model.att[i], innerBorderAtt.x + 20, innerBorderAtt.y + 18 * (i + 1));
-        });
 
-        var t2 = new Thread(() -> {
-            for (int i = 0; i < model.functions.length; i++)
-                graphics2D.drawString(model.functions[i], innerBorderFunctions.x + 20, innerBorderFunctions.y + 18 * (i + 1));
-        });
-
-        t1.start();
-        t2.start();
-
-        try {
-            t1.join();
-            t2.join();
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
     }
 
     @Override
     public void mouseClicked(MouseEvent e) {
         if (e.getButton() == MouseEvent.BUTTON3) { // Right-click to open popup
             new UMLComponentParamPopup((className, data) -> {
-
-                String attributes = data[0];
-                String functions = data[1];
-
-
-                String[] attArray = attributes.isEmpty() ? new String[]{} : attributes.split(",");
-                String[] funcArray = functions.isEmpty() ? new String[]{} : functions.split(",");
+                String[] attArray = data.length > 0 && !data[0].isEmpty() ? data[0].split(",") : new String[]{};
+                String[] funcArray = data.length > 1 && !data[1].isEmpty() ? data[1].split(",") : new String[]{};
 
 
                 model.name = className;
                 model.att = attArray;
                 model.functions = funcArray;
 
-
-                elements = 3 + (model.att.length == 0 ? 0 : model.att.length - 1) +
-                        (model.functions.length == 0 ? 0 : model.functions.length - 1);
+                elements = 3 + attArray.length + funcArray.length;
                 setHeight(32 * elements + 8);
 
 

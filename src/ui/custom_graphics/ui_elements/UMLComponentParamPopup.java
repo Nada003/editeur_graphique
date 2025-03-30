@@ -2,22 +2,23 @@ package ui.custom_graphics.ui_elements;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionAdapter;
+import java.awt.event.*;
 import java.util.function.BiConsumer;
 
 public class UMLComponentParamPopup extends JDialog {
     private JTextField nameField;
-    private JTextArea attributesField;
-    private JTextArea functionsField;
+    private JTextField attributeCountField;
+    private JTextField functionCountField;
+    private JPanel attributesPanel;
+    private JPanel functionsPanel;
     private final BiConsumer<String, String[]> callback;
+    private int mouseX, mouseY;
 
-    public UMLComponentParamPopup(BiConsumer<String, String[]> callback, String currentName, String[] currentAttributes, String[] currentFunctions) {
+    public UMLComponentParamPopup(BiConsumer<String, String[]> callback, String currentName, String[] att, String[] functions) {
         super((Frame) null, "Edit UML Component", true);
         this.callback = callback;
 
-        this.setMinimumSize(new Dimension(500, 300));
+        this.setMinimumSize(new Dimension(500, 400));
         this.setLocationRelativeTo(null);
         this.setResizable(false);
         this.setUndecorated(true);
@@ -25,8 +26,7 @@ public class UMLComponentParamPopup extends JDialog {
 
         JPanel titleBar = createTitleBar();
         this.add(titleBar, BorderLayout.NORTH);
-        this.add(getMainPopupView(currentName, currentAttributes, currentFunctions), BorderLayout.CENTER);
-
+        this.add(getMainPopupView(currentName), BorderLayout.CENTER);
         this.setVisible(true);
     }
 
@@ -47,85 +47,110 @@ public class UMLComponentParamPopup extends JDialog {
         closeButton.addActionListener(e -> this.dispose());
         titleBar.add(closeButton, BorderLayout.EAST);
 
-        enableDragging(this, titleBar);
+        titleBar.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                mouseX = e.getX();
+                mouseY = e.getY();
+            }
+        });
+
+        titleBar.addMouseMotionListener(new MouseMotionAdapter() {
+            @Override
+            public void mouseDragged(MouseEvent e) {
+                int x = getLocation().x + e.getX() - mouseX;
+                int y = getLocation().y + e.getY() - mouseY;
+                setLocation(x, y);
+            }
+        });
+
         return titleBar;
     }
 
-    private JPanel getMainPopupView(String currentName, String[] currentAttributes, String[] currentFunctions) {
-        JPanel main = new JPanel(new GridBagLayout());
+    private JPanel getMainPopupView(String currentName) {
+        JPanel main = new JPanel();
+        main.setLayout(new BoxLayout(main, BoxLayout.Y_AXIS));
         main.setBackground(Color.WHITE);
-        GridBagConstraints c = new GridBagConstraints();
-        c.insets = new Insets(8, 10, 8, 10);
-        c.fill = GridBagConstraints.HORIZONTAL;
-        c.weightx = 1.0;
 
         nameField = new JTextField(currentName, 20);
-        attributesField = new JTextArea(String.join(",", currentAttributes), 3, 20);
-        functionsField = new JTextArea(String.join(",", currentFunctions), 3, 20);
+        attributeCountField = new JTextField(5);
+        functionCountField = new JTextField(5);
+        attributesPanel = new JPanel();
+        functionsPanel = new JPanel();
+        attributesPanel.setLayout(new GridLayout(0, 1));
+        functionsPanel.setLayout(new GridLayout(0, 1));
 
-        attributesField.setBorder(BorderFactory.createLineBorder(Color.GRAY));
-        functionsField.setBorder(BorderFactory.createLineBorder(Color.GRAY));
+        JScrollPane attributesScrollPane = new JScrollPane(attributesPanel);
+        attributesScrollPane.setPreferredSize(new Dimension(450, 100));
+        JScrollPane functionsScrollPane = new JScrollPane(functionsPanel);
+        functionsScrollPane.setPreferredSize(new Dimension(450, 100));
 
-        addLabeledComponent(main, "Class Name:", nameField, c, 0);
-        addLabeledComponent(main, "Attributes:", new JScrollPane(attributesField), c, 1);
-        addLabeledComponent(main, "Functions:", new JScrollPane(functionsField), c, 2);
+        JButton generateFieldsButton = new JButton("Generate Fields");
+        generateFieldsButton.addActionListener(e -> generateFields());
+
+        main.add(new JLabel("Class Name:"));
+        main.add(nameField);
+        main.add(new JLabel("Number of Attributes:"));
+        main.add(attributeCountField);
+        main.add(new JLabel("Number of Functions:"));
+        main.add(functionCountField);
+        main.add(generateFieldsButton);
+        main.add(new JLabel("Attributes:"));
+        main.add(attributesScrollPane);
+        main.add(new JLabel("Functions:"));
+        main.add(functionsScrollPane);
 
         JButton saveButton = new JButton("Save");
         saveButton.setBackground(new Color(0, 150, 0));
         saveButton.setForeground(Color.WHITE);
-        saveButton.setBorder(BorderFactory.createEmptyBorder(5, 15, 5, 15));
         saveButton.addActionListener(e -> saveData());
-
-        c.gridx = 1; c.gridy = 3;
-        c.anchor = GridBagConstraints.EAST;
-        main.add(saveButton, c);
+        main.add(saveButton);
 
         return main;
     }
 
-    private void addLabeledComponent(JPanel panel, String labelText, Component component, GridBagConstraints c, int y) {
-        c.gridx = 0; c.gridy = y;
-        panel.add(new JLabel(labelText), c);
-        c.gridx = 1;
-        panel.add(component, c);
+    private void generateFields() {
+        try {
+            int attributeCount = Integer.parseInt(attributeCountField.getText().trim());
+            int functionCount = Integer.parseInt(functionCountField.getText().trim());
+
+            attributesPanel.removeAll();
+            functionsPanel.removeAll();
+
+            for (int i = 0; i < attributeCount; i++) {
+                attributesPanel.add(new JTextField(20));
+            }
+            for (int i = 0; i < functionCount; i++) {
+                functionsPanel.add(new JTextField(20));
+            }
+
+            attributesPanel.revalidate();
+            attributesPanel.repaint();
+            functionsPanel.revalidate();
+            functionsPanel.repaint();
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "Please enter valid numbers", "Error", JOptionPane.ERROR_MESSAGE);
+        }
     }
 
     private void saveData() {
         String className = nameField.getText().trim();
-        String attributes = attributesField.getText().trim();
-        String functions = functionsField.getText().trim();
-
         if (className.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Class name cannot be empty", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
 
-        callback.accept(className, new String[]{attributes, functions});
+        String[] attributes = getTextFromFields(attributesPanel);
+        String[] functions = getTextFromFields(functionsPanel);
+
+        callback.accept(className, new String[]{String.join("\n", attributes), String.join("\n", functions)});
         this.dispose();
     }
 
-    private static void enableDragging(JDialog dialog, JPanel titleBar) {
-        final Point[] mouseDownCompCoords = {null};
-
-        titleBar.addMouseListener(new MouseAdapter() {
-            public void mousePressed(MouseEvent e) {
-                mouseDownCompCoords[0] = e.getPoint();
-            }
-        });
-
-        titleBar.addMouseMotionListener(new MouseMotionAdapter() {
-            public void mouseDragged(MouseEvent e) {
-                Point currCoords = e.getLocationOnScreen();
-                dialog.setLocation(currCoords.x - mouseDownCompCoords[0].x, currCoords.y - mouseDownCompCoords[0].y);
-            }
-        });
-    }
-
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new UMLComponentParamPopup((name, data) -> {
-            System.out.println("Saved Class: " + name);
-            System.out.println("Attributes: " + data[0]);
-            System.out.println("Functions: " + data[1]);
-        }, "ExampleClass", new String[]{"att1", "att2"}, new String[]{"func1", "func2"}));
+    private String[] getTextFromFields(JPanel panel) {
+        return java.util.Arrays.stream(panel.getComponents())
+                .filter(c -> c instanceof JTextField)
+                .map(c -> ((JTextField) c).getText().trim())
+                .toArray(String[]::new);
     }
 }

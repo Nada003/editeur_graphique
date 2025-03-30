@@ -23,7 +23,7 @@ public class InterfaceRender extends UMLComponent {
         super.paintComponent(g);
         Graphics2D graphics2D = (Graphics2D) g;
 
-       final String str = "<interface>";
+
 
         Rectangle outerBorer = new Rectangle(4,4, super.getWidth()-10,(32) * (elements-1) + 50);
         graphics2D.draw(outerBorer);
@@ -40,7 +40,7 @@ public class InterfaceRender extends UMLComponent {
 
         graphics2D.drawString(model.name, (int) ((10+innerBorder.getWidth()-getTextWidth(model.name))/2),innerBorder.y+25);
 
-        graphics2D.drawString(str, (int) ((10+innerBorder.getWidth()-getTextWidth(str))/2),innerBorder.y+9);
+
 
 
 
