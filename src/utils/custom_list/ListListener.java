@@ -1,5 +1,7 @@
 package utils.custom_list;
 
-public interface ListListener {
+import java.io.Serializable;
+
+public interface ListListener extends Serializable {
    void notifyListChanged();
 }

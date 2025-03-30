@@ -46,7 +46,7 @@ public class MainPanel extends JPanel implements MenuExpandingListener {
         menu.setBounds(0, 0, FIXED_PANEL_WIDTH + (menu.isExpanded() ? DYNAMIC_PANEL_WIDTH : 0), 600);
         layeredPane.add(menu, JLayeredPane.PALETTE_LAYER);
 
-        layeredPane.addComponentListener(new ComponentAdapter() {
+        layeredPane.getParent().addComponentListener(new ComponentAdapter() {
             @Override
             public void componentResized(ComponentEvent e) {
                 int width = layeredPane.getWidth();

@@ -18,7 +18,6 @@ public class CommentRender extends UMLComponent {
     private String fontFamily = "Arial";
     private int currentFontSize = 14;
     private final String value;
-    private boolean isSelected = false;
     private CommentClickedHandel mouseAdapter ;
 
 
@@ -102,7 +101,7 @@ public class CommentRender extends UMLComponent {
     }
 
     public void setSelected(boolean selected) {
-        isSelected = selected;
+        super.setSelected( selected);
         if (selected) {
             float[] dashPattern = {10, 5}; // 10px dash, 5px gap
             Border dashedBorder = BorderFactory.createStrokeBorder(

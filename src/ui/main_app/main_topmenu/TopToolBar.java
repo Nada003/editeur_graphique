@@ -36,14 +36,12 @@ public class TopToolBar extends JToolBar {
                     label.setClickListener(new CommentClickedHandel(board,label));
                     label.setPositionX(e.getX());
                     label.setPositionY(e.getY());
+                    mainFlow.addElement(new UserAction("ajouter text \""+textField.getText()+"\"",label));
                     board.components.addElement(label);
                     board.remove(textField);
-                    board.revalidate();
-                    board.repaint();
                 }
             });
             board.add(textField);
-            board.repaint();
             textField.requestFocus();
 
 
@@ -108,7 +106,6 @@ public class TopToolBar extends JToolBar {
             assert selectedSize != null;
             int fontSize = Integer.parseInt(selectedSize.replace("pt", ""));
             selecedComment.setFontSize(fontSize);
-            selecedComment.repaint();
         });
         // Action pour le choix des couleurs
         colorButton.addActionListener(e -> {
@@ -136,21 +133,18 @@ public class TopToolBar extends JToolBar {
             CommentRender selecedComment =  board.getSelectedComment();
             if (selecedComment == null) return;
             selecedComment.toggleBold();
-            selecedComment.repaint();
         });
 
         italicButton.addActionListener(e -> {
             CommentRender selecedComment =  board.getSelectedComment();
             if (selecedComment == null) return;
             selecedComment.toggleItalic();
-            selecedComment.repaint();
         });
 
         underlineButton.addActionListener(e -> {
             CommentRender selecedComment =  board.getSelectedComment();
             if (selecedComment == null) return;
             selecedComment.toggleUnderline();
-            selecedComment.repaint();
         });
 
         // Appliquer la police sélectionnée

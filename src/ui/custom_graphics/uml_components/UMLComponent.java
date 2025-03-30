@@ -12,21 +12,29 @@ import java.awt.dnd.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.IOException;
+import java.util.LinkedList;
 
 public abstract class UMLComponent extends JPanel implements MouseListener, DragGestureListener {
     private static int count = 0;
+
     private int Id;
     private Color colorStroke = Color.BLACK, backgroundColor = Color.white;
-    private int positionX = 400, positionY = 25, height = 110, width = 210;
+    private int rotation = 0, positionX = 400, positionY = 25, height = 110, width = 210;
+    private boolean selected ;
 
-    private DragSource dragSource;
-    private UMLComponent instance;
+    private final LinkedList<UMLComponentMovementListener> listeners = new LinkedList<>();
+
+    private final DragSource dragSource;
+    private final UMLComponent instance;
 
     protected UMLComponent() {
+        setCursor(new Cursor(Cursor.HAND_CURSOR)); // Changes to hand cursor
+
         positionX += count * 20;
         positionY += count * 20;
         this.setBounds(positionX, positionY, width, height);
         this.addMouseListener(this);
+        setFocusable(true);
         this.Id = count;
         increaseCount();
 
@@ -81,7 +89,7 @@ public abstract class UMLComponent extends JPanel implements MouseListener, Drag
     public void setPositionX(int positionX) {
         this.positionX = positionX;
         this.setBounds(positionX, positionY, width, height);
-        System.out.println("x" +positionX);
+        notifyAllListeners();
     }
 
     public int getPositionY() {
@@ -91,8 +99,7 @@ public abstract class UMLComponent extends JPanel implements MouseListener, Drag
     public void setPositionY(int positionY) {
         this.positionY = positionY;
         this.setBounds(positionX, positionY, width, height);
-        System.out.println("y" +positionY);
-
+        notifyAllListeners();
     }
 
     @Override
@@ -188,8 +195,8 @@ public abstract class UMLComponent extends JPanel implements MouseListener, Drag
     @Override
     public void setLocation(Point p) {
         super.setLocation(p);
-        this.positionY = p.y;
-        this.positionX = p.x;
+        this.setPositionY(p.y);
+        this.setPositionX(p.x);
     }
 
 
@@ -212,6 +219,36 @@ public abstract class UMLComponent extends JPanel implements MouseListener, Drag
 
     private static Point getLastPoint(UMLComponent c){
         return new Point( c.getPositionX()+c.getWidth() ,c.getPositionY()+c.getHeight()  );
+    }
+
+
+    public boolean isSelected() {
+        return selected;
+    }
+
+    public void setSelected(boolean selected) {
+        this.selected = selected;
+    }
+
+    public int getRotation() {
+        return rotation;
+    }
+
+    public void setRotation(int rotation) {
+        this.rotation = rotation;
+    }
+
+    public void addListener(UMLComponentMovementListener l){
+        if (! listeners.contains(l))
+            listeners.add(l);
+    }
+    public void removeListener(UMLComponentMovementListener l){
+        listeners.add(l);
+    }
+
+    public void notifyAllListeners(){
+        for (var v : listeners)
+            v.componentMoved();
     }
 }
 

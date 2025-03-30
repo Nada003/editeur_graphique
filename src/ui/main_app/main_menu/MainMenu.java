@@ -101,7 +101,6 @@ public class MainMenu extends JPanel {
         notifyListeners();
         updateSize();
         revalidate(); // Important to revalidate after changing visibility
-        repaint();    // Important to repaint the component
     }
 
     private void setAllDynamicPanelsVisibility(boolean isVisible) {
@@ -144,6 +143,5 @@ public class MainMenu extends JPanel {
     public void setHeight(int height) {
         MainMenu.height = height;
         revalidate();
-        repaint();
     }
 }
