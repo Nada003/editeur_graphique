@@ -166,11 +166,6 @@ public abstract class UMLComponent extends JPanel implements MouseListener, Drag
 
     }
 
-    @Override
-    public void mouseClicked(MouseEvent e) {
-        if (e.getButton() == 3)
-            new UMLComponentParamPopup();
-    }
 
     @Override
     public void mousePressed(MouseEvent e) {
