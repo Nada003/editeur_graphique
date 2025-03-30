@@ -24,13 +24,15 @@ public class MainBoard extends JPanel implements UMLComponentMovementListener {
     private final Set<Integer> pressedKeys = new HashSet<>(); // Stores currently pressed keys
     private final int MOVE_AMOUNT = 5; // Default move step
     private Timer movementTimer;
+    private JScrollPane scrollPane;
 
     private boolean showGrid = false;
     private CommentRender selectedComment ;
     private Rectangle selectionRect = new Rectangle();
     private Point startPoint;
 
-   
+
+
     private static class PanelDropListener extends DropTargetAdapter {
         private final MainBoard targetPanel;
 
@@ -62,7 +64,7 @@ public class MainBoard extends JPanel implements UMLComponentMovementListener {
         }
     }
 
-    public MainBoard(WatchedList<UMLComponent> components) {
+    public MainBoard( WatchedList<UMLComponent> components) {
         this.setFocusable(true);
         this.components = components;
         components.addListener(this::notifyComponentsListChanged);
@@ -117,6 +119,7 @@ public class MainBoard extends JPanel implements UMLComponentMovementListener {
     }
 
     public void paintAll() {
+        if (components.getList().isEmpty()) return;
         for (var m : components.getList()) {
             if (!checkChild(m)) {
                 this.add(m);
@@ -239,10 +242,12 @@ public class MainBoard extends JPanel implements UMLComponentMovementListener {
     }
 
     @Override
-    public void componentMoved() {
+    public void componentMoved(UMLComponent c) {
+        moveViewPort(c);
+
         Point[] extremePoints = UMLComponent.getExtremePoints(this.components);
         if (this.getHeight() <= extremePoints[1].y && this.getWidth() <= extremePoints[1].x) {
-            // get more space vertical
+            // get more space
             this.setPreferredSize(new Dimension((int) (extremePoints[1].x*1.2), (int) (extremePoints[1].y*1.2)));
         }
         else
@@ -257,6 +262,39 @@ public class MainBoard extends JPanel implements UMLComponentMovementListener {
 
         revalidate();
         repaint();
+    }
+
+    private void moveViewPort(UMLComponent c) {
+        JViewport viewport = scrollPane.getViewport();
+        viewport.setBackground(Color.BLUE);
+
+        Point viewPos = viewport.getViewPosition();
+        int viewRight = viewPos.x + scrollPane.getWidth();
+        int viewBottom = viewPos.y + scrollPane.getHeight();
+        int componentRight = c.getPositionX() + c.getWidth()+20;
+        int componentBottom = c.getPositionY() + c.getHeight()+20;
+
+        int newX = viewPos.x;
+        int newY = viewPos.y;
+
+        // Move viewport horizontally if needed
+        if (viewRight < componentRight) {
+            newX += viewport.getX() + MOVE_AMOUNT-3;
+        }
+
+        // Move viewport vertically if needed
+        if (viewBottom < componentBottom) {
+            newY += viewport.getY() +MOVE_AMOUNT-3;
+        }
+
+        // Update viewport position if changed
+        if (newX != viewPos.x || newY != viewPos.y) {
+            viewport.setViewPosition(new Point(newX, newY));
+        }
+    }
+
+    public void setScrollPane(JScrollPane scrollPane) {
+        this.scrollPane = scrollPane;
     }
 
 }

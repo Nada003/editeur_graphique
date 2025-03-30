@@ -31,14 +31,15 @@ public class MainPanel extends JPanel implements MenuExpandingListener {
         board = new MainBoard(components);
         board.setPreferredSize(new Dimension(1800, 1600));
 
-
         // Scroll pane
         scrollPane = new JScrollPane(board,
                 JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
                 JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
         scrollPane.setBounds(0, 0, 400, 600);
-
+        board.setScrollPane(scrollPane);
         layeredPane.add(scrollPane, JLayeredPane.DEFAULT_LAYER);
+
+
 
         // Initialize menu
         menu = new MainMenu(components, mainFlow, undoFlow);

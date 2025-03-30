@@ -243,7 +243,7 @@ public abstract class UMLComponent extends JPanel implements MouseListener, Drag
 
     public void notifyAllListeners(){
         for (var v : listeners)
-            v.componentMoved();
+            v.componentMoved(this);
     }
 }
 
