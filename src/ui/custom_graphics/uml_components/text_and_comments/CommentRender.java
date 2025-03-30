@@ -116,7 +116,6 @@ public class CommentRender extends UMLComponent {
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        super.mouseClicked(e);
         mouseAdapter.mouseClicked(e);
     }
 

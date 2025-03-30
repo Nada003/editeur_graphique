@@ -3,6 +3,7 @@ package ui.custom_graphics.uml_components.connect_components.aggregations;
 import ui.custom_graphics.uml_components.UMLComponent;
 
 import java.awt.*;
+import java.awt.event.MouseEvent;
 
 public class AggregationRender extends UMLComponent {
 
@@ -38,6 +39,11 @@ public class AggregationRender extends UMLComponent {
 
         g2d.setColor(Color.black);
         g2d.drawPolygon(xPoints, yPoints, 4);
+    }
+
+    @Override
+    public void mouseClicked(MouseEvent e) {
+
     }
 }
 

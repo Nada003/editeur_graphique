@@ -3,6 +3,7 @@ package ui.custom_graphics.uml_components.connect_components.generalization;
 import ui.custom_graphics.uml_components.UMLComponent;
 
 import java.awt.*;
+import java.awt.event.MouseEvent;
 
 public class GeneralizationRender extends UMLComponent {
 
@@ -47,5 +48,10 @@ public class GeneralizationRender extends UMLComponent {
 
         g2d.drawLine(x2, y2, x3, y3);
         g2d.drawLine(x2, y2, x4, y4);
+    }
+
+    @Override
+    public void mouseClicked(MouseEvent e) {
+
     }
 }

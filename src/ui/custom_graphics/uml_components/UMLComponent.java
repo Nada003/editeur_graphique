@@ -30,8 +30,8 @@ public abstract class UMLComponent extends JPanel implements MouseListener, Drag
     protected UMLComponent() {
         setCursor(new Cursor(Cursor.HAND_CURSOR)); // Changes to hand cursor
 
-        positionX += count * 20;
-        positionY += count * 20;
+        positionX = 400 + (int) (Math.random() * width);
+        positionY = 10 + (int) (Math.random() * height);
         this.setBounds(positionX, positionY, width, height);
         this.addMouseListener(this);
         setFocusable(true);
@@ -166,11 +166,6 @@ public abstract class UMLComponent extends JPanel implements MouseListener, Drag
 
     }
 
-    @Override
-    public void mouseClicked(MouseEvent e) {
-        if (e.getButton() == 3)
-            new UMLComponentParamPopup();
-    }
 
     @Override
     public void mousePressed(MouseEvent e) {

@@ -3,6 +3,7 @@ package ui.custom_graphics.uml_components.use_case_diagrame.use_case;
 import ui.custom_graphics.uml_components.UMLComponent;
 
 import java.awt.*;
+import java.awt.event.MouseEvent;
 
 import static utils.TextUtils.getTextWidth;
 
@@ -31,6 +32,11 @@ public class UseCaseRender extends UMLComponent {
 
         graphics2D.drawString(model.scenario,(getWidth()-getTextWidth(model.scenario))/2, getHeight()/2);
 
+
+    }
+
+    @Override
+    public void mouseClicked(MouseEvent e) {
 
     }
 }
