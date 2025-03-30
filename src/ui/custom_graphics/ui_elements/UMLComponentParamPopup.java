@@ -17,70 +17,59 @@ public class UMLComponentParamPopup extends JDialog {
         super((Frame) null, "Edit UML Component", true);
         this.callback = callback;
 
-        this.setMinimumSize(new Dimension(600, 300));
+        this.setMinimumSize(new Dimension(500, 300));
         this.setLocationRelativeTo(null);
         this.setResizable(false);
         this.setUndecorated(true);
         this.setLayout(new BorderLayout());
 
-        JPanel titleBar = new JPanel();
-        titleBar.setBackground(Color.DARK_GRAY);
-        titleBar.setLayout(new FlowLayout(FlowLayout.RIGHT));
+        JPanel titleBar = createTitleBar();
+        this.add(titleBar, BorderLayout.NORTH);
+        this.add(getMainPopupView(currentName, currentAttributes, currentFunctions), BorderLayout.CENTER);
+
+        this.setVisible(true);
+    }
+
+    private JPanel createTitleBar() {
+        JPanel titleBar = new JPanel(new BorderLayout());
+        titleBar.setBackground(new Color(50, 50, 50));
+        titleBar.setPreferredSize(new Dimension(getWidth(), 30));
+
+        JLabel titleLabel = new JLabel(" Edit UML Component ");
+        titleLabel.setForeground(Color.WHITE);
+        titleBar.add(titleLabel, BorderLayout.WEST);
 
         JButton closeButton = new JButton("✖");
         closeButton.setFocusable(false);
         closeButton.setForeground(Color.WHITE);
-        closeButton.setBackground(Color.RED);
+        closeButton.setBackground(new Color(200, 50, 50));
         closeButton.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
         closeButton.addActionListener(e -> this.dispose());
-        titleBar.add(closeButton);
+        titleBar.add(closeButton, BorderLayout.EAST);
 
         enableDragging(this, titleBar);
-
-        this.add(titleBar, BorderLayout.NORTH);
-        this.add(getMainPopupView(currentName, currentAttributes, currentFunctions), BorderLayout.CENTER);
-        this.setVisible(true);
+        return titleBar;
     }
 
     private JPanel getMainPopupView(String currentName, String[] currentAttributes, String[] currentFunctions) {
         JPanel main = new JPanel(new GridBagLayout());
         main.setBackground(Color.WHITE);
-
         GridBagConstraints c = new GridBagConstraints();
-        c.insets = new Insets(5, 10, 5, 10);
+        c.insets = new Insets(8, 10, 8, 10);
         c.fill = GridBagConstraints.HORIZONTAL;
         c.weightx = 1.0;
 
-        // Class Name Field
-        c.gridx = 0; c.gridy = 0;
-        main.add(new JLabel("Class Name:"), c);
+        nameField = new JTextField(currentName, 20);
+        attributesField = new JTextArea(String.join(",", currentAttributes), 3, 20);
+        functionsField = new JTextArea(String.join(",", currentFunctions), 3, 20);
 
-        nameField = new JTextField(20);
-        nameField.setText(currentName);
-        c.gridx = 1;
-        main.add(nameField, c);
-
-        // Attributes Field
-        c.gridx = 0; c.gridy = 1;
-        main.add(new JLabel("Attributes:"), c);
-
-        attributesField = new JTextArea(3, 20);
-        attributesField.setText(String.join(",", currentAttributes));
         attributesField.setBorder(BorderFactory.createLineBorder(Color.GRAY));
-        c.gridx = 1;
-        main.add(new JScrollPane(attributesField), c);
-
-        // Functions Field
-        c.gridx = 0; c.gridy = 2;
-        main.add(new JLabel("Functions:"), c);
-
-        functionsField = new JTextArea(3, 20);
-        functionsField.setText(String.join(",", currentFunctions));
         functionsField.setBorder(BorderFactory.createLineBorder(Color.GRAY));
-        c.gridx = 1;
-        main.add(new JScrollPane(functionsField), c);
 
-        // Save Button
+        addLabeledComponent(main, "Class Name:", nameField, c, 0);
+        addLabeledComponent(main, "Attributes:", new JScrollPane(attributesField), c, 1);
+        addLabeledComponent(main, "Functions:", new JScrollPane(functionsField), c, 2);
+
         JButton saveButton = new JButton("Save");
         saveButton.setBackground(new Color(0, 150, 0));
         saveButton.setForeground(Color.WHITE);
@@ -94,6 +83,13 @@ public class UMLComponentParamPopup extends JDialog {
         return main;
     }
 
+    private void addLabeledComponent(JPanel panel, String labelText, Component component, GridBagConstraints c, int y) {
+        c.gridx = 0; c.gridy = y;
+        panel.add(new JLabel(labelText), c);
+        c.gridx = 1;
+        panel.add(component, c);
+    }
+
     private void saveData() {
         String className = nameField.getText().trim();
         String attributes = attributesField.getText().trim();
@@ -104,14 +100,7 @@ public class UMLComponentParamPopup extends JDialog {
             return;
         }
 
-
-        String[] attArray = attributes.isEmpty() ? new String[]{} : attributes.split(",");
-        String[] funcArray = functions.isEmpty() ? new String[]{} : functions.split(",");
-
-
-        callback.accept(className, new String[]{String.join(",", attArray), String.join(",", funcArray)});
-
-        // Close the dialog
+        callback.accept(className, new String[]{attributes, functions});
         this.dispose();
     }
 
