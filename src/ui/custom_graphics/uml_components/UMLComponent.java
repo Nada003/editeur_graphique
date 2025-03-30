@@ -1,6 +1,7 @@
 package ui.custom_graphics.uml_components;
 
 import ui.custom_graphics.ui_elements.UMLComponentParamPopup;
+import utils.custom_list.WatchedList;
 
 import javax.swing.*;
 import java.awt.*;
@@ -16,7 +17,7 @@ public abstract class UMLComponent extends JPanel implements MouseListener, Drag
     private static int count = 0;
     private int Id;
     private Color colorStroke = Color.BLACK, backgroundColor = Color.white;
-    private int positionX = 25, positionY = 25, height = 110, width = 210;
+    private int positionX = 400, positionY = 25, height = 110, width = 210;
 
     private DragSource dragSource;
     private UMLComponent instance;
@@ -189,6 +190,28 @@ public abstract class UMLComponent extends JPanel implements MouseListener, Drag
         super.setLocation(p);
         this.positionY = p.y;
         this.positionX = p.x;
+    }
+
+
+    public static Point[] getExtremePoints(WatchedList<UMLComponent> components){
+        int maxX = 0 , maxY = 0, minX = 0, minY = 0;
+        for (var c : components.getList()){
+            if(maxX < getLastPoint(c).x )
+                maxX = getLastPoint(c).x;
+            else if (minX > c.getPositionX())
+                minX = c.getPositionX();
+
+            if(maxY < getLastPoint(c).y )
+                maxY = getLastPoint(c).y;
+            else if (minY > c.getPositionY())
+                minY = c.getPositionY();
+        }
+
+        return new Point[]{new Point(minX,minY) , new Point(maxX,maxY)};
+    }
+
+    private static Point getLastPoint(UMLComponent c){
+        return new Point( c.getPositionX()+c.getWidth() ,c.getPositionY()+c.getHeight()  );
     }
 }
 

@@ -40,7 +40,26 @@ public class MainBoard extends JPanel implements ListListener {
                 draggedPanel.setLocation(dropPoint);
                 targetPanel.components.removeElement(draggedPanel);
                 targetPanel.components.addElement(draggedPanel);
+
+                Point[] extremePoints = UMLComponent.getExtremePoints(targetPanel.components);
+                var v = targetPanel.getParent().getWidth();
+                if (targetPanel.getHeight() < extremePoints[1].y && targetPanel.getWidth() < extremePoints[1].x) {
+                    // get more space vertical
+                    targetPanel.setPreferredSize(new Dimension((int) (extremePoints[1].x*1.2), (int) (extremePoints[1].y*1.2)));
+                }
+                else
+                if (targetPanel.getHeight() < extremePoints[1].y) {
+                    // get more space vertical
+                    targetPanel.setPreferredSize(new Dimension(targetPanel.getWidth(), (int) (extremePoints[1].y*1.2)));
+                } else
+                if (targetPanel.getWidth() < extremePoints[1].x) {
+                    // get more space horizontal
+                    targetPanel.setPreferredSize(new Dimension((int) (extremePoints[1].x*1.2),targetPanel.getHeight()));
+                }
+
+                targetPanel.revalidate();
                 targetPanel.repaint(); // Ensure repaint after drop
+                targetPanel.getParent().repaint();
 
                 System.out.println("new position : " + dropPoint);
             } catch (Exception ex) {
@@ -51,6 +70,7 @@ public class MainBoard extends JPanel implements ListListener {
 
     public MainBoard(WatchedList<UMLComponent> components) {
         this.components = components;
+
         setLayout(null);
         setBackground(Color.WHITE);
         components.addListener(this);

@@ -21,6 +21,7 @@ public class MainMenu extends JPanel {
     public static final int FIXED_PANEL_WIDTH = 50;
     public static final int DYNAMIC_PANEL_WIDTH = 300;
     private static final int BUTTON_HEIGHT = 50;
+    public static int height = Integer.MAX_VALUE;
 
     private final WatchedList<UserAction> mainFlow;
     private final WatchedList<UserAction> undoFlow;
@@ -35,8 +36,12 @@ public class MainMenu extends JPanel {
         setPanelSize(fixedMenu, FIXED_PANEL_WIDTH);
 
         dynamicMenu = new DynamicMenu(components, mainFlow);
+        dynamicMenu.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY, 1));
         dynamicPanelConnect = new DynamicPanelConnect(components, mainFlow);
+        dynamicPanelConnect.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY, 1));
         dynamicPanelContainers = new DynamicPanelContainers(components, mainFlow);
+        dynamicPanelContainers.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY, 1));
+
 
         // Set panel sizes
         setPanelSize(dynamicMenu, DYNAMIC_PANEL_WIDTH);
@@ -106,13 +111,13 @@ public class MainMenu extends JPanel {
     }
 
     private void setPanelSize(JPanel panel, int width) {
-        panel.setMaximumSize(new Dimension(width, Short.MAX_VALUE));
-        panel.setPreferredSize(new Dimension(width, Short.MAX_VALUE));
-        panel.setMinimumSize(new Dimension(width, Short.MAX_VALUE));
+        panel.setMaximumSize(new Dimension(width, height));
+        panel.setPreferredSize(new Dimension(width, height));
+        panel.setMinimumSize(new Dimension(width, height));
     }
 
     private void updateSize() {
-        this.setPreferredSize(new Dimension(FIXED_PANEL_WIDTH + (isExpanded() ? DYNAMIC_PANEL_WIDTH : 0), Integer.MAX_VALUE));
+        this.setPreferredSize(new Dimension(FIXED_PANEL_WIDTH + (isExpanded() ? DYNAMIC_PANEL_WIDTH : 0), height));
         revalidate(); // Notify layout manager to re-layout components
     }
 
@@ -134,5 +139,11 @@ public class MainMenu extends JPanel {
     public void notifyListeners(){
         for (var v : listeners)
             v.doAction();
+    }
+
+    public void setHeight(int height) {
+        MainMenu.height = height;
+        revalidate();
+        repaint();
     }
 }
