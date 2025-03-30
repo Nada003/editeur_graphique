@@ -3,6 +3,7 @@ package ui.custom_graphics.uml_components.class_diagram.interfaces;
 import ui.custom_graphics.uml_components.UMLComponent;
 
 import java.awt.*;
+import java.awt.event.MouseEvent;
 
 import static utils.TextUtils.getTextWidth;
 
@@ -62,5 +63,11 @@ public class InterfaceRender extends UMLComponent {
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
+
+    }
+
+    @Override
+    public void mouseClicked(MouseEvent e) {
+
     }
 }
