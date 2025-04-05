@@ -16,7 +16,7 @@ import java.io.File;
 public class Application extends JFrame implements ListListener {
     private static final WatchedList<UMLComponent> components = new WatchedList<>();
     // Piles pour l'historique des actions
-    private static final WatchedList<UserAction> mainFlow = new WatchedList<>();
+    public static final WatchedList<UserAction> mainFlow = new WatchedList<>();
     private static final WatchedList<UserAction> undoFlow = new WatchedList<>();
     private static File currentFile;
     private JPanel main;

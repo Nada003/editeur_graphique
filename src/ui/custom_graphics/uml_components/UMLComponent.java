@@ -1,6 +1,5 @@
 package ui.custom_graphics.uml_components;
 
-import ui.custom_graphics.ui_elements.UMLComponentParamPopup;
 import utils.custom_list.WatchedList;
 
 import javax.swing.*;
@@ -12,9 +11,10 @@ import java.awt.dnd.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.LinkedList;
 
-public abstract class UMLComponent extends JPanel implements MouseListener, DragGestureListener {
+public abstract class UMLComponent extends JPanel implements MouseListener, DragGestureListener, Serializable {
     private static int count = 0;
 
     private int Id;
@@ -22,7 +22,7 @@ public abstract class UMLComponent extends JPanel implements MouseListener, Drag
     private int rotation = 0, positionX = 400, positionY = 25, height = 110, width = 210;
     private boolean selected ;
 
-    private final LinkedList<UMLComponentMovementListener> listeners = new LinkedList<>();
+    public final LinkedList<UMLComponentMovementListener> listeners = new LinkedList<>();
 
     private final DragSource dragSource;
     private final UMLComponent instance;
@@ -244,6 +244,11 @@ public abstract class UMLComponent extends JPanel implements MouseListener, Drag
     public void notifyAllListeners(){
         for (var v : listeners)
             v.componentMoved(this);
+    }
+
+    @Override
+    public String toString() {
+        return this.getClass() + "[x : " +positionX + ", y : " + positionY + ", width: " + width + ", height : " + height+"]";
     }
 }
 

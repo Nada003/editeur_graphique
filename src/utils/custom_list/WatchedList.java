@@ -5,7 +5,7 @@ import java.util.LinkedList;
 
 public class WatchedList<T> implements Serializable {
     private int oldSize = 0;
-    private LinkedList<T> list = new LinkedList<>();
+    private final LinkedList<T> list = new LinkedList<>();
     private final LinkedList<ListListener> listListeners = new LinkedList<>();
     public synchronized void addElement(T element){
         if (!list.contains(element)) {
@@ -45,7 +45,15 @@ public class WatchedList<T> implements Serializable {
     }
 
     public void removeAll() {
-        list = new LinkedList<>();
+        list.clear();
+        notifyAllListeners();
+    }
+
+    public void reAdd(T element) {
+        synchronized (list){
+            list.remove(element);
+            list.add(element);
+        }
         notifyAllListeners();
     }
 }

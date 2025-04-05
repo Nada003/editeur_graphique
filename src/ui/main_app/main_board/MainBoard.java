@@ -2,7 +2,10 @@ package ui.main_app.main_board;
 
 import ui.custom_graphics.uml_components.UMLComponent;
 import ui.custom_graphics.uml_components.UMLComponentMovementListener;
+import ui.custom_graphics.uml_components.connect_components.Relation;
+import ui.custom_graphics.uml_components.connect_components.RelationPoint;
 import ui.custom_graphics.uml_components.text_and_comments.CommentRender;
+import ui.main_app.history.UserAction;
 import utils.custom_list.WatchedList;
 
 import javax.swing.*;
@@ -16,7 +19,10 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.Set;
+
+import static ui.main_app.Application.mainFlow;
 
 public class MainBoard extends JPanel implements UMLComponentMovementListener {
     public final WatchedList<UMLComponent> components;
@@ -30,6 +36,9 @@ public class MainBoard extends JPanel implements UMLComponentMovementListener {
     private CommentRender selectedComment ;
     private Rectangle selectionRect = new Rectangle();
     private Point startPoint;
+
+    private static Relation relation;
+    private static UMLComponent clickedComponent;
 
 
 
@@ -51,16 +60,63 @@ public class MainBoard extends JPanel implements UMLComponentMovementListener {
                 Point dropPoint = dtde.getLocation();
                 dropPoint.translate(-draggedPanel.getWidth() / 2, -draggedPanel.getHeight() / 2);
 
+                draggedPanel.listeners.clear();
                 targetPanel.components.removeElement(draggedPanel);
                 targetPanel.components.addElement(draggedPanel);
+                updateRelationPoints(targetPanel.components,draggedPanel);
                 draggedPanel.setLocation(dropPoint);
+                if (draggedPanel instanceof RelationPoint obj) {
+                    updateRelations(obj,targetPanel.components);
+                }
 
+                if (draggedPanel.isSelected()){
+                    targetPanel.selectedComponents.removeElement(draggedPanel);
+                    targetPanel.selectedComponents.addElement(draggedPanel);
+                }
                
 
                 if (draggedPanel instanceof CommentRender obj) targetPanel.setSelectedComment(obj);
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
+        }
+
+        private void updateRelations(RelationPoint relationPoint, WatchedList<UMLComponent> components) {
+            Relation r1 = null ,r2 = null;
+            relationPoint.listeners.clear();
+            for (var v : components.getList()){
+                if (v instanceof Relation obj) {
+                    if (obj.getStart().equals(relationPoint)) {
+                        r1 = obj;
+                        relationPoint.addListener(obj);
+                    } else if (obj.getEnd().equals(relationPoint)) {
+                        r2 = obj;
+                        relationPoint.addListener(obj);
+                    }
+                }
+
+            }
+
+
+            assert r1 != null;
+            r1.setStart(relationPoint);
+            r1.setEnd(r1.getEnd());
+            assert r2 != null;
+            r2.setEnd(relationPoint);
+        }
+
+        private void updateRelationPoints(WatchedList<UMLComponent> list, UMLComponent draggedPanel) {
+            var temp = new LinkedList<UMLComponent>();
+            for (UMLComponent component : list.getList()) {
+                if (component instanceof RelationPoint obj && obj.belongTO != null  && obj.belongTO.equals(draggedPanel)) {
+                    obj.setBelongsTo(draggedPanel);
+                    temp.add(obj);
+                }
+            }
+
+           for (var v : temp)
+                list.reAdd(v);
+
         }
     }
 
@@ -107,23 +163,49 @@ public class MainBoard extends JPanel implements UMLComponentMovementListener {
         KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(e -> {
             synchronized (pressedKeys) {
                 if (e.getID() == KeyEvent.KEY_PRESSED) {
-                    pressedKeys.add(e.getKeyCode());
-                    startMovementTimer();  // Start movement when a key is pressed
+                    if (pressedKeys.add(e.getKeyCode())) { // Only add & start if not already pressed
+                        startMovementTimer();
+                    }
                 } else if (e.getID() == KeyEvent.KEY_RELEASED) {
                     pressedKeys.remove(e.getKeyCode());
-                    if (pressedKeys.isEmpty()) stopMovementTimer(); // Stop when no keys are pressed
+                    if (pressedKeys.isEmpty()) {
+                        stopMovementTimer();
+                    }
                 }
             }
             return false; // Allow normal key processing
         });
+
     }
 
     public void paintAll() {
         if (components.getList().isEmpty()) return;
         for (var m : components.getList()) {
             if (!checkChild(m)) {
-                this.add(m);
+                this.add(m,0);
                 m.addListener(this);
+                if (! (m instanceof RelationPoint))
+                    m.addMouseListener(new MouseAdapter() {
+                        @Override
+                        public synchronized void mouseClicked(MouseEvent e) {
+                            super.mouseClicked(e);
+                            if (relation == null) return;
+                            clickedComponent = m;
+                            RelationPoint model = new RelationPoint(m);
+                            if (relation.getStart() == null){
+                                relation.setStart(model);
+                                components.addElement(model);
+                                mainFlow.addElement(new UserAction("Ajouter point",model));
+
+                            }else if (relation.getStart().belongTO != m && relation.getEnd() == null){
+                                relation.setEnd(model);
+                                components.addElement(model);
+                                components.addElement(relation);
+                                mainFlow.addElement(new UserAction("Ajouter point",model));
+
+                            }
+                        }
+                    });
             }
         }
     }
@@ -193,7 +275,7 @@ public class MainBoard extends JPanel implements UMLComponentMovementListener {
         repaint();
     }
 
-    public void notifySelectedComponentsListChanged(){
+    public synchronized void notifySelectedComponentsListChanged(){
         if (selectedComponents.getList().isEmpty()) return;
         UMLComponent umlComponent = selectedComponents.getList().getLast();
         umlComponent.setSelected(true);
@@ -203,7 +285,7 @@ public class MainBoard extends JPanel implements UMLComponentMovementListener {
     private void selectObjects(){
         unselect();
         for (var com : components.getList()) {
-            if ((com.getPositionX() >= selectionRect.x && com.getWidth() <= selectionRect.width) && (com.getPositionY() >= selectionRect.y && com.getHeight() <= selectionRect.height))
+            if ((com.getPositionX()+5 > selectionRect.x && com.getPositionX()+ com.getWidth()+5 <  selectionRect.x +  selectionRect.width) && (com.getPositionY()+5 > selectionRect.y && com.getPositionY()+ com.getHeight()+5 < selectionRect.y + selectionRect.height))
                 selectedComponents.addElement(com);
         }
     }
@@ -238,7 +320,15 @@ public class MainBoard extends JPanel implements UMLComponentMovementListener {
 
         // Move diagonally if two direction keys are pressed
         for (var panel : selectedComponents.getList())
-            panel.setLocation(new Point(panel.getPositionX() + dx,panel.getPositionY() + dy));
+            if (!(panel instanceof RelationPoint) && !(panel instanceof Relation))
+                panel.setLocation(new Point(panel.getPositionX() + dx,panel.getPositionY() + dy));
+            else if ( (panel instanceof RelationPoint) && ((RelationPoint) panel).belongTO == null)
+                panel.setLocation(new Point(panel.getPositionX() + dx,panel.getPositionY() + dy));
+            else if ( ((panel instanceof RelationPoint) && ! ((RelationPoint)panel).belongTO.isSelected()) || (panel instanceof Relation))
+                panel.setLocation(new Point(panel.getPositionX() + dx/MOVE_AMOUNT,panel.getPositionY() + dy/MOVE_AMOUNT));
+
+
+
     }
 
     @Override
@@ -297,4 +387,11 @@ public class MainBoard extends JPanel implements UMLComponentMovementListener {
         this.scrollPane = scrollPane;
     }
 
+    public static Relation getRelation() {
+        return relation;
+    }
+
+    public static void setRelation(Relation relation) {
+        MainBoard.relation = relation;
+    }
 }

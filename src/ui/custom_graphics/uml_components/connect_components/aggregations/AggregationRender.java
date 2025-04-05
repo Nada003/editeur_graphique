@@ -1,11 +1,12 @@
 package ui.custom_graphics.uml_components.connect_components.aggregations;
 
 import ui.custom_graphics.uml_components.UMLComponent;
+import ui.custom_graphics.uml_components.connect_components.DrawingSpecification;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
 
-public class AggregationRender extends UMLComponent {
+public class AggregationRender extends UMLComponent implements DrawingSpecification {
 
     AggregationModel model;
 
@@ -44,6 +45,24 @@ public class AggregationRender extends UMLComponent {
     @Override
     public void mouseClicked(MouseEvent e) {
 
+    }
+
+    @Override
+    public void drawHead( Graphics2D graphics2D, Point ... point) {
+        int size = 20;
+        int[] xPoints = {point[0].x, point[0].x - size, point[0].x, point[0].x + size};
+        int[] yPoints = {point[0].y - size / 2, point[0].y, point[0].y + size / 2, point[0].y};
+
+        graphics2D.setColor(Color.white);
+        graphics2D.fillPolygon(xPoints, yPoints, 4);
+
+        graphics2D.setColor(Color.black);
+        graphics2D.drawPolygon(xPoints, yPoints, 4);
+    }
+
+    @Override
+    public Graphics2D lineStyle() {
+        return null;
     }
 }
 

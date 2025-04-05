@@ -1,6 +1,7 @@
 package ui.main_app.main_menu;
 
 import ui.custom_graphics.uml_components.UMLComponent;
+import ui.custom_graphics.uml_components.connect_components.Relation;
 import ui.custom_graphics.uml_components.connect_components.aggregations.AggregationModel;
 import ui.custom_graphics.uml_components.connect_components.aggregations.AggregationRender;
 import ui.custom_graphics.uml_components.connect_components.associations.AssociationModel;
@@ -8,6 +9,7 @@ import ui.custom_graphics.uml_components.connect_components.associations.Associa
 import ui.custom_graphics.uml_components.connect_components.generalization.GeneralizationModel;
 import ui.custom_graphics.uml_components.connect_components.generalization.GeneralizationRender;
 import ui.main_app.history.UserAction;
+import ui.main_app.main_board.MainBoard;
 import utils.custom_list.WatchedList;
 
 import javax.swing.*;
@@ -50,8 +52,10 @@ public class DynamicPanelConnect extends JPanel {
         generalizationButton.addActionListener(e -> {
             GeneralizationModel model = new GeneralizationModel("");
             GeneralizationRender generalization = new GeneralizationRender(model);
-            mainFlow.addElement(new UserAction("Ajouter genralization",generalization)); //save to user action
-            components.addElement(generalization);
+            //mainFlow.addElement(new UserAction("Ajouter genralization",generalization)); //save to user action
+            //components.addElement(generalization);
+            MainBoard.setRelation(new Relation(generalization ,components));
+
         });
 
         aggregationButton.addActionListener(e -> {
