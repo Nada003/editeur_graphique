@@ -122,4 +122,8 @@ public class CommentRender extends UMLComponent {
     public CommentClickedHandel getMouseAdapter() {
         return mouseAdapter;
     }
+
+    public boolean isUnderlined() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
 }

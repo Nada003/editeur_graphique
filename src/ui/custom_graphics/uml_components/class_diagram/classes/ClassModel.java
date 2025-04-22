@@ -12,4 +12,16 @@ public class ClassModel implements UMLModel {
         this.att = att;
         this.functions = functions;
     }
+
+    public void setEnum(boolean b) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    public void setAbstract(boolean b) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    public void setInterface(boolean b) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
 }

@@ -7,30 +7,103 @@ import ui.main_app.history.UserAction;
 import utils.custom_list.WatchedList;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class DynamicMenu extends JPanel {
-    ImageIcon icon = new ImageIcon("src/assets/containers2.png");
+    // Modern color scheme
+    private static final Color PRIMARY_COLOR = new Color(66, 133, 244);  // Blue
+    private static final Color SECONDARY_COLOR = new Color(241, 243, 244);  // Light gray
+    private static final Color HOVER_COLOR = new Color(232, 240, 254);  // Light blue
+    private static final Color BORDER_COLOR = new Color(218, 220, 224);  // Border gray
+    private static final Color TEXT_COLOR = new Color(60, 64, 67);  // Dark gray
 
-    JButton buttonClass = new JButton();
-    public DynamicMenu(WatchedList<UMLComponent> components, WatchedList<UserAction> mainFlow){
+    private final JButton buttonClass;
+   
 
-        buttonClass.setFocusPainted(false);
-        buttonClass.setBorderPainted(false);
-        buttonClass.setContentAreaFilled(false);
-        buttonClass.setIcon(new ImageIcon(icon.getImage().getScaledInstance(40, 40,Image.SCALE_SMOOTH)));
-        buttonClass.setToolTipText("Class");
+    public DynamicMenu(WatchedList<UMLComponent> components, WatchedList<UserAction> mainFlow) {
+        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+        setBackground(Color.WHITE);
+        setBorder(new EmptyBorder(15, 10, 15, 10));
+
+        // Create title label
+        JLabel titleLabel = new JLabel("Class Diagram Elements");
+        titleLabel.setFont(new Font("Segoe UI", Font.BOLD, 16));
+        titleLabel.setForeground(TEXT_COLOR);
+        titleLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
+        titleLabel.setBorder(new EmptyBorder(0, 5, 15, 5));
+        add(titleLabel);
+
+        // Create buttons for class diagram elements
+        buttonClass = createElementButton("Class", "src/assets/containers2.png",
+            "Add a standard class to your diagram");
+    
+        // Add buttons to panel with spacing
+        add(buttonClass);
+        add(Box.createRigidArea(new Dimension(0, 10)));
+        
+
+        // Add action listeners
         buttonClass.addActionListener(e -> {
-            ClassModel model = new ClassModel("", new String[]{}, new String[]{});
+            ClassModel model = new ClassModel("New Class", new String[]{}, new String[]{});
             ClassRender render = new ClassRender(model);
-            mainFlow.addElement(new UserAction("Ajouter une class",render)); //save to user action
+            mainFlow.addElement(new UserAction("Add class", render));
             components.addElement(render);
         });
-        buttonClass.setFocusPainted(false);
-        buttonClass.setBorderPainted(false);
-        buttonClass.setContentAreaFilled(false);
-        buttonClass.setIcon(new ImageIcon(icon.getImage().getScaledInstance(40, 40,Image.SCALE_SMOOTH)));
-        buttonClass.setToolTipText("Class");
-       this.add(buttonClass);
+
+    }
+
+    private JButton createElementButton(String text, String iconPath, String tooltip) {
+        JButton button = new JButton(text);
+        button.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        button.setForeground(TEXT_COLOR);
+        button.setAlignmentX(Component.LEFT_ALIGNMENT);
+        button.setMaximumSize(new Dimension(Integer.MAX_VALUE, 40));
+        button.setFocusPainted(false);
+        button.setBorderPainted(true);
+        button.setBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createLineBorder(BORDER_COLOR),
+            new EmptyBorder(8, 12, 8, 12)
+        ));
+        button.setToolTipText(tooltip);
+        button.setBackground(Color.WHITE);
+        button.setHorizontalAlignment(SwingConstants.LEFT);
+
+        // Try to load icon
+        try {
+            ImageIcon originalIcon = new ImageIcon(iconPath);
+            Image scaledImage = originalIcon.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH);
+            button.setIcon(new ImageIcon(scaledImage));
+            button.setIconTextGap(10);
+        } catch (Exception e) {
+            // If icon fails to load, continue without it
+        }
+
+        // Add hover effect
+        button.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                button.setBackground(HOVER_COLOR);
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                button.setBackground(Color.WHITE);
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+                button.setBackground(SECONDARY_COLOR);
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                button.setBackground(HOVER_COLOR);
+            }
+        });
+
+        return button;
     }
 }

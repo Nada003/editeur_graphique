@@ -5,12 +5,25 @@ import ui.main_app.history.UserAction;
 import utils.custom_list.WatchedList;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
+import javax.swing.border.MatteBorder;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.LinkedList;
 
 public class MainMenu extends JPanel {
+    // Modern color scheme
+    private static final Color PRIMARY_COLOR = new Color(66, 133, 244);  // Blue
+    private static final Color SECONDARY_COLOR = new Color(241, 243, 244);  // Light gray
+    private static final Color HOVER_COLOR = new Color(232, 240, 254);  // Light blue
+    private static final Color SELECTED_COLOR = new Color(209, 231, 252);  // Selected blue
+    private static final Color BORDER_COLOR = new Color(218, 220, 224);  // Border gray
+    private static final Color TEXT_COLOR = new Color(60, 64, 67);  // Dark gray
+    private static final Color ICON_COLOR = new Color(95, 99, 104);  // Icon gray
+
     private static final LinkedList<MenuExpandingListener> listeners = new LinkedList<>();
-    private final JButton hideButton;
+    private final JButton classButton;
     private final JButton connectButton;
     private final JButton containersButton;
 
@@ -18,9 +31,9 @@ public class MainMenu extends JPanel {
     private final JPanel dynamicPanelConnect;
     private final JPanel dynamicPanelContainers;
 
-    public static final int FIXED_PANEL_WIDTH = 50;
+    public static final int FIXED_PANEL_WIDTH = 60;
     public static final int DYNAMIC_PANEL_WIDTH = 300;
-    private static final int BUTTON_HEIGHT = 50;
+    private static final int BUTTON_HEIGHT = 60;
     public static int height = Integer.MAX_VALUE;
 
     private final WatchedList<UserAction> mainFlow;
@@ -31,40 +44,46 @@ public class MainMenu extends JPanel {
 
         // Creating and configuring fixed menu panel
         JPanel fixedMenu = new JPanel();
-        fixedMenu.setBackground(Color.WHITE);
-        fixedMenu.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY, 2));
+        fixedMenu.setBackground(SECONDARY_COLOR);
+        fixedMenu.setBorder(new MatteBorder(0, 0, 0, 1, BORDER_COLOR));
         setPanelSize(fixedMenu, FIXED_PANEL_WIDTH);
 
         dynamicMenu = new DynamicMenu(components, mainFlow);
-        dynamicMenu.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY, 1));
-        dynamicPanelConnect = new DynamicPanelConnect(components, mainFlow);
-        dynamicPanelConnect.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY, 1));
-        dynamicPanelContainers = new DynamicPanelContainers(components, mainFlow);
-        dynamicPanelContainers.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY, 1));
+        dynamicMenu.setBorder(new MatteBorder(0, 0, 0, 1, BORDER_COLOR));
+        dynamicMenu.setBackground(Color.WHITE);
 
+        dynamicPanelConnect = new DynamicPanelConnect(components, mainFlow);
+        dynamicPanelConnect.setBorder(new MatteBorder(0, 0, 0, 1, BORDER_COLOR));
+        dynamicPanelConnect.setBackground(Color.WHITE);
+
+        dynamicPanelContainers = new DynamicPanelContainers(components, mainFlow);
+        dynamicPanelContainers.setBorder(new MatteBorder(0, 0, 0, 1, BORDER_COLOR));
+        dynamicPanelContainers.setBackground(Color.WHITE);
 
         // Set panel sizes
         setPanelSize(dynamicMenu, DYNAMIC_PANEL_WIDTH);
         setPanelSize(dynamicPanelConnect, DYNAMIC_PANEL_WIDTH);
         setPanelSize(dynamicPanelContainers, DYNAMIC_PANEL_WIDTH);
 
-        // Initialize buttons with their sizes and tooltips
-        hideButton = createButton("src/assets/containers2.png", "class");
-        connectButton = createButton("src/assets/connect_components.png", "Connectors");
-        containersButton = createButton("src/assets/shapes.png", "Containers");
+        // Initialize buttons with modern icons and styling
+        classButton = createModernButton("Class Diagrams", "src/assets/containers2.png", "Create and manage class diagrams");
+        connectButton = createModernButton("Connectors", "src/assets/connect_components.png", "Add relationships between elements");
+        containersButton = createModernButton("Containers", "src/assets/shapes.png", "Add container elements to your diagram");
 
-        // Adding buttons to the fixed menu
+        // Adding buttons to the fixed menu with better spacing
         fixedMenu.setLayout(new BoxLayout(fixedMenu, BoxLayout.Y_AXIS));
-        fixedMenu.add(hideButton);
-        fixedMenu.add(Box.createVerticalStrut(30));
+        fixedMenu.add(Box.createVerticalStrut(15));
+        fixedMenu.add(classButton);
+        fixedMenu.add(Box.createVerticalStrut(15));
         fixedMenu.add(connectButton);
-        fixedMenu.add(Box.createVerticalStrut(30));
+        fixedMenu.add(Box.createVerticalStrut(15));
         fixedMenu.add(containersButton);
+        fixedMenu.add(Box.createVerticalGlue());
 
-        // Add action listeners to buttons
-        hideButton.addActionListener(e -> togglePanel(dynamicMenu));
-        connectButton.addActionListener(e -> togglePanel(dynamicPanelConnect));
-        containersButton.addActionListener(e -> togglePanel(dynamicPanelContainers));
+        // Add action listeners to buttons with visual feedback
+        classButton.addActionListener(e -> togglePanel(dynamicMenu, classButton));
+        connectButton.addActionListener(e -> togglePanel(dynamicPanelConnect, connectButton));
+        containersButton.addActionListener(e -> togglePanel(dynamicPanelContainers, containersButton));
 
         // Adding panels to the main interface
         this.add(fixedMenu);
@@ -77,30 +96,85 @@ public class MainMenu extends JPanel {
 
         // Set all dynamic panels to be initially invisible
         setAllDynamicPanelsVisibility(false);
+        resetButtonStyles();
     }
 
-    private JButton createButton(String iconPath, String tooltip) {
+    private JButton createModernButton(String tooltip, String iconPath, String description) {
         JButton button = new JButton();
         button.setFocusPainted(false);
         button.setBorderPainted(false);
         button.setContentAreaFilled(false);
-        button.setIcon(new ImageIcon(new ImageIcon(iconPath)
-                .getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH)));
-        button.setToolTipText(tooltip);
+
+        // Create a modern icon with consistent styling
+        try {
+            ImageIcon originalIcon = new ImageIcon(iconPath);
+            Image scaledImage = originalIcon.getImage().getScaledInstance(24, 24, Image.SCALE_SMOOTH);
+            button.setIcon(new ImageIcon(scaledImage));
+        } catch (Exception e) {
+            // Fallback if image not found
+            button.setText(tooltip.substring(0, 1));
+            button.setFont(new Font("Segoe UI", Font.BOLD, 16));
+            button.setForeground(PRIMARY_COLOR);
+        }
+
+        // Add tooltip with modern styling
+        button.setToolTipText("<html><b>" + tooltip + "</b><br>" + description + "</html>");
+
+        // Set button size
         setButtonSize(button, new Dimension(FIXED_PANEL_WIDTH, BUTTON_HEIGHT));
+
+        // Add hover effects
+        button.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                if (!Boolean.TRUE.equals(button.getClientProperty("selected"))) {
+                    button.setBackground(HOVER_COLOR);
+                    button.setContentAreaFilled(true);
+                }
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                if (!Boolean.TRUE.equals(button.getClientProperty("selected"))) {
+                    button.setContentAreaFilled(false);
+                }
+            }
+        });
+
         return button;
     }
 
-    private void togglePanel(JPanel panel) {
+    private void togglePanel(JPanel panel, JButton button) {
+        resetButtonStyles();
+
         if (panel.isVisible()) {
             panel.setVisible(false);
+            button.setContentAreaFilled(false);
+            button.putClientProperty("selected", false);
         } else {
             setAllDynamicPanelsVisibility(false);
             panel.setVisible(true);
+
+            // Highlight the selected button
+            button.setBackground(SELECTED_COLOR);
+            button.setContentAreaFilled(true);
+            button.putClientProperty("selected", true);
         }
+
         notifyListeners();
         updateSize();
-        revalidate(); // Important to revalidate after changing visibility
+        revalidate();
+    }
+
+    private void resetButtonStyles() {
+        classButton.setContentAreaFilled(false);
+        classButton.putClientProperty("selected", false);
+
+        connectButton.setContentAreaFilled(false);
+        connectButton.putClientProperty("selected", false);
+
+        containersButton.setContentAreaFilled(false);
+        containersButton.putClientProperty("selected", false);
     }
 
     private void setAllDynamicPanelsVisibility(boolean isVisible) {
@@ -117,7 +191,7 @@ public class MainMenu extends JPanel {
 
     private void updateSize() {
         this.setPreferredSize(new Dimension(FIXED_PANEL_WIDTH + (isExpanded() ? DYNAMIC_PANEL_WIDTH : 0), height));
-        revalidate(); // Notify layout manager to re-layout components
+        revalidate();
     }
 
     private void setButtonSize(JButton button, Dimension size) {
@@ -127,15 +201,15 @@ public class MainMenu extends JPanel {
     }
 
     public boolean isExpanded() {
-        return dynamicMenu.isVisible() || dynamicPanelConnect.isVisible() || dynamicPanelContainers.isVisible() ;
+        return dynamicMenu.isVisible() || dynamicPanelConnect.isVisible() || dynamicPanelContainers.isVisible();
     }
 
-    public void addListener(MenuExpandingListener listener){
-        if(!listeners.contains(listener))
+    public void addListener(MenuExpandingListener listener) {
+        if (!listeners.contains(listener))
             listeners.add(listener);
     }
 
-    public void notifyListeners(){
+    public void notifyListeners() {
         for (var v : listeners)
             v.doAction();
     }
