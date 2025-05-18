@@ -1,31 +1,35 @@
 package ui.main_app.main_menu;
 
+import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import ui.custom_graphics.uml_components.UMLComponent;
 import ui.custom_graphics.uml_components.connect_components.Relation;
 import ui.custom_graphics.uml_components.connect_components.aggregations.AggregationModel;
 import ui.custom_graphics.uml_components.connect_components.aggregations.AggregationRender;
 import ui.custom_graphics.uml_components.connect_components.associations.AssociationModel;
 import ui.custom_graphics.uml_components.connect_components.associations.AssociationRender;
+import ui.custom_graphics.uml_components.connect_components.composition.CompositionModel;
+import ui.custom_graphics.uml_components.connect_components.composition.CompositionRender;
+import ui.custom_graphics.uml_components.connect_components.dependency.DependencyModel;
+import ui.custom_graphics.uml_components.connect_components.dependency.DependencyRender;
 import ui.custom_graphics.uml_components.connect_components.generalization.GeneralizationModel;
 import ui.custom_graphics.uml_components.connect_components.generalization.GeneralizationRender;
+import ui.custom_graphics.uml_components.connect_components.realization.RealizationModel;
+import ui.custom_graphics.uml_components.connect_components.realization.RealizationRender;
 import ui.main_app.history.UserAction;
 import ui.main_app.main_board.MainBoard;
 import utils.custom_list.WatchedList;
 
-import javax.swing.*;
-import javax.swing.border.EmptyBorder;
-import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-
 public class DynamicPanelConnect extends JPanel {
-    // Modern color scheme
-    private static final Color PRIMARY_COLOR = new Color(66, 133, 244);  // Blue
-    private static final Color SECONDARY_COLOR = new Color(241, 243, 244);  // Light gray
-    private static final Color HOVER_COLOR = new Color(232, 240, 254);  // Light blue
-    private static final Color BORDER_COLOR = new Color(218, 220, 224);  // Border gray
-    private static final Color TEXT_COLOR = new Color(60, 64, 67);  // Dark gray
-    private static final Color ACTIVE_COLOR = new Color(209, 231, 252);  // Selected blue
+    private static final Color PRIMARY_COLOR = new Color(66, 133, 244);
+    private static final Color SECONDARY_COLOR = new Color(241, 243, 244);
+    private static final Color HOVER_COLOR = new Color(232, 240, 254);
+    private static final Color BORDER_COLOR = new Color(218, 220, 224);
+    private static final Color TEXT_COLOR = new Color(60, 64, 67);
+    private static final Color ACTIVE_COLOR = new Color(209, 231, 252);
 
     private final JButton associationButton;
     private final JButton generalizationButton;
@@ -39,7 +43,6 @@ public class DynamicPanelConnect extends JPanel {
         setBackground(Color.WHITE);
         setBorder(new EmptyBorder(15, 10, 15, 10));
 
-        // Create title label
         JLabel titleLabel = new JLabel("Relationship Types");
         titleLabel.setFont(new Font("Segoe UI", Font.BOLD, 16));
         titleLabel.setForeground(TEXT_COLOR);
@@ -47,32 +50,13 @@ public class DynamicPanelConnect extends JPanel {
         titleLabel.setBorder(new EmptyBorder(0, 5, 15, 5));
         add(titleLabel);
 
-        // Create relationship buttons with custom icons
-        associationButton = createRelationshipButton("Association",
-            "src/assets/association.png",
-            "Connect classes with a simple association");
+        associationButton = createRelationshipButton("Association", "src/assets/association.png", "Connect classes with a simple association");
+        generalizationButton = createRelationshipButton("Generalization", "src/assets/generalization.png", "Create inheritance relationships");
+        aggregationButton = createRelationshipButton("Aggregation", "src/assets/aggregation.png", "Create a 'has-a' relationship");
+        compositionButton = createRelationshipButton("Composition", "src/assets/composition.png", "Create a strong 'contains' relationship");
+        dependencyButton = createRelationshipButton("Dependency", "src/assets/dependency.png", "Create a 'uses' relationship");
+        realizationButton = createRelationshipButton("Realization", "src/assets/realization.png", "Connect class to interface implementation");
 
-        generalizationButton = createRelationshipButton("Generalization",
-            "src/assets/generalization(heritage).png",
-            "Create inheritance relationships");
-
-        aggregationButton = createRelationshipButton("Aggregation",
-            "src/assets/aggregation.png",
-            "Create a 'has-a' relationship");
-
-        compositionButton = createRelationshipButton("Composition",
-            "src/assets/composition.png",
-            "Create a strong 'contains' relationship");
-
-        dependencyButton = createRelationshipButton("Dependency",
-            "src/assets/dependency.png",
-            "Create a 'uses' relationship");
-
-        realizationButton = createRelationshipButton("Realization",
-            "src/assets/realization.png",
-            "Connect class to interface implementation");
-
-        // Add buttons to panel with spacing
         add(associationButton);
         add(Box.createRigidArea(new Dimension(0, 10)));
         add(generalizationButton);
@@ -86,75 +70,57 @@ public class DynamicPanelConnect extends JPanel {
         add(realizationButton);
         add(Box.createVerticalGlue());
 
-        // Add action listeners
         associationButton.addActionListener(e -> {
             resetButtonStates();
             associationButton.setBackground(ACTIVE_COLOR);
-
             AssociationModel model = new AssociationModel("");
-            AssociationRender association = new AssociationRender(model);
-            mainFlow.addElement(new UserAction("Add Association", association));
-            components.addElement(association);
+            AssociationRender render = new AssociationRender(model);
+            mainFlow.addElement(new UserAction("Add Association", render));
+            components.addElement(render);
         });
 
         generalizationButton.addActionListener(e -> {
             resetButtonStates();
             generalizationButton.setBackground(ACTIVE_COLOR);
-
             GeneralizationModel model = new GeneralizationModel("");
-            GeneralizationRender generalization = new GeneralizationRender(model);
-            MainBoard.setRelation(new Relation(generalization, components));
-
-           
+            GeneralizationRender render = new GeneralizationRender(model);
+            MainBoard.setRelation(new Relation(render, components));
         });
 
         aggregationButton.addActionListener(e -> {
             resetButtonStates();
             aggregationButton.setBackground(ACTIVE_COLOR);
-
             AggregationModel model = new AggregationModel("");
-            AggregationRender aggregation = new AggregationRender(model);
-            mainFlow.addElement(new UserAction("Add aggregation", aggregation));
-            components.addElement(aggregation);
+            AggregationRender render = new AggregationRender(model);
+            mainFlow.addElement(new UserAction("Add Aggregation", render));
+            components.addElement(render);
         });
 
         compositionButton.addActionListener(e -> {
             resetButtonStates();
             compositionButton.setBackground(ACTIVE_COLOR);
-
-            
-            JOptionPane.showMessageDialog(
-                this,
-                "Placeholder for composition - would need actual implementation",
-                "Create Composition",
-                JOptionPane.INFORMATION_MESSAGE
-            );
+            CompositionModel model = new CompositionModel("");
+            CompositionRender render = new CompositionRender(model);
+            mainFlow.addElement(new UserAction("Add Composition", render));
+            components.addElement(render);
         });
 
         dependencyButton.addActionListener(e -> {
             resetButtonStates();
             dependencyButton.setBackground(ACTIVE_COLOR);
-
-            
-            JOptionPane.showMessageDialog(
-                this,
-                "Placeholder for dependency - would need actual implementation",
-                "Create Dependency",
-                JOptionPane.INFORMATION_MESSAGE
-            );
+            DependencyModel model = new DependencyModel("");
+            DependencyRender render = new DependencyRender(model);
+            mainFlow.addElement(new UserAction("Add Dependency", render));
+            components.addElement(render);
         });
 
         realizationButton.addActionListener(e -> {
             resetButtonStates();
             realizationButton.setBackground(ACTIVE_COLOR);
-
-            
-            JOptionPane.showMessageDialog(
-                this,
-                " Placeholder for realization - would need actual implementation",
-                "Create Realization",
-                JOptionPane.INFORMATION_MESSAGE
-            );
+            RealizationModel model = new RealizationModel("");
+            RealizationRender render = new RealizationRender(model);
+            mainFlow.addElement(new UserAction("Add Realization", render));
+            components.addElement(render);
         });
     }
 
@@ -183,18 +149,15 @@ public class DynamicPanelConnect extends JPanel {
         button.setBackground(Color.WHITE);
         button.setHorizontalAlignment(SwingConstants.LEFT);
 
-        // Try to load icon
         try {
             ImageIcon originalIcon = new ImageIcon(iconPath);
             Image scaledImage = originalIcon.getImage().getScaledInstance(24, 24, Image.SCALE_SMOOTH);
             button.setIcon(new ImageIcon(scaledImage));
             button.setIconTextGap(10);
         } catch (Exception e) {
-            // If icon fails to load, continue without it
             System.out.println("Failed to load icon: " + iconPath);
         }
 
-        // Add hover effect
         button.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseEntered(MouseEvent e) {

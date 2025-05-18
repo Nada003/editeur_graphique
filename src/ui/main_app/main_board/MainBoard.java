@@ -39,7 +39,7 @@ public class MainBoard extends JPanel implements UMLComponentMovementListener {
     private Timer movementTimer;
     private JScrollPane scrollPane;
 
-    private boolean showGrid = true; // Default to showing grid for better UX
+    private boolean showGrid = true; 
     private CommentRender selectedComment;
     private Rectangle selectionRect = new Rectangle();
     private Point startPoint;
@@ -197,12 +197,7 @@ public class MainBoard extends JPanel implements UMLComponentMovementListener {
                 Graphics2D g2d = (Graphics2D) g;
                 g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-                // Draw a pulsing circle
-                g2d.setColor(new Color(66, 133, 244, 100));
-                g2d.fillOval(0, 0, getWidth(), getHeight());
-                g2d.setColor(new Color(66, 133, 244, 200));
-                g2d.setStroke(new BasicStroke(2f));
-                g2d.drawOval(0, 0, getWidth(), getHeight());
+             
             }
         };
 
@@ -290,10 +285,10 @@ public class MainBoard extends JPanel implements UMLComponentMovementListener {
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
         if (showGrid) {
-            // Draw a more subtle, modern grid
+            
             g2.setColor(GRID_COLOR);
 
-            // Draw standard grid lines
+            
             int gridSize = 20;
             for (int i = 0; i < getWidth(); i += gridSize) {
                 g2.drawLine(i, 0, i, getHeight());
@@ -316,11 +311,11 @@ public class MainBoard extends JPanel implements UMLComponentMovementListener {
         if (selectionRect.width > 0 && selectionRect.height > 0) {
             g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-            // Fill with semi-transparent color
+            
             g2.setColor(SELECTION_FILL_COLOR);
             g2.fill(selectionRect);
 
-            // Draw border with dashed stroke
+            
             g2.setColor(SELECTION_BORDER_COLOR);
             Stroke dashed = new BasicStroke(1.5f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL,
                                            0, new float[]{5}, 0);
@@ -382,13 +377,13 @@ public class MainBoard extends JPanel implements UMLComponentMovementListener {
         // Move components based on their type
         for (var panel : selectedComponents.getList()) {
             if (!(panel instanceof RelationPoint) && !(panel instanceof Relation)) {
-                // Regular components
+             
                 panel.setLocation(new Point(panel.getPositionX() + dx, panel.getPositionY() + dy));
             } else if ((panel instanceof RelationPoint) && ((RelationPoint) panel).belongTO == null) {
-                // Independent relation points
+                
                 panel.setLocation(new Point(panel.getPositionX() + dx, panel.getPositionY() + dy));
             } else if (((panel instanceof RelationPoint) && !((RelationPoint) panel).belongTO.isSelected()) || (panel instanceof Relation)) {
-                // Dependent relation points or relations
+               
                 panel.setLocation(new Point(panel.getPositionX() + dx / MOVE_AMOUNT, panel.getPositionY() + dy / MOVE_AMOUNT));
             }
         }
