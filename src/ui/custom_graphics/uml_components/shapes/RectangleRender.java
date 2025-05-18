@@ -1,9 +1,10 @@
 package ui.custom_graphics.uml_components.shapes;
 
-import java.awt.*;
-import java.awt.event.MouseEvent;
 import ui.custom_graphics.uml_components.UMLComponent;
 import ui.custom_graphics.uml_components.connect_components.DrawingSpecification;
+
+import java.awt.*;
+import java.awt.event.MouseEvent;
 
 public class RectangleRender extends UMLComponent implements DrawingSpecification {
 
@@ -16,21 +17,35 @@ public class RectangleRender extends UMLComponent implements DrawingSpecificatio
         this.setOpaque(false);
     }
 
-   @Override
-protected void paintComponent(Graphics g) {
-    super.paintComponent(g);
-    Graphics2D g2d = (Graphics2D) g;
-    g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        Graphics2D g2d = (Graphics2D) g;
+        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-    int width = getWidth();
-    int height = getHeight();
+        int width = getWidth();
+        int height = getHeight();
 
-    g2d.setColor(Color.WHITE); // fond
-    g2d.fillRect(0, 0, width - 1, height - 1);
+        g2d.setColor(Color.WHITE); // fond
+        g2d.fillRect(0, 0, width - 1, height - 1);
 
-    g2d.setColor(Color.BLACK); // bordure
-    g2d.setStroke(new BasicStroke(2));
-    g2d.drawRect(0, 0, width - 1, height - 1);
-}
+        g2d.setColor(Color.BLACK); // bordure
+        g2d.setStroke(new BasicStroke(2));
+        g2d.drawRect(0, 0, width - 1, height - 1);
+    }
 
+    @Override
+    public void mouseClicked(MouseEvent e) {
+
+    }
+
+    @Override
+    public void drawHead(Graphics2D graphics2D, Point... point) {
+
+    }
+
+    @Override
+    public Graphics2D lineStyle() {
+        return null;
+    }
 }

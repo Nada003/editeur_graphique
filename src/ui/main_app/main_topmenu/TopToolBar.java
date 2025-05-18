@@ -13,152 +13,242 @@ import java.awt.event.*;
 public class TopToolBar extends JToolBar {
     private final WatchedList<UserAction> mainFlow;
     private final WatchedList<UserAction> undoFlow;
+    private final MainBoard board;
+    private boolean bool = false;
     private Color currentColor = Color.BLACK;
     private JButton toggleGridButton;
-    private MainBoard board;
-    private boolean bool = false;
-    private MouseListener textModeMouseListener = new MouseAdapter() {
+
+    private final MouseListener textModeMouseListener = new MouseAdapter() {
         @Override
         public void mouseClicked(MouseEvent e) {
             JTextField textField = new JTextField();
             textField.setBounds(e.getX(), e.getY(), 100, 30);
             textField.setFont(new Font("Arial", Font.PLAIN, 14));
 
-            textField.addFocusListener(new FocusListener() {
-                @Override
-                public void focusGained(FocusEvent e) {
+            textField.addActionListener(ev -> textField.transferFocus());
 
-                }
-
+            textField.addFocusListener(new FocusAdapter() {
                 @Override
                 public void focusLost(FocusEvent f) {
-                    var label = new CommentRender(textField.getText());
-                    label.setClickListener(new CommentClickedHandel(board,label));
+                    CommentRender label = new CommentRender(textField.getText());
+                    label.setClickListener(new CommentClickedHandel(board, label));
                     label.setPositionX(e.getX());
                     label.setPositionY(e.getY());
-                    mainFlow.addElement(new UserAction("ajouter text \""+textField.getText()+"\"",label));
+                    mainFlow.addElement(new UserAction("ajouter text \"" + textField.getText() + "\"", label));
+
                     board.components.addElement(label);
                     board.remove(textField);
+                    board.repaint();
+
+                    // Désactive automatiquement le mode texte après ajout
+                    disactivateTextMode();
+                    bool = false;
                 }
             });
+
             board.add(textField);
             textField.requestFocus();
-
-
+            board.repaint();
         }
     };
 
-
     public TopToolBar(MainBoard board, WatchedList<UserAction> mainFlow, WatchedList<UserAction> undoFlow) {
         super(JToolBar.HORIZONTAL);
-        this.board = board; // Initialisation de la référence à MainBoard
+        this.board = board;
         this.mainFlow = mainFlow;
         this.undoFlow = undoFlow;
-        this.setBackground(Color.WHITE);
 
-        // Création des boutons
-        JButton undoButton = new JButton("↩");
-        undoButton.addActionListener(e -> undoAction());
+        setFloatable(false);
+        setBackground(Color.WHITE);
+        setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
+        setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
 
-        JButton redoButton = new JButton("↪");
-        redoButton.addActionListener(e -> redoAction());
+        add(createUndoRedoGroup());
+        add(createSeparator());
+        add(createFontGroup());
+        add(createSeparator());
+        add(createStyleGroup());
+        add(createSeparator());
+        add(createGridAndTextGroup());
+        add(Box.createHorizontalGlue()); // pousse ce qui suit à droite
+        add(createGridButtonGroup());   // bouton "G" à droite
+    }
 
-        JButton boldButton = new JButton("𝐁");
-        JButton italicButton = new JButton("𝘐");
-        JButton underlineButton = new JButton("U̲");
-        JButton colorButton = new JButton("🎨");
-        toggleGridButton = new JButton("Grille");
-        JButton textButton = new JButton("📝 Texte");
+    private JComboBox<String> createFlatComboBox(String[] items, Dimension size) {
+        JComboBox<String> comboBox = new JComboBox<>(items);
+        comboBox.setPreferredSize(size);
+        comboBox.setBackground(Color.WHITE);
+        comboBox.setForeground(Color.BLACK);
+        comboBox.setFont(new Font("SansSerif", Font.PLAIN, 13));
+        comboBox.setFocusable(false);
+        comboBox.setBorder(BorderFactory.createLineBorder(new Color(200, 200, 200)));
 
-        // ComboBox pour la taille de police
-        String[] fontSizes = {"8pt", "10pt", "12pt", "14pt", "16pt"};
-        JComboBox<String> fontSizeBox = new JComboBox<>(fontSizes);
-
-        // Récupération des polices système
-        GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-        String[] fontNames = ge.getAvailableFontFamilyNames();
-        JComboBox<String> fontBox = new JComboBox<>(fontNames);
-
-        // Slider pour l'épaisseur
-        JSlider thicknessSlider = new JSlider(1, 10, 2);
-
-        // Ajout des composants à la barre d'outils
-        this.add(undoButton);
-        this.add(redoButton);
-        this.addSeparator();
-        this.add(fontSizeBox);
-        this.add(fontBox);
-        this.add(boldButton);
-        this.add(italicButton);
-        this.add(underlineButton);
-        this.addSeparator();
-        this.add(colorButton);
-        this.add(thicknessSlider);
-        this.add(toggleGridButton);
-        this.addSeparator();
-        this.add(textButton);
-
-        fontSizeBox.addActionListener(e -> {
-            CommentRender selecedComment =  board.getSelectedComment();
-            if (selecedComment == null) return;
-
-            String selectedSize = (String) fontSizeBox.getSelectedItem();
-            assert selectedSize != null;
-            int fontSize = Integer.parseInt(selectedSize.replace("pt", ""));
-            selecedComment.setFontSize(fontSize);
-        });
-        // Action pour le choix des couleurs
-        colorButton.addActionListener(e -> {
-            Color newColor = JColorChooser.showDialog(this, "Choisir une couleur", currentColor);
-            if (newColor != null) {
-                currentColor = newColor;
+        comboBox.setRenderer(new DefaultListCellRenderer() {
+            @Override
+            public Component getListCellRendererComponent(JList<?> list, Object value, int index,
+                                                          boolean isSelected, boolean cellHasFocus) {
+                Component c = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+                c.setFont(new Font("SansSerif", Font.PLAIN, 13));
+                return c;
             }
         });
 
-        // Action pour afficher/masquer la grille
-        toggleGridButton.addActionListener(e -> board.toggleGrid());
+        return comboBox;
+    }
 
-        // Action pour activer le mode texte
-        textButton.addActionListener(e -> {
+    private JPanel createUndoRedoGroup() {
+        JPanel panel = createGroupPanel();
+        panel.add(createStyledButton("↩", e -> undoAction()));
+        panel.add(createStyledButton("↪", e -> redoAction()));
+        return panel;
+    }
+
+    private JPanel createFontGroup() {
+        JPanel panel = createGroupPanel();
+
+        String[] fontSizes = {"8pt", "10pt", "12pt", "14pt", "16pt"};
+        String[] fonts = GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames();
+
+        JComboBox<String> sizeBox = createFlatComboBox(fontSizes, new Dimension(60, 28));
+        JComboBox<String> fontBox = createFlatComboBox(fonts, new Dimension(140, 28));
+
+        JButton boldBtn = createStyledButton("𝐁", e -> {
+            CommentRender selected = board.getSelectedComment();
+            if (selected != null) selected.toggleBold();
+        });
+
+        JButton italicBtn = createStyledButton("𝐼", e -> {
+            CommentRender selected = board.getSelectedComment();
+            if (selected != null) selected.toggleItalic();
+        });
+
+        JButton underlineBtn = createStyledButton("𝐔", e -> {
+            CommentRender selected = board.getSelectedComment();
+            if (selected != null) selected.toggleUnderline();
+        });
+
+        sizeBox.addActionListener(e -> {
+            CommentRender selected = board.getSelectedComment();
+            if (selected != null)
+                selected.setFontSize(Integer.parseInt(((String) sizeBox.getSelectedItem()).replace("pt", "")));
+        });
+
+        fontBox.addActionListener(e -> {
+            CommentRender selected = board.getSelectedComment();
+            if (selected != null)
+                selected.setCurrentFont((String) fontBox.getSelectedItem());
+        });
+
+        panel.add(sizeBox);
+        panel.add(fontBox);
+        panel.add(boldBtn);
+        panel.add(italicBtn);
+        panel.add(underlineBtn);
+
+        return panel;
+    }
+
+    private JPanel createStyleGroup() {
+        JPanel panel = createGroupPanel();
+
+        JButton colorBtn = new JButton("🎨");
+        colorBtn.setFont(new Font("SansSerif", Font.BOLD, 16));
+        colorBtn.setForeground(currentColor);
+        colorBtn.setBackground(Color.WHITE);
+        colorBtn.setBorder(BorderFactory.createEmptyBorder());
+        colorBtn.setFocusPainted(false);
+        colorBtn.setContentAreaFilled(false);
+        colorBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        colorBtn.setPreferredSize(new Dimension(40, 28));
+
+        colorBtn.addActionListener(e -> {
+            Color newColor = JColorChooser.showDialog(this, "Choisir une couleur", currentColor);
+            if (newColor != null) {
+                currentColor = newColor;
+                colorBtn.setForeground(currentColor);
+                CommentRender selected = board.getSelectedComment();
+                if (selected != null) {
+                    selected.setTextColor(currentColor);
+                }
+            }
+        });
+
+        panel.add(colorBtn);
+        return panel;
+    }
+
+    private JPanel createGridAndTextGroup() {
+        JPanel panel = createGroupPanel();
+
+        JButton textBtn = createStyledButton("T", e -> {
             if (!bool) {
                 activateTextMode();
             } else {
-               disactivateTextMode();
+                disactivateTextMode();
             }
             bool = !bool;
         });
 
-        // Styles : Gras, Italique, Souligné
-        boldButton.addActionListener(e -> {
-            CommentRender selecedComment =  board.getSelectedComment();
-            if (selecedComment == null) return;
-            selecedComment.toggleBold();
+        panel.add(textBtn);
+        return panel;
+    }
+
+    private JPanel createGridButtonGroup() {
+        JPanel panel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 4, 4));
+        panel.setOpaque(true);
+        panel.setBackground(Color.WHITE);
+        panel.setBorder(BorderFactory.createEmptyBorder(3, 3, 3, 3));
+
+        toggleGridButton = createStyledButton("𝐆", e -> board.toggleGrid());
+        panel.add(toggleGridButton);
+        return panel;
+    }
+
+    private JPanel createGroupPanel() {
+        JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEFT, 4, 4));
+        panel.setOpaque(true);
+        panel.setBackground(Color.WHITE);
+        panel.setBorder(BorderFactory.createEmptyBorder(3, 3, 3, 3));
+        return panel;
+    }
+
+    private JButton createStyledButton(String text, ActionListener action) {
+        JButton button = new JButton(text);
+        button.setFont(new Font("SansSerif", Font.BOLD, 14));
+        button.setForeground(Color.BLACK);
+        button.setBackground(Color.WHITE);
+        button.setFocusPainted(false);
+        button.setContentAreaFilled(true);
+        button.setOpaque(true);
+        button.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        button.setPreferredSize(new Dimension(36, 28));
+        button.setBorder(BorderFactory.createEmptyBorder());
+
+        button.addMouseListener(new MouseAdapter() {
+            public void mouseEntered(MouseEvent e) {
+                button.setBackground(new Color(230, 240, 255));
+            }
+
+            public void mouseExited(MouseEvent e) {
+                button.setBackground(Color.WHITE);
+            }
         });
 
-        italicButton.addActionListener(e -> {
-            CommentRender selecedComment =  board.getSelectedComment();
-            if (selecedComment == null) return;
-            selecedComment.toggleItalic();
-        });
+        button.addActionListener(action);
+        return button;
+    }
 
-        underlineButton.addActionListener(e -> {
-            CommentRender selecedComment =  board.getSelectedComment();
-            if (selecedComment == null) return;
-            selecedComment.toggleUnderline();
-        });
-
-        // Appliquer la police sélectionnée
-        fontBox.addActionListener(e -> {
-            CommentRender selecedComment =  board.getSelectedComment();
-            if (selecedComment == null) return;
-            String selectedFont = (String) fontBox.getSelectedItem();
-            selecedComment.setCurrentFont(selectedFont);
-        });
+    private JSeparator createSeparator() {
+        JSeparator separator = new JSeparator(SwingConstants.VERTICAL);
+        separator.setPreferredSize(new Dimension(1, 32));
+        separator.setForeground(new Color(180, 180, 180));
+        return separator;
     }
 
     private void activateTextMode() {
         board.addMouseListener(textModeMouseListener);
     }
+
     private void disactivateTextMode() {
         board.removeMouseListener(textModeMouseListener);
     }
