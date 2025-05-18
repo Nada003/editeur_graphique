@@ -5,11 +5,15 @@ import utils.custom_list.WatchedList;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+
 
 public class MainTopMenu extends JMenuBar {
     // Modern color palette
@@ -722,41 +726,33 @@ public class MainTopMenu extends JMenuBar {
         JFileChooser fileChooser = new JFileChooser();
         fileChooser.setDialogTitle("Ouvrir un fichier");
 
-        // Style the file chooser
-        fileChooser.setBackground(SECONDARY_COLOR);
-        fileChooser.setForeground(TEXT_COLOR);
+        FileNameExtensionFilter filter = new FileNameExtensionFilter("Fichiers MyApp (*.myapp)", "myapp");
+        fileChooser.setFileFilter(filter);
 
         int result = fileChooser.showOpenDialog(this);
         if (result == JFileChooser.APPROVE_OPTION) {
             currentFile = fileChooser.getSelectedFile();
+            System.out.println("Fichier sélectionné : " + currentFile.getAbsolutePath());
+
             try {
-                String content = new String(Files.readAllBytes(currentFile.toPath()));
-
-                // Create a modern dialog to show file content
-                JTextArea contentArea = new JTextArea(content);
-                contentArea.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-                contentArea.setEditable(false);
-                contentArea.setLineWrap(true);
-                contentArea.setWrapStyleWord(true);
-
-                JScrollPane scrollPane = new JScrollPane(contentArea);
-                scrollPane.setPreferredSize(new Dimension(500, 300));
-
-                JOptionPane.showMessageDialog(
-                        this, scrollPane, "Contenu du fichier: " + currentFile.getName(),
-                        JOptionPane.PLAIN_MESSAGE
-                );
-            } catch (Exception ex) {
-                showErrorMessage("Erreur lors de l'ouverture du fichier : " + ex.getMessage());
+                String content = new String(Files.readAllBytes(currentFile.toPath()), StandardCharsets.UTF_8);
+                System.out.println("Contenu lu : " + content);
+                textArea.setText(content);
+                showSuccessMessage("Fichier ouvert avec succès !");
+            } catch (IOException e) {
+                e.printStackTrace(); // Ajoute ceci pour plus de détails
+                showErrorMessage("Erreur lors de l'ouverture du fichier : " + e.getMessage());
             }
         }
     }
 
+
+
     private void saveFile() {
         if (currentFile != null) {
             try {
-                String content = "Contenu modifié du fichier"; // Remplace par le contenu réel
-                Files.write(currentFile.toPath(), content.getBytes());
+                String content = textArea.getText();  // Récupérer le contenu réel de la zone de texte
+                Files.write(currentFile.toPath(), content.getBytes(StandardCharsets.UTF_8));
                 showSuccessMessage("Fichier enregistré avec succès !");
             } catch (Exception ex) {
                 showErrorMessage("Erreur lors de l'enregistrement du fichier : " + ex.getMessage());
@@ -770,16 +766,32 @@ public class MainTopMenu extends JMenuBar {
         JFileChooser fileChooser = new JFileChooser();
         fileChooser.setDialogTitle("Enregistrer sous");
 
-        // Style the file chooser
-        fileChooser.setBackground(SECONDARY_COLOR);
-        fileChooser.setForeground(TEXT_COLOR);
+        // Filtre personnalisé pour l'extension .myapp
+        FileNameExtensionFilter filter = new FileNameExtensionFilter("Fichiers MyApp (*.myapp)", "myapp");
+        fileChooser.setFileFilter(filter);
 
         int result = fileChooser.showSaveDialog(this);
         if (result == JFileChooser.APPROVE_OPTION) {
-            currentFile = fileChooser.getSelectedFile();
-            saveFile();
+            File selectedFile = fileChooser.getSelectedFile();
+
+            // Ajouter .myapp si le fichier ne finit pas déjà par cette extension
+            if (!selectedFile.getName().toLowerCase().endsWith(".myapp")) {
+                selectedFile = new File(selectedFile.getAbsolutePath() + ".myapp");
+            }
+
+            currentFile = selectedFile;
+
+            try {
+                String content = textArea.getText(); // Ton contenu
+                Files.write(currentFile.toPath(), content.getBytes(StandardCharsets.UTF_8));
+                showSuccessMessage("Fichier enregistré avec succès !");
+            } catch (IOException ex) {
+                showErrorMessage("Erreur lors de l'enregistrement du fichier : " + ex.getMessage());
+            }
         }
     }
+
+
 
     private void renameFile() {
         if (currentFile != null) {
