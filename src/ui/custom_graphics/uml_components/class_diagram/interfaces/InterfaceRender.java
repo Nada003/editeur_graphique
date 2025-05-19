@@ -1,10 +1,8 @@
 package ui.custom_graphics.uml_components.class_diagram.interfaces;
 
-import ui.custom_graphics.uml_components.UMLComponent;
-
 import java.awt.*;
 import java.awt.event.MouseEvent;
-
+import ui.custom_graphics.uml_components.UMLComponent;
 import static utils.TextUtils.getTextWidth;
 
 public class InterfaceRender extends UMLComponent {
@@ -17,6 +15,7 @@ public class InterfaceRender extends UMLComponent {
         super.setHeight((32) * (elements-1) + 65);
 
     }
+    
 
     @Override
     protected void paintComponent(Graphics g) {
@@ -63,11 +62,11 @@ public class InterfaceRender extends UMLComponent {
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
-
     }
-
+    
     @Override
     public void mouseClicked(MouseEvent e) {
 
     }
+    
 }
