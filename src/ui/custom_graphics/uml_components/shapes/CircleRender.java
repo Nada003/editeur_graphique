@@ -5,7 +5,7 @@ import java.awt.event.MouseEvent;
 import ui.custom_graphics.uml_components.UMLComponent;
 import ui.custom_graphics.uml_components.connect_components.DrawingSpecification;
 
-public class CircleRender extends UMLComponent implements DrawingSpecification {
+public class CircleRender extends UMLComponent {
 
     CircleModel model;
 
@@ -39,11 +39,4 @@ protected void paintComponent(Graphics g) {
     @Override
     public void mouseClicked(MouseEvent e) {}
 
-    @Override
-    public void drawHead(Graphics2D g2d, Point... point) {}
-
-    @Override
-    public Graphics2D lineStyle() {
-        return null;
-    }
 }

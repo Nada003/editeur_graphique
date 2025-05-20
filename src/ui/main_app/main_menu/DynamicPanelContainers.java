@@ -1,22 +1,20 @@
 package ui.main_app.main_menu;
 
-import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import javax.swing.*;
-import javax.swing.border.EmptyBorder;
 import ui.custom_graphics.uml_components.UMLComponent;
-import ui.custom_graphics.uml_components.shapes.CircleModel;
-import ui.custom_graphics.uml_components.shapes.CircleRender;
-import ui.custom_graphics.uml_components.shapes.RectangleModel;
-import ui.custom_graphics.uml_components.shapes.RectangleRender;
-import ui.custom_graphics.uml_components.shapes.TriangleModel;
-import ui.custom_graphics.uml_components.shapes.TriangleRender;
+import ui.custom_graphics.uml_components.shapes.*;
+import ui.custom_graphics.uml_components.use_case_diagrame.ActorModel;
+import ui.custom_graphics.uml_components.use_case_diagrame.ActorRender;
 import ui.custom_graphics.uml_components.use_case_diagrame.use_case.UseCaseModel;
 import ui.custom_graphics.uml_components.use_case_diagrame.use_case.UseCaseRender;
 import ui.main_app.history.UserAction;
+import utils.UML_diagrame;
 import utils.custom_list.WatchedList;
 
+import javax.swing.*;
+import javax.swing.border.EmptyBorder;
+import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 public class DynamicPanelContainers extends JPanel {
     private static final Color PRIMARY_COLOR = new Color(66, 133, 244);
     private static final Color SECONDARY_COLOR = new Color(241, 243, 244);
@@ -28,9 +26,10 @@ public class DynamicPanelContainers extends JPanel {
     private final JButton triangleButton;
     private final JButton circleButton;
     private final JButton rectangleButton;
-   
+    private final JButton actorButton;
 
-    public DynamicPanelContainers(WatchedList<UMLComponent> components, WatchedList<UserAction> mainFlow) {
+
+    public DynamicPanelContainers(WatchedList<UMLComponent> components, WatchedList<UserAction> mainFlow, UML_diagrame currentDiagramme) {
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         setBackground(Color.WHITE);
         setBorder(new EmptyBorder(15, 10, 15, 10));
@@ -46,7 +45,8 @@ public class DynamicPanelContainers extends JPanel {
         triangleButton = createShapeButton("Triangle", "src/assets/triangle.png", "Add a triangle shape to your diagram");
         circleButton = createShapeButton("Circle", "src/assets/circle.png", "Add a circle shape to your diagram");
         rectangleButton = createShapeButton("Rectangle", "src/assets/rectangle.png", "Add a rectangle shape to your diagram");
-        
+        actorButton = createShapeButton("Actor", "src/assets/actor.png", "Add an actor to your diagram");
+
 
         add(ovalButton);
         add(Box.createRigidArea(new Dimension(0, 10)));
@@ -55,7 +55,9 @@ public class DynamicPanelContainers extends JPanel {
         add(rectangleButton);
         add(Box.createRigidArea(new Dimension(0, 10)));
         add(triangleButton);
-        
+        add(actorButton);
+        add(Box.createRigidArea(new Dimension(0, 10)));
+
         add(Box.createVerticalGlue());
 
         ovalButton.addActionListener(e -> {
@@ -84,6 +86,13 @@ public class DynamicPanelContainers extends JPanel {
             RectangleRender render = new RectangleRender(model);
             mainFlow.addElement(new UserAction("Add rectangle", render));
             components.addElement(render);
+        });
+
+        actorButton.addActionListener(e -> {
+            ActorModel model = new ActorModel("Actor");
+            ActorRender actor = new ActorRender(model);
+            mainFlow.addElement(new UserAction("Add actor", actor));
+            components.addElement(actor);
         });
 
        

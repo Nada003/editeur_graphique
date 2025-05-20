@@ -48,7 +48,7 @@ public class DependencyRender extends UMLComponent implements DrawingSpecificati
     }
 
     @Override
-    public Graphics2D lineStyle() {
+    public Graphics2D lineStyle(Graphics2D graphics2D) {
         return null;
     }
 }

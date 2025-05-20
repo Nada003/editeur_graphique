@@ -4,5 +4,5 @@ import java.awt.*;
 
 public interface DrawingSpecification {
     void drawHead(Graphics2D graphics2D, Point ... point);
-    Graphics2D lineStyle();
+    Graphics2D lineStyle(Graphics2D graphics2D);
 }

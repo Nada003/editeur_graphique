@@ -177,21 +177,28 @@ public class MainBoard extends JPanel implements UMLComponentMovementListener {
                 if (e.getKeyCode() == KeyEvent.VK_BACK_SPACE) {
                     deleteSelectedComponents();  // نداء الحذف عند الضغط على Backspace
                 }
-            }
+
+                if(pressedKeys.add(e.getKeyCode())) {
+                    startMovementTimer();
+                }
+            } else if (e.getID() == KeyEvent.KEY_RELEASED){
+            pressedKeys.remove(e.getKeyCode());
+            if(pressedKeys.isEmpty() ) stopMovementTimer();
+        }
             return false;  // باش نخلي الأحداث تكمل تنفيذها في أماكن
         });
     }
-        private void deleteSelectedComponents() {
+    private void deleteSelectedComponents() {
 
-           for (UMLComponent component : new LinkedList<>(selectedComponents.getList())) {
-               if (components.getList().contains(component)) {
-                   components.removeElement(component);
-                   this.remove(component);
-               }
-           }
-           selectedComponents.removeAll();
-           repaint();
-       }
+        for (UMLComponent component : new LinkedList<>(selectedComponents.getList())) {
+            if (components.getList().contains(component)) {
+                components.removeElement(component);
+                this.remove(component);
+            }
+        }
+        selectedComponents.removeAll();
+        repaint();
+    }
     private void showDropFeedback(Point location) {
         JPanel feedback = new JPanel() {
             @Override
@@ -321,7 +328,7 @@ public class MainBoard extends JPanel implements UMLComponentMovementListener {
 
             g2.setColor(SELECTION_BORDER_COLOR);
             Stroke dashed = new BasicStroke(1.5f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL,
-                                           0, new float[]{5}, 0);
+                    0, new float[]{5}, 0);
             g2.setStroke(dashed);
             g2.draw(selectionRect);
         }
@@ -344,7 +351,7 @@ public class MainBoard extends JPanel implements UMLComponentMovementListener {
         unselect();
         for (var com : components.getList()) {
             if ((com.getPositionX() + 5 > selectionRect.x && com.getPositionX() + com.getWidth() + 5 < selectionRect.x + selectionRect.width) &&
-                (com.getPositionY() + 5 > selectionRect.y && com.getPositionY() + com.getHeight() + 5 < selectionRect.y + selectionRect.height))
+                    (com.getPositionY() + 5 > selectionRect.y && com.getPositionY() + com.getHeight() + 5 < selectionRect.y + selectionRect.height))
                 selectedComponents.addElement(com);
         }
     }

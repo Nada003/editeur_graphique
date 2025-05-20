@@ -12,6 +12,7 @@ import ui.custom_graphics.uml_components.class_diagram.classes.ClassEnumeration;
 import ui.custom_graphics.uml_components.class_diagram.classes.ClassInterface;
 import ui.custom_graphics.uml_components.class_diagram.classes.ClassModel;
 import ui.main_app.history.UserAction;
+import utils.UML_diagrame;
 import utils.custom_list.WatchedList;
 
 public class DynamicMenu extends JPanel {
@@ -28,7 +29,7 @@ public class DynamicMenu extends JPanel {
     private final JButton buttonClassInterface;
     private final JButton buttonClassDetail;
 
-    public DynamicMenu(WatchedList<UMLComponent> components, WatchedList<UserAction> mainFlow) {
+    public DynamicMenu(WatchedList<UMLComponent> components, WatchedList<UserAction> mainFlow, UML_diagrame currentDiagramme) {
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         setBackground(Color.WHITE);
         setBorder(new EmptyBorder(15, 10, 15, 10));

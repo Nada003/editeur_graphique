@@ -129,7 +129,7 @@ public class GeneralizationRender extends UMLComponent implements DrawingSpecifi
 
 
     @Override
-    public Graphics2D lineStyle() {
+    public Graphics2D lineStyle(Graphics2D graphics2D) {
         return null;
     }
 }
