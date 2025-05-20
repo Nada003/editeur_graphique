@@ -7,6 +7,7 @@ import ui.custom_graphics.uml_components.use_case_diagrame.ActorRender;
 import ui.custom_graphics.uml_components.use_case_diagrame.use_case.UseCaseModel;
 import ui.custom_graphics.uml_components.use_case_diagrame.use_case.UseCaseRender;
 import ui.main_app.history.UserAction;
+import utils.UML_diagrame;
 import utils.custom_list.WatchedList;
 
 import javax.swing.*;
@@ -26,9 +27,13 @@ public class DynamicPanelContainers extends JPanel {
     private final JButton circleButton;
     private final JButton rectangleButton;
     private final JButton actorButton;
+<<<<<<< HEAD
+
+=======
+>>>>>>> 995fbf5f0380f1016723ed3ed9ad69e3e9343074
 
 
-    public DynamicPanelContainers(WatchedList<UMLComponent> components, WatchedList<UserAction> mainFlow) {
+    public DynamicPanelContainers(WatchedList<UMLComponent> components, WatchedList<UserAction> mainFlow, UML_diagrame currentDiagramme) {
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         setBackground(Color.WHITE);
         setBorder(new EmptyBorder(15, 10, 15, 10));
@@ -40,11 +45,11 @@ public class DynamicPanelContainers extends JPanel {
         titleLabel.setBorder(new EmptyBorder(0, 5, 15, 5));
         add(titleLabel);
 
-        ovalButton = createShapeButton("Oval", "src/assets/oval.png", "Add an oval shape to your diagram");
-        triangleButton = createShapeButton("Triangle", "src/assets/triangle.png", "Add a triangle shape to your diagram");
-        circleButton = createShapeButton("Circle", "src/assets/circle.png", "Add a circle shape to your diagram");
-        rectangleButton = createShapeButton("Rectangle", "src/assets/rectangle.png", "Add a rectangle shape to your diagram");
-        actorButton = createShapeButton("Actor", "src/assets/actor.png", "Add an actor to your diagram");
+        ovalButton = createShapeButton("Oval", "src/assets/oval.png", "Ajouter une for,e oval ");
+        triangleButton = createShapeButton("Triangle", "src/assets/triangle.png", "Ajouter une forme triangulaire");
+        circleButton = createShapeButton("Cercle", "src/assets/circle.png", "Ajouter une forme ronde");
+        rectangleButton = createShapeButton("Rectangle", "src/assets/rectangle.png", "Ajouter une forme triangulaire");
+        actorButton = createShapeButton("Acteur", "src/assets/actor.png", "Ajouter un acteur");
 
 
         add(ovalButton);
@@ -60,30 +65,30 @@ public class DynamicPanelContainers extends JPanel {
         add(Box.createVerticalGlue());
 
         ovalButton.addActionListener(e -> {
-            UseCaseModel model = new UseCaseModel("Oval Element");
+            UseCaseModel model = new UseCaseModel("Oval");
             UseCaseRender usecase = new UseCaseRender(model);
-            mainFlow.addElement(new UserAction("Add oval", usecase));
+            mainFlow.addElement(new UserAction("Ajouter oval", usecase));
             components.addElement(usecase);
         });
 
         circleButton.addActionListener(e -> {
             CircleModel model = new CircleModel("Circle");
             CircleRender render = new CircleRender(model);
-            mainFlow.addElement(new UserAction("Add circle", render));
+            mainFlow.addElement(new UserAction("Ajouter cercle", render));
             components.addElement(render);
         });
 
         triangleButton.addActionListener(e -> {
             TriangleModel model = new TriangleModel("Triangle");
             TriangleRender render = new TriangleRender(model);
-            mainFlow.addElement(new UserAction("Add triangle", render));
+            mainFlow.addElement(new UserAction("Ajouter triangle", render));
             components.addElement(render);
         });
 
         rectangleButton.addActionListener(e -> {
             RectangleModel model = new RectangleModel("Rectangle");
             RectangleRender render = new RectangleRender(model);
-            mainFlow.addElement(new UserAction("Add rectangle", render));
+            mainFlow.addElement(new UserAction("Ajouter rectangle", render));
             components.addElement(render);
         });
 
@@ -98,7 +103,7 @@ public class DynamicPanelContainers extends JPanel {
     }
 
     private void showFeedback(String message) {
-        JOptionPane.showMessageDialog(this, message, "Element Added", JOptionPane.INFORMATION_MESSAGE);
+        JOptionPane.showMessageDialog(this, message, "Élément ajouté", JOptionPane.INFORMATION_MESSAGE);
     }
 
     private JButton createShapeButton(String text, String iconPath, String tooltip) {

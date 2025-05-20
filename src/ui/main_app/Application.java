@@ -10,7 +10,10 @@ import utils.custom_list.ListListener;
 import utils.custom_list.WatchedList;
 
 import javax.swing.*;
+import javax.swing.event.MenuEvent;
+import javax.swing.event.MenuListener;
 import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.io.File;
 
 public class Application extends JFrame implements ListListener {
@@ -20,6 +23,7 @@ public class Application extends JFrame implements ListListener {
     private static final WatchedList<UserAction> undoFlow = new WatchedList<>();
     private static File currentFile;
     private JPanel main;
+    private final JPanel home;
 
 
 
@@ -31,19 +35,44 @@ public class Application extends JFrame implements ListListener {
         this.setLayout(new BorderLayout());
         mainFlow.addListener(this);
 
-        JPanel home = new Home(e->{
-            this.remove(main);
-            this.setJMenuBar(new MainTopMenu(mainFlow, undoFlow,currentFile));
-            var v = new MainPanel(components,mainFlow,undoFlow);
-            this.add(v, BorderLayout.CENTER);
-            this.add(new TopToolBar(v.getBoard(), mainFlow, undoFlow), BorderLayout.NORTH);
-            this.revalidate();
-            this.repaint();
-        });
+        home = new Home(this::navigateToMainBord);
         main = home;
         this.add(home);
         this.pack();
         this.setVisible(true);
+    }
+
+    private void navigateToMainBord(ActionEvent actionEvent) {
+        this.remove(main);
+        var v = new MainPanel(components,mainFlow,undoFlow,Home.getCurrentDiagrame());
+        var topToolBar = new TopToolBar(v.getBoard(), mainFlow, undoFlow);
+
+        JFrame instance = this;
+        this.setJMenuBar(new MainTopMenu(mainFlow, undoFlow,currentFile,new MenuListener() {
+            @Override
+            public void menuSelected(MenuEvent e) {
+                instance.setJMenuBar(null);
+                instance.remove(topToolBar);
+                instance.remove(v);
+                instance.add(home,BorderLayout.CENTER);
+                instance.revalidate();
+                instance.repaint();
+            }
+
+            @Override
+            public void menuDeselected(MenuEvent e) {
+
+            }
+
+            @Override
+            public void menuCanceled(MenuEvent e) {
+
+            }
+        }));
+        this.add(v, BorderLayout.CENTER);
+        this.add(topToolBar, BorderLayout.NORTH);
+        this.revalidate();
+        this.repaint();
     }
 
 

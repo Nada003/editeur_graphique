@@ -1,5 +1,12 @@
 package ui.main_app.main_menu;
 
+import ui.custom_graphics.uml_components.UMLComponent;
+import ui.main_app.history.UserAction;
+import utils.UML_diagrame;
+import utils.custom_list.WatchedList;
+
+import javax.swing.*;
+import javax.swing.border.MatteBorder;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -33,11 +40,13 @@ public class MainMenu extends JPanel {
     public static final int DYNAMIC_PANEL_WIDTH = 300;
     private static final int BUTTON_HEIGHT = 60;
     public static int height = Integer.MAX_VALUE;
+    public final UML_diagrame currentDiagramme;
 
     private final WatchedList<UserAction> mainFlow;
     private final WatchedList<UserAction> undoFlow;
 
-    public MainMenu(WatchedList<UMLComponent> components, WatchedList<UserAction> mainFlow, WatchedList<UserAction> undoFlow) {
+    public MainMenu(WatchedList<UMLComponent> components, WatchedList<UserAction> mainFlow, WatchedList<UserAction> undoFlow, UML_diagrame currentDiagrame) {
+        this.currentDiagramme = currentDiagrame;
         this.setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
 
         // Creating and configuring fixed menu panel
@@ -46,15 +55,15 @@ public class MainMenu extends JPanel {
         fixedMenu.setBorder(new MatteBorder(0, 0, 0, 1, BORDER_COLOR));
         setPanelSize(fixedMenu, FIXED_PANEL_WIDTH);
 
-        dynamicMenu = new DynamicMenu(components, mainFlow);
+        dynamicMenu = new DynamicMenu(components, mainFlow, currentDiagramme);
         dynamicMenu.setBorder(new MatteBorder(0, 0, 0, 1, BORDER_COLOR));
         dynamicMenu.setBackground(Color.WHITE);
 
-        dynamicPanelConnect = new DynamicPanelConnect(components, mainFlow);
+        dynamicPanelConnect = new DynamicPanelConnect(components, mainFlow, currentDiagramme);
         dynamicPanelConnect.setBorder(new MatteBorder(0, 0, 0, 1, BORDER_COLOR));
         dynamicPanelConnect.setBackground(Color.WHITE);
 
-        dynamicPanelContainers = new DynamicPanelContainers(components, mainFlow);
+        dynamicPanelContainers = new DynamicPanelContainers(components, mainFlow, currentDiagramme);
         dynamicPanelContainers.setBorder(new MatteBorder(0, 0, 0, 1, BORDER_COLOR));
         dynamicPanelContainers.setBackground(Color.WHITE);
 

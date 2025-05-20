@@ -5,6 +5,7 @@ import ui.main_app.history.UserAction;
 import ui.main_app.main_board.MainBoard;
 import ui.main_app.main_menu.MainMenu;
 import ui.main_app.main_menu.MenuExpandingListener;
+import utils.UML_diagrame;
 import utils.custom_list.WatchedList;
 
 import javax.swing.*;
@@ -20,9 +21,11 @@ public class MainPanel extends JPanel implements MenuExpandingListener {
     private static JScrollPane scrollPane;
     private static MainBoard board;
     private MainMenu menu;
+    private final UML_diagrame currentDiagrame;
 
-    public MainPanel(WatchedList<UMLComponent> components, WatchedList<UserAction> mainFlow, WatchedList<UserAction> undoFlow) {
+    public MainPanel(WatchedList<UMLComponent> components, WatchedList<UserAction> mainFlow, WatchedList<UserAction> undoFlow, UML_diagrame currentDiagrame1) {
         super(new BorderLayout());
+        this.currentDiagrame = currentDiagrame1;
 
         layeredPane = new JLayeredPane();
         add(layeredPane, BorderLayout.CENTER);
@@ -42,7 +45,7 @@ public class MainPanel extends JPanel implements MenuExpandingListener {
 
 
         // Initialize menu
-        menu = new MainMenu(components, mainFlow, undoFlow);
+        menu = new MainMenu(components, mainFlow, undoFlow, currentDiagrame);
         menu.addListener(this);
         menu.setBounds(0, 0, FIXED_PANEL_WIDTH + (menu.isExpanded() ? DYNAMIC_PANEL_WIDTH : 0), 600);
         layeredPane.add(menu, JLayeredPane.PALETTE_LAYER);

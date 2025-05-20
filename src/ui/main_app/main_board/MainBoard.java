@@ -177,7 +177,14 @@ public class MainBoard extends JPanel implements UMLComponentMovementListener {
                 if (e.getKeyCode() == KeyEvent.VK_BACK_SPACE) {
                     deleteSelectedComponents();  // نداء الحذف عند الضغط على Backspace
                 }
-            }
+
+                if(pressedKeys.add(e.getKeyCode())) {
+                    startMovementTimer();
+                }
+            } else if (e.getID() == KeyEvent.KEY_RELEASED){
+            pressedKeys.remove(e.getKeyCode());
+            if(pressedKeys.isEmpty() ) stopMovementTimer();
+        }
             return false;  // باش نخلي الأحداث تكمل تنفيذها في أماكن
         });
     }

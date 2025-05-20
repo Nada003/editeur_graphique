@@ -61,7 +61,7 @@ public class AggregationRender extends UMLComponent implements DrawingSpecificat
     }
 
     @Override
-    public Graphics2D lineStyle() {
+    public Graphics2D lineStyle(Graphics2D graphics2D) {
         return null;
     }
 }

@@ -6,7 +6,7 @@ import ui.custom_graphics.uml_components.connect_components.DrawingSpecification
 import java.awt.*;
 import java.awt.event.MouseEvent;
 
-public class RectangleRender extends UMLComponent implements DrawingSpecification {
+public class RectangleRender extends UMLComponent {
 
     RectangleModel model;
 
@@ -39,13 +39,4 @@ public class RectangleRender extends UMLComponent implements DrawingSpecificatio
 
     }
 
-    @Override
-    public void drawHead(Graphics2D graphics2D, Point... point) {
-
-    }
-
-    @Override
-    public Graphics2D lineStyle() {
-        return null;
-    }
 }

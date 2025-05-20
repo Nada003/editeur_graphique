@@ -6,6 +6,7 @@ import java.awt.geom.RoundRectangle2D;
 import java.io.File;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+import utils.UML_diagrame;
 
 public class Home extends JPanel {
     // Modern color palette
@@ -30,12 +31,14 @@ public class Home extends JPanel {
     private static final Font CREDIT_FONT = new Font("Segoe UI", Font.ITALIC, 12);
 
     // Diagram types
-    private static final String CLASS_DIAGRAM = "Diagrammes De Classe";
-    private static final String SEQUENCE_DIAGRAM = "Diagrammes De Sequence";
-    private static final String USE_CASE_DIAGRAM = "Diagrammes De Cas d'Utilisation";
+   /* private static final String CLASS_DIAGRAM = "Class Diagrams";
+    private static final String SEQUENCE_DIAGRAM = "Sequence Diagrams";
+    private static final String USE_CASE_DIAGRAM = "Use Case Diagrams";*/
+    private static UML_diagrame currentDiagrame= UML_diagrame.diagrameClass;
+
 
     // Selected diagram type - start with Class Diagram selected
-    private String selectedDiagramType = CLASS_DIAGRAM;
+    //private String currentDiagrame = CLASS_DIAGRAM;
 
     // Diagram cards panel
     private JPanel diagramCardsPanel;
@@ -222,14 +225,14 @@ public class Home extends JPanel {
 
     private void updateSelectedDiagramIcon() {
         if (documentButton != null) {
-            switch (selectedDiagramType) {
-                case CLASS_DIAGRAM:
+            switch (currentDiagrame) {
+                case UML_diagrame.diagrameClass:
                     documentButton.setIcon(classDiagramIcon);
                     break;
-                case SEQUENCE_DIAGRAM:
+                case UML_diagrame.diagrameSequence:
                     documentButton.setIcon(sequenceDiagramIcon);
                     break;
-                case USE_CASE_DIAGRAM:
+                case UML_diagrame.diagrameCasUtilisation:
                     documentButton.setIcon(useCaseDiagramIcon);
                     break;
             }
@@ -403,7 +406,7 @@ public class Home extends JPanel {
 
         // Add action listener
         documentButton.addActionListener(e -> {
-            if (selectedDiagramType != null) {
+            if (currentDiagrame != null) {
                 // Open the selected diagram type
                 openDocument.actionPerformed(e);
             } else {
@@ -448,15 +451,15 @@ public class Home extends JPanel {
         diagramCardsPanel.setBorder(new EmptyBorder(20, 60, 40, 60));
 
         // Create diagram type cards
-        classDiagramCard = createDiagramTypeCard(CLASS_DIAGRAM,
+        classDiagramCard = createDiagramTypeCard(UML_diagrame.diagrameClass,
                 "Modeliser la structure de votre systeme avec des classes, des attributs et des méthodes",
                 createClassDiagramPreview());
 
-        sequenceDiagramCard = createDiagramTypeCard(SEQUENCE_DIAGRAM,
+        sequenceDiagramCard = createDiagramTypeCard(UML_diagrame.diagrameSequence,
                 "Visualiser les intéractions entre objets dans un order séquentiel",
                 createSequenceDiagramPreview());
 
-        useCaseDiagramCard = createDiagramTypeCard(USE_CASE_DIAGRAM,
+        useCaseDiagramCard = createDiagramTypeCard(UML_diagrame.diagrameCasUtilisation,
                 "Représenter les interacations de l'utilisateur avec le systeme et ses fonctionnalités",
                 createUseCaseDiagramPreview());
 
@@ -466,7 +469,7 @@ public class Home extends JPanel {
         diagramCardsPanel.add(useCaseDiagramCard);
 
         // Set initial selection
-        updateCardSelection(CLASS_DIAGRAM);
+        updateCardSelection(UML_diagrame.diagrameClass);
 
         // Add diagram cards panel to home panel
         homePanel.add(diagramCardsPanel, BorderLayout.SOUTH);
@@ -495,7 +498,7 @@ public class Home extends JPanel {
         g2d.dispose();
     }
 
-    private JPanel createDiagramTypeCard(String title, String description, Icon previewIcon) {
+    private JPanel createDiagramTypeCard(UML_diagrame title, String description, Icon previewIcon) {
         // Use GridBagLayout for better control over component placement
         JPanel card = new JPanel(new GridBagLayout());
         card.setBackground(CARD_BG_COLOR);
@@ -503,7 +506,7 @@ public class Home extends JPanel {
                 new ShadowBorder(),
                 new EmptyBorder(24, 24, 24, 24)
         ));
-        card.setName(title);  // Set name for identification
+        card.setName(title.value);  // Set name for identification
 
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridwidth = GridBagConstraints.REMAINDER;
@@ -517,7 +520,7 @@ public class Home extends JPanel {
         card.add(iconLabel, gbc);
 
         // Add title
-        JLabel titleLabel = new JLabel(title, SwingConstants.CENTER);
+        JLabel titleLabel = new JLabel(title.value, SwingConstants.CENTER);
         titleLabel.setFont(new Font("Segoe UI", Font.BOLD, 16));
         titleLabel.setForeground(TEXT_COLOR);
         gbc.insets = new Insets(0, 0, 12, 0);
@@ -542,7 +545,7 @@ public class Home extends JPanel {
         card.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseEntered(MouseEvent e) {
-                if (!title.equals(selectedDiagramType)) {
+                if (!title.equals(currentDiagrame)) {
                     // Change background color
                     card.setBackground(HOVER_COLOR);
                     descLabel.setBackground(HOVER_COLOR);
@@ -564,7 +567,7 @@ public class Home extends JPanel {
 
             @Override
             public void mouseExited(MouseEvent e) {
-                if (!title.equals(selectedDiagramType)) {
+                if (!title.equals(currentDiagrame)) {
                     // Reset background color
                     card.setBackground(CARD_BG_COLOR);
                     descLabel.setBackground(CARD_BG_COLOR);
@@ -587,7 +590,7 @@ public class Home extends JPanel {
             @Override
             public void mousePressed(MouseEvent e) {
                 // Add pressed effect
-                if (!title.equals(selectedDiagramType)) {
+                if (!title.equals(currentDiagrame)) {
                     card.setBackground(new Color(220, 230, 240));
                     descLabel.setBackground(new Color(220, 230, 240));
                 }
@@ -596,7 +599,7 @@ public class Home extends JPanel {
             @Override
             public void mouseReleased(MouseEvent e) {
                 // Reset from pressed effect if not selected
-                if (!title.equals(selectedDiagramType)) {
+                if (!title.equals(currentDiagrame)) {
                     card.setBackground(HOVER_COLOR);
                     descLabel.setBackground(HOVER_COLOR);
                 }
@@ -623,9 +626,9 @@ public class Home extends JPanel {
         return card;
     }
 
-    private void selectDiagramType(String diagramType) {
+    private void selectDiagramType(UML_diagrame diagramType) {
         // Update selected diagram type
-        selectedDiagramType = diagramType;
+        currentDiagrame = diagramType;
 
         // Update instruction label with interactive message
         instructionLabel.setText("Cliquer sur le ci_dessus diargamme pour commencer");
@@ -641,7 +644,7 @@ public class Home extends JPanel {
         updateCardSelection(diagramType);
     }
 
-    private void updateCardSelection(String diagramType) {
+    private void updateCardSelection(UML_diagrame diagramType) {
         // Reset all cards
         classDiagramCard.setBackground(CARD_BG_COLOR);
         ((JTextArea)findComponentByClass(classDiagramCard, JTextArea.class)).setBackground(CARD_BG_COLOR);
@@ -670,13 +673,13 @@ public class Home extends JPanel {
         // Highlight selected card
         JPanel selectedCard = null;
         switch (diagramType) {
-            case CLASS_DIAGRAM:
+            case UML_diagrame.diagrameClass:
                 selectedCard = classDiagramCard;
                 break;
-            case SEQUENCE_DIAGRAM:
+            case UML_diagrame.diagrameSequence:
                 selectedCard = sequenceDiagramCard;
                 break;
-            case USE_CASE_DIAGRAM:
+            case UML_diagrame.diagrameCasUtilisation:
                 selectedCard = useCaseDiagramCard;
                 break;
         }
@@ -907,7 +910,7 @@ public class Home extends JPanel {
         projectsGrid.setOpaque(false);
 
         // Add just one sample project
-        projectsGrid.add(createProjectCard("Diagramme de CLasse", "Derniere modification: Aujourd'hui", CLASS_DIAGRAM, openDocument));
+        projectsGrid.add(createProjectCard("Diagramme de CLasse", "Derniere modification: Aujourd'hui", UML_diagrame.diagrameClass, openDocument));
 
         JScrollPane scrollPane = new JScrollPane(projectsGrid);
         scrollPane.setBorder(null);
@@ -918,7 +921,7 @@ public class Home extends JPanel {
         return panel;
     }
 
-    private JPanel createProjectCard(String title, String lastEdited, String diagramType, ActionListener openAction) {
+    private JPanel createProjectCard(String title, String lastEdited, UML_diagrame diagramType, ActionListener openAction) {
         JPanel card = new JPanel(new BorderLayout());
         card.setBackground(CARD_BG_COLOR);
         card.setBorder(new ShadowBorder());
@@ -933,13 +936,13 @@ public class Home extends JPanel {
         // Add appropriate icon based on diagram type
         Icon previewIcon = null;
         switch (diagramType) {
-            case CLASS_DIAGRAM:
+            case UML_diagrame.diagrameClass:
                 previewIcon = createClassDiagramPreview();
                 break;
-            case SEQUENCE_DIAGRAM:
+            case UML_diagrame.diagrameSequence:
                 previewIcon = createSequenceDiagramPreview();
                 break;
-            case USE_CASE_DIAGRAM:
+            case UML_diagrame.diagrameCasUtilisation:
                 previewIcon = createUseCaseDiagramPreview();
                 break;
         }
@@ -1834,5 +1837,9 @@ public class Home extends JPanel {
 
             g2.dispose();
         }
+    }
+
+    public static UML_diagrame getCurrentDiagrame() {
+        return currentDiagrame;
     }
 }

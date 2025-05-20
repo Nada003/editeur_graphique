@@ -1,11 +1,12 @@
 package ui.custom_graphics.uml_components.connect_components.associations;
 
 import ui.custom_graphics.uml_components.UMLComponent;
+import ui.custom_graphics.uml_components.connect_components.DrawingSpecification;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
 
-public class AssociationRender extends UMLComponent {
+public class AssociationRender extends UMLComponent implements DrawingSpecification {
 
     AssociationModel model;
     public AssociationRender(AssociationModel model) {
@@ -26,5 +27,15 @@ public class AssociationRender extends UMLComponent {
     @Override
     public void mouseClicked(MouseEvent e) {
 
+    }
+
+    @Override
+    public void drawHead(Graphics2D graphics2D, Point... point) {
+
+    }
+
+    @Override
+    public Graphics2D lineStyle(Graphics2D graphics2D) {
+        return null;
     }
 }

@@ -1,11 +1,5 @@
 package ui.main_app.main_topmenu;
 
-import ui.main_app.history.UserAction;
-import utils.custom_list.WatchedList;
-
-import javax.swing.*;
-import javax.swing.border.EmptyBorder;
-import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -13,6 +7,12 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import javax.swing.*;
+import javax.swing.border.EmptyBorder;
+import javax.swing.event.MenuListener;
+import javax.swing.filechooser.FileNameExtensionFilter;
+import ui.main_app.history.UserAction;
+import utils.custom_list.WatchedList;
 
 
 public class MainTopMenu extends JMenuBar {
@@ -29,6 +29,7 @@ public class MainTopMenu extends JMenuBar {
     private static final Font MENU_ITEM_FONT = new Font("Segoe UI", Font.PLAIN, 13);
 
     // Menu items with modern icons
+    private final JMenu home;
     private final JMenu fichier;
     private final JMenu edition;
     private final JMenu afficher;
@@ -73,7 +74,7 @@ public class MainTopMenu extends JMenuBar {
     private final WatchedList<UserAction> mainFlow;
     private final WatchedList<UserAction> undoFlow;
 
-    public MainTopMenu(WatchedList<UserAction> mainFlow, WatchedList<UserAction> undoFlow, File currentFile) {
+    public MainTopMenu(WatchedList<UserAction> mainFlow, WatchedList<UserAction> undoFlow, File currentFile, MenuListener navigateToHomePage) {
         this.currentFile = currentFile;
         this.mainFlow = mainFlow;
         this.undoFlow = undoFlow;
@@ -83,6 +84,10 @@ public class MainTopMenu extends JMenuBar {
         this.setBorder(new EmptyBorder(5, 5, 5, 5));
 
         // Initialize menus with modern styling
+        home = createMenu("home");
+        home.addMenuListener(navigateToHomePage);
+        this.add(home);
+
         fichier = createMenu("Fichier");
         edition = createMenu("Édition");
         afficher = createMenu("Afficher");
@@ -124,6 +129,7 @@ public class MainTopMenu extends JMenuBar {
         initFontMenu();
         initHelpMenu();
     }
+
 
     private JMenu createMenu(String text) {
         JMenu menu = new JMenu(text);
