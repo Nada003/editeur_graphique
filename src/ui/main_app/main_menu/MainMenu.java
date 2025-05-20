@@ -1,16 +1,14 @@
 package ui.main_app.main_menu;
 
-import ui.custom_graphics.uml_components.UMLComponent;
-import ui.main_app.history.UserAction;
-import utils.custom_list.WatchedList;
-
-import javax.swing.*;
-import javax.swing.border.EmptyBorder;
-import javax.swing.border.MatteBorder;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.LinkedList;
+import javax.swing.*;
+import javax.swing.border.MatteBorder;
+import ui.custom_graphics.uml_components.UMLComponent;
+import ui.main_app.history.UserAction;
+import utils.custom_list.WatchedList;
 
 public class MainMenu extends JPanel {
     // Modern color scheme
@@ -66,9 +64,9 @@ public class MainMenu extends JPanel {
         setPanelSize(dynamicPanelContainers, DYNAMIC_PANEL_WIDTH);
 
         // Initialize buttons with modern icons and styling
-        classButton = createModernButton("Class Diagrams", "src/assets/containers2.png", "Create and manage class diagrams");
-        connectButton = createModernButton("Connectors", "src/assets/connect_components.png", "Add relationships between elements");
-        containersButton = createModernButton("Containers", "src/assets/shapes.png", "Add container elements to your diagram");
+        classButton = createModernButton("diagrammes", "src/assets/containers2.png", "Create and manage class diagrams");
+        connectButton = createModernButton("Relations", "src/assets/connect_components.png", "Add relationships between elements");
+        containersButton = createModernButton("Conteneurs", "src/assets/shapes.png", "Add container elements to your diagram");
 
         // Adding buttons to the fixed menu with better spacing
         fixedMenu.setLayout(new BoxLayout(fixedMenu, BoxLayout.Y_AXIS));

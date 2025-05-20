@@ -30,9 +30,9 @@ public class Home extends JPanel {
     private static final Font CREDIT_FONT = new Font("Segoe UI", Font.ITALIC, 12);
 
     // Diagram types
-    private static final String CLASS_DIAGRAM = "Class Diagrams";
-    private static final String SEQUENCE_DIAGRAM = "Sequence Diagrams";
-    private static final String USE_CASE_DIAGRAM = "Use Case Diagrams";
+    private static final String CLASS_DIAGRAM = "Diagrammes De Classe";
+    private static final String SEQUENCE_DIAGRAM = "Diagrammes De Sequence";
+    private static final String USE_CASE_DIAGRAM = "Diagrammes De Cas d'Utilisation";
 
     // Selected diagram type - start with Class Diagram selected
     private String selectedDiagramType = CLASS_DIAGRAM;
@@ -284,7 +284,7 @@ public class Home extends JPanel {
         titlePanel.add(iconLabel);
 
         // Add title text
-        JLabel titleLabel = new JLabel("UML Designer");
+        JLabel titleLabel = new JLabel("Editeur Graphique");
         titleLabel.setFont(APP_TITLE_FONT);
         titleLabel.setForeground(Color.WHITE);
         titlePanel.add(titleLabel);
@@ -295,9 +295,9 @@ public class Home extends JPanel {
         JPanel navPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 0));
         navPanel.setBackground(PRIMARY_COLOR);
 
-        JButton homeButton = createNavButton("Home", e -> mainCardLayout.show(mainPanel, "HomePanel"));
-        JButton openButton = createNavButton("Open", e -> mainCardLayout.show(mainPanel, "OpenPanel"));
-        JButton recentButton = createNavButton("Recent Projects", e -> mainCardLayout.show(mainPanel, "RecentProjectsPanel"));
+        JButton homeButton = createNavButton("Acceuil", e -> mainCardLayout.show(mainPanel, "HomePanel"));
+        JButton openButton = createNavButton("Ouvrir", e -> mainCardLayout.show(mainPanel, "OpenPanel"));
+        JButton recentButton = createNavButton("Projetc Récents", e -> mainCardLayout.show(mainPanel, "RecentProjectsPanel"));
 
         navPanel.add(homeButton);
         navPanel.add(openButton);
@@ -340,15 +340,12 @@ public class Home extends JPanel {
         footerPanel.setBackground(new Color(33, 37, 41));
         footerPanel.setBorder(new EmptyBorder(10, 24, 10, 24));
 
-        JLabel creditLabel = new JLabel("Created by ...");
+        JLabel creditLabel = new JLabel("Créer par...");
         creditLabel.setFont(CREDIT_FONT);
         creditLabel.setForeground(Color.WHITE);
         footerPanel.add(creditLabel, BorderLayout.EAST);
 
-        JLabel versionLabel = new JLabel("Version 1.0.0");
-        versionLabel.setFont(CREDIT_FONT);
-        versionLabel.setForeground(new Color(180, 180, 180));
-        footerPanel.add(versionLabel, BorderLayout.WEST);
+      
 
         return footerPanel;
     }
@@ -375,14 +372,14 @@ public class Home extends JPanel {
         gbc.insets = new Insets(10, 10, 10, 10);
 
         // Welcome title with UML styling
-        JLabel welcomeTitle = new JLabel("Welcome to Our UML Designer", SwingConstants.CENTER);
+        JLabel welcomeTitle = new JLabel("Bienvenue sur notre Editeur graphique UML", SwingConstants.CENTER);
         welcomeTitle.setFont(TITLE_FONT);
         welcomeTitle.setForeground(TEXT_COLOR);
         gbc.insets = new Insets(40, 40, 10, 40);
         welcomePanel.add(welcomeTitle, gbc);
 
         // Welcome subtitle
-        JLabel welcomeSubtitle = new JLabel("Create professional UML diagrams with ease", SwingConstants.CENTER);
+        JLabel welcomeSubtitle = new JLabel("Créer des diagrammes UML professionels", SwingConstants.CENTER);
         welcomeSubtitle.setFont(SUBTITLE_FONT);
         welcomeSubtitle.setForeground(LIGHT_TEXT_COLOR);
         gbc.insets = new Insets(0, 40, 30, 40);
@@ -416,13 +413,13 @@ public class Home extends JPanel {
         });
 
         // Instruction text with interactive styling
-        instructionLabel = new JLabel("Click on the diagram to begin", SwingConstants.CENTER);
+        instructionLabel = new JLabel("Cliquer sur le diagramme ci-dessus pour commencer", SwingConstants.CENTER);
         instructionLabel.setFont(new Font("Segoe UI", Font.BOLD, 18));
         instructionLabel.setForeground(PRIMARY_COLOR);
         instructionLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         // Add tooltip to make it more interactive
-        instructionLabel.setToolTipText("Click here to start designing with the selected diagram type");
+        instructionLabel.setToolTipText("Cliquer ici pour débuteur le travail avec le diagramme sélectionné");
 
         documentPanel.add(documentButton);
         documentPanel.add(Box.createRigidArea(new Dimension(0, 20)));
@@ -433,7 +430,7 @@ public class Home extends JPanel {
         welcomePanel.add(documentPanel, gbc);
 
         // Add selection instruction label
-        selectionInstructionLabel = new JLabel("Select a diagram type below to get started", SwingConstants.CENTER);
+        selectionInstructionLabel = new JLabel("Selectionner un type de diagramme de votre choix", SwingConstants.CENTER);
         selectionInstructionLabel.setFont(new Font("Segoe UI", Font.BOLD, 16));
         selectionInstructionLabel.setForeground(ACCENT_COLOR);
         selectionInstructionLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -452,15 +449,15 @@ public class Home extends JPanel {
 
         // Create diagram type cards
         classDiagramCard = createDiagramTypeCard(CLASS_DIAGRAM,
-                "Model the structure of your system with classes, attributes, and methods",
+                "Modeliser la structure de votre systeme avec des classes, des attributs et des méthodes",
                 createClassDiagramPreview());
 
         sequenceDiagramCard = createDiagramTypeCard(SEQUENCE_DIAGRAM,
-                "Visualize the interactions between objects in a sequential order",
+                "Visualiser les intéractions entre objets dans un order séquentiel",
                 createSequenceDiagramPreview());
 
         useCaseDiagramCard = createDiagramTypeCard(USE_CASE_DIAGRAM,
-                "Represent user interactions with the system and its functionality",
+                "Représenter les interacations de l'utilisateur avec le systeme et ses fonctionnalités",
                 createUseCaseDiagramPreview());
 
         // Add diagram type cards to panel
@@ -610,7 +607,7 @@ public class Home extends JPanel {
                 selectDiagramType(title);
 
                 // Update the selection instruction to show the user what to do next
-                selectionInstructionLabel.setText("Now click on the diagram above to begin designing");
+                selectionInstructionLabel.setText("Mainetenant cliquer sur le diagramme ci-dessus pour commencer");
 
                 // Add a visual feedback animation
                 Timer feedbackTimer = new Timer(50, event -> {
@@ -631,7 +628,7 @@ public class Home extends JPanel {
         selectedDiagramType = diagramType;
 
         // Update instruction label with interactive message
-        instructionLabel.setText("Click on the diagram to begin");
+        instructionLabel.setText("Cliquer sur le ci_dessus diargamme pour commencer");
 
         // Reset pulsing animation
         pulseAlpha = 1.0f;
@@ -755,13 +752,13 @@ public class Home extends JPanel {
         gbc.anchor = GridBagConstraints.WEST;
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        JLabel titleLabel = new JLabel("Open a UML Diagram", SwingConstants.LEFT);
+        JLabel titleLabel = new JLabel("Ouvrir un Diagramme", SwingConstants.LEFT);
         titleLabel.setFont(TITLE_FONT);
         titleLabel.setForeground(TEXT_COLOR);
         gbc.insets = new Insets(0, 0, 16, 0);
         headerPanel.add(titleLabel, gbc);
 
-        JLabel subtitleLabel = new JLabel("Select a diagram file to continue your work");
+        JLabel subtitleLabel = new JLabel("Selectionner un fichier pour poursuivre votre travail");
         subtitleLabel.setFont(SUBTITLE_FONT);
         subtitleLabel.setForeground(LIGHT_TEXT_COLOR);
         gbc.insets = new Insets(0, 0, 32, 0);
@@ -797,7 +794,7 @@ public class Home extends JPanel {
         buttonPanel.setOpaque(false);
         buttonPanel.setBorder(new EmptyBorder(24, 0, 0, 0));
 
-        JButton openFileButton = new JButton("Browse Diagrams");
+        JButton openFileButton = new JButton("Parcourir les diagrammes");
         openFileButton.setFont(BUTTON_FONT);
         openFileButton.setForeground(Color.WHITE);
         openFileButton.setBackground(PRIMARY_COLOR);
@@ -814,7 +811,7 @@ public class Home extends JPanel {
             int returnValue = fileChooser.showOpenDialog(null);
             if (returnValue == JFileChooser.APPROVE_OPTION) {
                 File selectedFile = fileChooser.getSelectedFile();
-                JOptionPane.showMessageDialog(null, "Diagram opened: " + selectedFile.getName());
+                JOptionPane.showMessageDialog(null, "Diagramme ouvert: " + selectedFile.getName());
             }
         });
 
@@ -866,12 +863,12 @@ public class Home extends JPanel {
         headerPanel.setOpaque(false);
         headerPanel.setBorder(new EmptyBorder(0, 0, 20, 0));
 
-        JLabel titleLabel = new JLabel("Recent Projects");
+        JLabel titleLabel = new JLabel("Projets recents");
         titleLabel.setFont(TITLE_FONT);
         titleLabel.setForeground(TEXT_COLOR);
         headerPanel.add(titleLabel, BorderLayout.WEST);
 
-        JButton newProjectButton = new JButton("New Project");
+        JButton newProjectButton = new JButton("Nouveau Projet");
         newProjectButton.setFont(BUTTON_FONT);
         newProjectButton.setForeground(Color.WHITE);
         newProjectButton.setBackground(PRIMARY_COLOR);
@@ -910,7 +907,7 @@ public class Home extends JPanel {
         projectsGrid.setOpaque(false);
 
         // Add just one sample project
-        projectsGrid.add(createProjectCard("Class Diagram - System Architecture", "Last edited: Today", CLASS_DIAGRAM, openDocument));
+        projectsGrid.add(createProjectCard("Diagramme de CLasse", "Derniere modification: Aujourd'hui", CLASS_DIAGRAM, openDocument));
 
         JScrollPane scrollPane = new JScrollPane(projectsGrid);
         scrollPane.setBorder(null);
@@ -1684,7 +1681,7 @@ public class Home extends JPanel {
                 label.setIcon(createUmlFileIcon(24, 24));
 
                 // Add file info
-                String info = "Last modified: Today";
+                String info = "Derniere modification: Aujourd'hui";
                 label.setText("<html><b>" + file.getName() + "</b><br><font size='2' color='gray'>" + info + "</font></html>");
 
                 label.setBorder(new EmptyBorder(12, 16, 12, 16));

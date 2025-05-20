@@ -11,6 +11,7 @@ import ui.custom_graphics.uml_components.class_diagram.classes.ClassDetail;
 import ui.custom_graphics.uml_components.class_diagram.classes.ClassEnumeration;
 import ui.custom_graphics.uml_components.class_diagram.classes.ClassInterface;
 import ui.custom_graphics.uml_components.class_diagram.classes.ClassModel;
+import ui.custom_graphics.uml_components.class_diagram.classes.ClassRender;
 import ui.main_app.history.UserAction;
 import utils.custom_list.WatchedList;
 
@@ -27,6 +28,7 @@ public class DynamicMenu extends JPanel {
     private final JButton buttonClassAbstract;
     private final JButton buttonClassInterface;
     private final JButton buttonClassDetail;
+    private final JButton buttonClass;
 
     public DynamicMenu(WatchedList<UMLComponent> components, WatchedList<UserAction> mainFlow) {
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
@@ -34,7 +36,7 @@ public class DynamicMenu extends JPanel {
         setBorder(new EmptyBorder(15, 10, 15, 10));
 
         // Create title label
-        JLabel titleLabel = new JLabel("Class Diagram Elements");
+        JLabel titleLabel = new JLabel("Les Éléments Du Diagramme De Classe");
         titleLabel.setFont(new Font("Segoe UI", Font.BOLD, 16));
         titleLabel.setForeground(TEXT_COLOR);
         titleLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
@@ -46,16 +48,18 @@ public class DynamicMenu extends JPanel {
     
         
         
-        buttonClassEnum = createElementButton("Class enumarations", "src/assets/containers2.png",
-            "Add a enumeration class to your diagram");
+        buttonClassEnum = createElementButton("Class Enumarations", "src/assets/containers2.png",
+            "Ajouter une classe enumeration");
 
-        buttonClassAbstract = createElementButton("Class abstract", "src/assets/containers2.png",
-            "Add a abstract class to your diagram");
+        buttonClassAbstract = createElementButton("Class Abstraite", "src/assets/containers2.png",
+            "Ajouter une classe abstraite");
 
-            buttonClassInterface = createElementButton("Class Interface", "src/assets/containers2.png",
-            "Add a interface class to your diagram");
-             buttonClassDetail = createElementButton("Class Detail", "src/assets/containers2.png",
-            "Add a standard class to your diagram");
+            buttonClassInterface = createElementButton("Interface", "src/assets/containers2.png",
+            "Ajouter une interface");
+             buttonClassDetail = createElementButton("Class Details", "src/assets/containers2.png",
+            "Ajouter une classe détaillées");
+             buttonClass = createElementButton("Class", "src/assets/containers2.png",
+            "Ajouter une classe standard");
 
          // Add buttons to panel with spacing
          add(buttonClassEnum);
@@ -66,36 +70,43 @@ public class DynamicMenu extends JPanel {
         add(Box.createRigidArea(new Dimension(0, 10)));
         add(buttonClassDetail);
         add(Box.createRigidArea(new Dimension(0, 10)));
+        add(buttonClass);
+        add(Box.createRigidArea(new Dimension(0, 10)));
 
         // Add action listeners
         
-
+           buttonClass.addActionListener(e -> {
+            ClassModel model = new ClassModel("",new String[]{}, new String[]{});
+            ClassRender render = new ClassRender(model);
+            mainFlow.addElement(new UserAction("Ajouter class", render));
+            components.addElement(render);
+        });
           buttonClassEnum.addActionListener(e -> {
             ClassModel model = new ClassModel("",new String[]{}, new String[]{});
             ClassEnumeration render = new ClassEnumeration(model);
-            mainFlow.addElement(new UserAction("Add class", render));
+            mainFlow.addElement(new UserAction("ajouter class", render));
             components.addElement(render);
         });
 
         
           buttonClassAbstract.addActionListener(e -> {
-            ClassModel model = new ClassModel("abstract",new String[]{}, new String[]{});
+            ClassModel model = new ClassModel("abstraite",new String[]{}, new String[]{});
             ClassAbstract render = new ClassAbstract(model);
-            mainFlow.addElement(new UserAction("Add class", render));
+            mainFlow.addElement(new UserAction("Ajouter class", render));
             components.addElement(render);
         });
 
         buttonClassInterface.addActionListener(e -> {
             ClassModel model = new ClassModel("",new String[]{}, new String[]{});
             ClassInterface render = new ClassInterface(model);
-            mainFlow.addElement(new UserAction("Add class", render));
+            mainFlow.addElement(new UserAction("Ajouter class", render));
             components.addElement(render);
         });
 
          buttonClassDetail.addActionListener(e -> {
             ClassModel model = new ClassModel("class details",new String[]{}, new String[]{});
             ClassDetail render = new ClassDetail(model);
-            mainFlow.addElement(new UserAction("Add class", render));
+            mainFlow.addElement(new UserAction("Ajouter class", render));
             components.addElement(render);
         });
 
