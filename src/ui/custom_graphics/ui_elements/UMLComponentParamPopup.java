@@ -8,14 +8,13 @@ import javax.swing.border.*;
 
 public class UMLComponentParamPopup extends JDialog {
     // Modern color scheme
-    private static final Color PRIMARY_COLOR = new Color(13, 110, 253);  // Bootstrap primary blue
-    private static final Color DANGER_COLOR = new Color(220, 53, 69);    // Bootstrap danger red
-    private static final Color SUCCESS_COLOR = new Color(25, 135, 84);   // Bootstrap success green
-    private static final Color BACKGROUND_COLOR = new Color(248, 249, 250); // Light gray background
-    private static final Color TEXT_COLOR = new Color(33, 37, 41);       // Dark text
-    private static final Color BORDER_COLOR = new Color(222, 226, 230);  // Light border
+    private static final Color PRIMARY_COLOR = new Color(13, 110, 253);
+    private static final Color DANGER_COLOR = new Color(220, 53, 69);
+    private static final Color SUCCESS_COLOR = new Color(25, 135, 84);
+    private static final Color BACKGROUND_COLOR = new Color(248, 249, 250);
+    private static final Color TEXT_COLOR = new Color(33, 37, 41);
+    private static final Color BORDER_COLOR = new Color(222, 226, 230);
 
-    // Modern fonts
     private static final Font TITLE_FONT = new Font("Segoe UI", Font.BOLD, 16);
     private static final Font REGULAR_FONT = new Font("Segoe UI", Font.PLAIN, 14);
     private static final Font SMALL_FONT = new Font("Segoe UI", Font.PLAIN, 12);
@@ -35,9 +34,7 @@ public class UMLComponentParamPopup extends JDialog {
         setupWindow();
         setupContent(currentName, att, functions);
 
-        // Make dialog draggable from anywhere
         makeDraggable(this);
-
         this.setVisible(true);
     }
 
@@ -48,8 +45,6 @@ public class UMLComponentParamPopup extends JDialog {
         this.setUndecorated(true);
         this.setLayout(new BorderLayout());
         this.setBackground(BACKGROUND_COLOR);
-
-        // Add drop shadow to window
         this.getRootPane().setBorder(BorderFactory.createCompoundBorder(
             new ShadowBorder(),
             BorderFactory.createLineBorder(BORDER_COLOR)
@@ -57,7 +52,6 @@ public class UMLComponentParamPopup extends JDialog {
     }
 
     private void setupContent(String currentName, String[] attributes, String[] methods) {
-        // Add components
         this.add(createTitleBar(), BorderLayout.NORTH);
         this.add(createMainContent(currentName, attributes, methods), BorderLayout.CENTER);
         this.add(createButtonPanel(), BorderLayout.SOUTH);
@@ -110,11 +104,11 @@ public class UMLComponentParamPopup extends JDialog {
         mainPanel.setBackground(BACKGROUND_COLOR);
         mainPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
-        // Class name section
-        mainPanel.add(createFormGroup("Class Name", createStyledTextField(currentName)));
+        // ✅ Corrigé ici : assignation de nameField
+        nameField = createStyledTextField(currentName);
+        mainPanel.add(createFormGroup("Class Name", nameField));
         mainPanel.add(Box.createVerticalStrut(15));
 
-        // Counts section
         JPanel countsPanel = new JPanel(new GridLayout(1, 2, 15, 0));
         countsPanel.setOpaque(false);
 
@@ -127,19 +121,16 @@ public class UMLComponentParamPopup extends JDialog {
         mainPanel.add(countsPanel);
         mainPanel.add(Box.createVerticalStrut(15));
 
-        // Generate button
         JButton generateButton = createStyledButton("Generate Fields", PRIMARY_COLOR);
         generateButton.addActionListener(e -> generateFields());
         mainPanel.add(generateButton);
         mainPanel.add(Box.createVerticalStrut(20));
 
-        // Fields sections
         attributesPanel = new JPanel();
         functionsPanel = new JPanel();
         setupFieldsPanel(attributesPanel, "Attributes");
         setupFieldsPanel(functionsPanel, "Methods");
 
-        // Add scrollable sections
         mainPanel.add(createScrollableSection("Attributes", attributesPanel));
         mainPanel.add(Box.createVerticalStrut(15));
         mainPanel.add(createScrollableSection("Methods", functionsPanel));
@@ -292,10 +283,7 @@ public class UMLComponentParamPopup extends JDialog {
     }
 
     private void showError(String message) {
-        JOptionPane.showMessageDialog(this,
-            message,
-            "Error",
-            JOptionPane.ERROR_MESSAGE);
+        JOptionPane.showMessageDialog(this, message, "Error", JOptionPane.ERROR_MESSAGE);
     }
 
     private String[] getTextFromFields(JPanel panel) {
@@ -317,12 +305,11 @@ public class UMLComponentParamPopup extends JDialog {
             public void mouseDragged(MouseEvent e) {
                 Point currCoords = e.getLocationOnScreen();
                 setLocation(currCoords.x - mouseDownCompCoords.x,
-                          currCoords.y - mouseDownCompCoords.y);
+                        currCoords.y - mouseDownCompCoords.y);
             }
         });
     }
 
-    // Custom shadow border
     private static class ShadowBorder extends AbstractBorder {
         @Override
         public void paintBorder(Component c, Graphics g, int x, int y, int width, int height) {
@@ -331,7 +318,7 @@ public class UMLComponentParamPopup extends JDialog {
 
             for (int i = 0; i < 4; i++) {
                 g2.setColor(new Color(0, 0, 0, 20 - i * 4));
-                g2.drawRoundRect(x + i, y + i, width - 2*i - 1, height - 2*i - 1, 10, 10);
+                g2.drawRoundRect(x + i, y + i, width - 2 * i - 1, height - 2 * i - 1, 10, 10);
             }
 
             g2.dispose();
