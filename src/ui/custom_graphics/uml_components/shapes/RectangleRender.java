@@ -1,19 +1,52 @@
 package ui.custom_graphics.uml_components.shapes;
 
-import java.awt.*;
-import java.awt.event.MouseEvent;
 import ui.custom_graphics.uml_components.UMLComponent;
 
-public class RectangleRender extends UMLComponent {
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 
-    RectangleModel model;
+public class RectangleRender extends UMLComponent implements MouseListener {
+
+    private final RectangleModel model;
+    private JTextField textField;
 
     public RectangleRender(RectangleModel model) {
         super.setId(UMLComponent.getCount());
         this.model = model;
         this.setPreferredSize(new Dimension(120, 70));
         this.setOpaque(false);
+        this.addMouseListener(this);
     }
+
+    @Override
+    public void mouseClicked(MouseEvent e) {
+        if (textField == null) {
+            textField = new JTextField(model.getLabel());
+            textField.setFont(new Font("Arial", Font.BOLD, 14));
+            textField.setHorizontalAlignment(SwingConstants.CENTER);
+            textField.setBorder(null);
+            textField.setOpaque(false);
+            textField.setForeground(Color.BLACK);
+            textField.setBounds(10, getHeight() / 2 - 10, getWidth() - 20, 20);
+            textField.addActionListener(evt -> {
+                model.setLabel(textField.getText());
+                textField.setVisible(false);
+                repaint();
+            });
+            setLayout(null);
+            add(textField);
+        }
+        textField.setText(model.getLabel());
+        textField.setVisible(true);
+        textField.requestFocusInWindow();
+    }
+
+    @Override public void mousePressed(MouseEvent e) {}
+    @Override public void mouseReleased(MouseEvent e) {}
+    @Override public void mouseEntered(MouseEvent e) {}
+    @Override public void mouseExited(MouseEvent e) {}
 
     @Override
     protected void paintComponent(Graphics g) {
@@ -24,16 +57,24 @@ public class RectangleRender extends UMLComponent {
         int width = getWidth();
         int height = getHeight();
 
-       
+        g2d.setColor(Color.WHITE);
+        g2d.fillRect(0, 0, width, height);
 
-        g2d.setColor(Color.BLACK); // bordure
+        g2d.setColor(Color.BLACK);
         g2d.setStroke(new BasicStroke(2));
         g2d.drawRect(0, 0, width - 1, height - 1);
+
+        if (textField == null || !textField.isVisible()) {
+            String text = model.getLabel();
+            Font font = new Font("Arial", Font.BOLD, 14);
+            g2d.setFont(font);
+            FontMetrics fm = g2d.getFontMetrics();
+            int textWidth = fm.stringWidth(text);
+            int textHeight = fm.getAscent();
+            int textX = (width - textWidth) / 2;
+            int textY = (height + textHeight) / 2 - 4;
+            g2d.setColor(Color.BLACK);
+            g2d.drawString(text, textX, textY);
+        }
     }
-
-    @Override
-    public void mouseClicked(MouseEvent e) {
-
-    }
-
 }
