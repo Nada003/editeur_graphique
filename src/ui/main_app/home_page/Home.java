@@ -433,7 +433,7 @@ public class Home extends JPanel {
         welcomePanel.add(documentPanel, gbc);
 
         // Add selection instruction label
-        selectionInstructionLabel = new JLabel("Selectionner un type de diagramme de votre choix", SwingConstants.CENTER);
+        selectionInstructionLabel = new JLabel("Selectionner le type de diagramme de votre choix", SwingConstants.CENTER);
         selectionInstructionLabel.setFont(new Font("Segoe UI", Font.BOLD, 16));
         selectionInstructionLabel.setForeground(ACCENT_COLOR);
         selectionInstructionLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -610,7 +610,7 @@ public class Home extends JPanel {
                 selectDiagramType(title);
 
                 // Update the selection instruction to show the user what to do next
-                selectionInstructionLabel.setText("Mainetenant cliquer sur le diagramme ci-dessus pour commencer");
+                selectionInstructionLabel.setText("");
 
                 // Add a visual feedback animation
                 Timer feedbackTimer = new Timer(50, event -> {
@@ -631,7 +631,7 @@ public class Home extends JPanel {
         currentDiagrame = diagramType;
 
         // Update instruction label with interactive message
-        instructionLabel.setText("Cliquer sur le ci_dessus diargamme pour commencer");
+        instructionLabel.setText("Cliquer sur le  diargamme ci-dessus pour commencer");
 
         // Reset pulsing animation
         pulseAlpha = 1.0f;

@@ -1,5 +1,3 @@
-
-
 package ui.custom_graphics.uml_components.connect_components.realization;
 
 import java.awt.*;
@@ -21,26 +19,32 @@ public class RealizationRender extends UMLComponent implements DrawingSpecificat
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2d = (Graphics2D) g;
-        g2d.setColor(Color.black);
+
+        // Ligne pointillée
         float[] dash = {5f};
         g2d.setStroke(new BasicStroke(2, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0, dash, 0));
+        g2d.setColor(Color.black);
 
         int x1 = 10, y1 = getHeight() / 2;
         int x2 = getWidth() - 20, y2 = getHeight() / 2;
 
+        // Dessin de la ligne (arrêtée avant la flèche)
         g2d.drawLine(x1, y1, x2 - 10, y2);
-        drawHollowArrow(g2d, x2, y2);
+
+        // Dessin de la tête ">" en trait plein
+        drawArrowHead(g2d, x2, y2);
     }
 
-    private void drawHollowArrow(Graphics2D g2d, int x, int y) {
+    private void drawArrowHead(Graphics2D g2d, int x, int y) {
         int size = 10;
-        int[] xPoints = {x, x - size, x - size};
-        int[] yPoints = {y, y - size, y + size};
 
-        g2d.setColor(Color.white);
-        g2d.fillPolygon(xPoints, yPoints, 3);
-        g2d.setColor(Color.black);
-        g2d.drawPolygon(xPoints, yPoints, 3);
+        Stroke oldStroke = g2d.getStroke(); // sauvegarde du style actuel
+        g2d.setStroke(new BasicStroke(2)); // ligne pleine pour la tête
+
+        g2d.drawLine(x - size, y - size, x, y); // ligne diagonale haute
+        g2d.drawLine(x - size, y + size, x, y); // ligne diagonale basse
+
+        g2d.setStroke(oldStroke); // restauration du style précédent (pointillé)
     }
 
     @Override
@@ -48,7 +52,7 @@ public class RealizationRender extends UMLComponent implements DrawingSpecificat
 
     @Override
     public void drawHead(Graphics2D g2d, Point... point) {
-        drawHollowArrow(g2d, point[0].x, point[0].y);
+        drawArrowHead(g2d, point[0].x, point[0].y);
     }
 
     @Override

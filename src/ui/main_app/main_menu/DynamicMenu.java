@@ -12,9 +12,12 @@ import ui.custom_graphics.uml_components.class_diagram.classes.ClassEnumeration;
 import ui.custom_graphics.uml_components.class_diagram.classes.ClassInterface;
 import ui.custom_graphics.uml_components.class_diagram.classes.ClassModel;
 import ui.custom_graphics.uml_components.class_diagram.classes.ClassRender;
+import ui.custom_graphics.uml_components.use_case_diagrame.ActorModel;
+import ui.custom_graphics.uml_components.use_case_diagrame.ActorRender;
 import ui.main_app.history.UserAction;
 import utils.UML_diagrame;
 import utils.custom_list.WatchedList;
+import utils.models.JButtonHelper;
 
 public class DynamicMenu extends JPanel {
     // Modern color scheme
@@ -30,6 +33,7 @@ public class DynamicMenu extends JPanel {
     private final JButton buttonClassInterface;
     private final JButton buttonClassDetail;
      private final JButton buttonClass;
+     private final JButton buttonActor;
    
 
 
@@ -39,7 +43,7 @@ public class DynamicMenu extends JPanel {
         setBorder(new EmptyBorder(15, 10, 15, 10));
 
         // Create title label
-        JLabel titleLabel = new JLabel("Les Éléments Du Diagramme De Classe");
+        JLabel titleLabel = new JLabel("Les Éléments Du Diagramme");
         titleLabel.setFont(new Font("Segoe UI", Font.BOLD, 16));
         titleLabel.setForeground(TEXT_COLOR);
         titleLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
@@ -51,33 +55,50 @@ public class DynamicMenu extends JPanel {
     
         
         
-        buttonClassEnum = createElementButton("Class Enumarations", "src/assets/containers2.png",
+        buttonClassEnum = createElementButton(currentDiagramme == UML_diagrame.diagrameClass ? "Class Enumarations" : "", "src/assets/containers2.png",
             "Ajouter une classe enumeration");
 
-        buttonClassAbstract = createElementButton("Class Abstraite", "src/assets/containers2.png",
+        buttonClassAbstract = createElementButton(currentDiagramme == UML_diagrame.diagrameClass ? "Class Abstraite" : "", "src/assets/containers2.png",
             "Ajouter une classe abstraite");
 
-            buttonClassInterface = createElementButton("Interface", "src/assets/containers2.png",
+            buttonClassInterface = createElementButton(currentDiagramme == UML_diagrame.diagrameClass ? "Interface" : "", "src/assets/containers2.png",
             "Ajouter une interface");
-             buttonClassDetail = createElementButton("Class Details", "src/assets/containers2.png",
+             buttonClassDetail = createElementButton(currentDiagramme == UML_diagrame.diagrameClass ? "Class Details" : "", "src/assets/containers2.png",
             "Ajouter une classe détaillées");
-             buttonClass = createElementButton("Class", "src/assets/containers2.png",
+             buttonClass = createElementButton(currentDiagramme == UML_diagrame.diagrameClass ? "Class Standars" : "", "src/assets/containers2.png",
             "Ajouter une classe standard");
 
+            buttonActor = createElementButton(currentDiagramme == UML_diagrame.diagrameCasUtilisation ? "Acteur" : currentDiagramme == UML_diagrame.diagrameSequence ? "acteur" : "", "src/assets/actor.png",
+            "Ajouter un acteur standard");
+
+
+             JButtonHelper[] buttons = {new JButtonHelper(buttonClass, UML_diagrame.diagrameClass), 
+                new JButtonHelper(buttonClassEnum, UML_diagrame.diagrameClass),
+                new JButtonHelper(buttonClassInterface, UML_diagrame.diagrameClass),
+                new JButtonHelper(buttonClassDetail, UML_diagrame.diagrameClass),
+                new JButtonHelper(buttonClassAbstract, UML_diagrame.diagrameClass),
+                new JButtonHelper(buttonActor, UML_diagrame.diagrameCasUtilisation),
+                new JButtonHelper(buttonActor, UML_diagrame.diagrameSequence)};
+
+                for (JButtonHelper button : buttons) {
+            if (button.umlDiagrame == currentDiagramme )  {
+                add(button.button);
+                add(Box.createRigidArea(new Dimension(0, 10)));
+            }
+        }
+
+
+
          // Add buttons to panel with spacing
-         add(buttonClassEnum);
-        add(Box.createRigidArea(new Dimension(0, 10)));
-         add(buttonClassAbstract);
-        add(Box.createRigidArea(new Dimension(0, 10)));
-         add(buttonClassInterface);
-        add(Box.createRigidArea(new Dimension(0, 10)));
-        add(buttonClassDetail);
-        add(Box.createRigidArea(new Dimension(0, 10)));
-        add(buttonClass);
-        add(Box.createRigidArea(new Dimension(0, 10)));
+        add(Box.createVerticalGlue());
 
         // Add action listeners
-        
+              buttonActor.addActionListener(e -> {
+            ActorModel model = new ActorModel("",new String[]{}, new String[]{});
+            ActorRender render = new ActorRender(model);
+            mainFlow.addElement(new UserAction("Add class", render));
+            components.addElement(render);
+        });
              buttonClass.addActionListener(e -> {
             ClassModel model = new ClassModel("",new String[]{}, new String[]{});
             ClassRender render = new ClassRender(model);

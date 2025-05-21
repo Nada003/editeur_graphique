@@ -3,7 +3,6 @@ package ui.custom_graphics.uml_components.shapes;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import ui.custom_graphics.uml_components.UMLComponent;
-import ui.custom_graphics.uml_components.connect_components.DrawingSpecification;
 
 public class TriangleRender extends UMLComponent {
 
@@ -27,8 +26,7 @@ protected void paintComponent(Graphics g) {
     int[] xPoints = { w / 2, 0, w };
     int[] yPoints = { 0, h, h };
 
-    g2d.setColor(Color.WHITE); // fond
-    g2d.fillPolygon(xPoints, yPoints, 3);
+  
 
     g2d.setColor(Color.BLACK); // bordure
     g2d.setStroke(new BasicStroke(2));

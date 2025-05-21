@@ -84,7 +84,7 @@ public class MainTopMenu extends JMenuBar {
         this.setBorder(new EmptyBorder(5, 5, 5, 5));
 
         // Initialize menus with modern styling
-        home = createMenu("home");
+        home = createMenu("Acceuil");
         home.addMenuListener(navigateToHomePage);
         this.add(home);
 

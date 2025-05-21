@@ -1,12 +1,5 @@
 package ui.main_app.main_menu;
 
-import ui.custom_graphics.uml_components.UMLComponent;
-import ui.main_app.history.UserAction;
-import utils.UML_diagrame;
-import utils.custom_list.WatchedList;
-
-import javax.swing.*;
-import javax.swing.border.MatteBorder;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -15,7 +8,9 @@ import javax.swing.*;
 import javax.swing.border.MatteBorder;
 import ui.custom_graphics.uml_components.UMLComponent;
 import ui.main_app.history.UserAction;
+import utils.UML_diagrame;
 import utils.custom_list.WatchedList;
+import utils.models.JButtonHelper;
 
 public class MainMenu extends JPanel {
     // Modern color scheme
@@ -24,13 +19,12 @@ public class MainMenu extends JPanel {
     private static final Color HOVER_COLOR = new Color(232, 240, 254);  // Light blue
     private static final Color SELECTED_COLOR = new Color(209, 231, 252);  // Selected blue
     private static final Color BORDER_COLOR = new Color(218, 220, 224);  // Border gray
-    private static final Color TEXT_COLOR = new Color(60, 64, 67);  // Dark gray
-    private static final Color ICON_COLOR = new Color(95, 99, 104);  // Icon gray
 
     private static final LinkedList<MenuExpandingListener> listeners = new LinkedList<>();
     private final JButton classButton;
     private final JButton connectButton;
     private final JButton containersButton;
+    private final JButton actorButton;
 
     private final JPanel dynamicMenu;
     private final JPanel dynamicPanelConnect;
@@ -45,8 +39,8 @@ public class MainMenu extends JPanel {
     private final WatchedList<UserAction> mainFlow;
     private final WatchedList<UserAction> undoFlow;
 
-    public MainMenu(WatchedList<UMLComponent> components, WatchedList<UserAction> mainFlow, WatchedList<UserAction> undoFlow, UML_diagrame currentDiagrame) {
-        this.currentDiagramme = currentDiagrame;
+    public MainMenu(WatchedList<UMLComponent> components, WatchedList<UserAction> mainFlow, WatchedList<UserAction> undoFlow, UML_diagrame currentDiagramme) {
+        this.currentDiagramme = currentDiagramme;
         this.setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
 
         // Creating and configuring fixed menu panel
@@ -73,26 +67,49 @@ public class MainMenu extends JPanel {
         setPanelSize(dynamicPanelContainers, DYNAMIC_PANEL_WIDTH);
 
         // Initialize buttons with modern icons and styling
-        classButton = createModernButton("diagrammes", "src/assets/containers2.png", "Create and manage class diagrams");
-        connectButton = createModernButton("Relations", "src/assets/connect_components.png", "Add relationships between elements");
-        containersButton = createModernButton("Conteneurs", "src/assets/shapes.png", "Add container elements to your diagram");
+        actorButton = createModernButton(
+                currentDiagramme == UML_diagrame.diagrameCasUtilisation ? "acteurs" : "",
+                "src/assets/actor.png",
+                "Ajouter des acteurs"
+        );
+        classButton = createModernButton(
+                currentDiagramme == UML_diagrame.diagrameClass ? "diagrammes" : "",
+                "src/assets/containers2.png",
+                "Créer et modifier des diagrammes"
+        );
+        connectButton = createModernButton(
+                "Relations",
+                "src/assets/connect_components.png",
+                "Ajouter des relations entre les éléments"
+        );
+        containersButton = createModernButton(
+                "Conteneurs",
+                "src/assets/shapes.png",
+                "Ajouter des conteneurs pour votre diagramme"
+        );
 
-        // Adding buttons to the fixed menu with better spacing
-        fixedMenu.setLayout(new BoxLayout(fixedMenu, BoxLayout.Y_AXIS));
-        fixedMenu.add(Box.createVerticalStrut(15));
-        fixedMenu.add(classButton);
-        fixedMenu.add(Box.createVerticalStrut(15));
-        fixedMenu.add(connectButton);
-        fixedMenu.add(Box.createVerticalStrut(15));
-        fixedMenu.add(containersButton);
-        fixedMenu.add(Box.createVerticalGlue());
+        JButtonHelper[] buttons = {
+                new JButtonHelper(actorButton, UML_diagrame.diagrameCasUtilisation),
+                new JButtonHelper(actorButton, UML_diagrame.diagrameSequence),
+                new JButtonHelper(connectButton, UML_diagrame.diagrameCasUtilisation),
+                new JButtonHelper(connectButton, UML_diagrame.diagrameSequence),
+                new JButtonHelper(connectButton, UML_diagrame.diagrameClass),
+                new JButtonHelper(classButton, UML_diagrame.diagrameClass),
+                new JButtonHelper(containersButton, UML_diagrame.diagrameClass)
+        };
 
-        // Add action listeners to buttons with visual feedback
+        for (JButtonHelper buttonHelper : buttons) {
+            if (buttonHelper.umlDiagrame == currentDiagramme) {
+                fixedMenu.add(buttonHelper.button);
+                fixedMenu.add(Box.createRigidArea(new Dimension(0, 10)));
+            }
+        }
+
+        actorButton.addActionListener(e -> togglePanel(dynamicMenu, actorButton));
         classButton.addActionListener(e -> togglePanel(dynamicMenu, classButton));
         connectButton.addActionListener(e -> togglePanel(dynamicPanelConnect, connectButton));
         containersButton.addActionListener(e -> togglePanel(dynamicPanelContainers, containersButton));
-
-        // Adding panels to the main interface
+        
         this.add(fixedMenu);
         this.add(dynamicMenu);
         this.add(dynamicPanelConnect);
@@ -101,7 +118,6 @@ public class MainMenu extends JPanel {
         this.mainFlow = mainFlow;
         this.undoFlow = undoFlow;
 
-        // Set all dynamic panels to be initially invisible
         setAllDynamicPanelsVisibility(false);
         resetButtonStyles();
     }
@@ -112,25 +128,21 @@ public class MainMenu extends JPanel {
         button.setBorderPainted(false);
         button.setContentAreaFilled(false);
 
-        // Create a modern icon with consistent styling
         try {
             ImageIcon originalIcon = new ImageIcon(iconPath);
             Image scaledImage = originalIcon.getImage().getScaledInstance(24, 24, Image.SCALE_SMOOTH);
             button.setIcon(new ImageIcon(scaledImage));
         } catch (Exception e) {
-            // Fallback if image not found
-            button.setText(tooltip.substring(0, 1));
-            button.setFont(new Font("Segoe UI", Font.BOLD, 16));
-            button.setForeground(PRIMARY_COLOR);
+            if (!tooltip.isEmpty()) {
+                button.setText(tooltip.substring(0, 1).toUpperCase());
+                button.setFont(new Font("Segoe UI", Font.BOLD, 16));
+                button.setForeground(PRIMARY_COLOR);
+            }
         }
 
-        // Add tooltip with modern styling
         button.setToolTipText("<html><b>" + tooltip + "</b><br>" + description + "</html>");
-
-        // Set button size
         setButtonSize(button, new Dimension(FIXED_PANEL_WIDTH, BUTTON_HEIGHT));
 
-        // Add hover effects
         button.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseEntered(MouseEvent e) {
@@ -161,8 +173,6 @@ public class MainMenu extends JPanel {
         } else {
             setAllDynamicPanelsVisibility(false);
             panel.setVisible(true);
-
-            // Highlight the selected button
             button.setBackground(SELECTED_COLOR);
             button.setContentAreaFilled(true);
             button.putClientProperty("selected", true);
@@ -182,6 +192,9 @@ public class MainMenu extends JPanel {
 
         containersButton.setContentAreaFilled(false);
         containersButton.putClientProperty("selected", false);
+
+        actorButton.setContentAreaFilled(false);
+        actorButton.putClientProperty("selected", false);
     }
 
     private void setAllDynamicPanelsVisibility(boolean isVisible) {
@@ -196,15 +209,15 @@ public class MainMenu extends JPanel {
         panel.setMinimumSize(new Dimension(width, height));
     }
 
-    private void updateSize() {
-        this.setPreferredSize(new Dimension(FIXED_PANEL_WIDTH + (isExpanded() ? DYNAMIC_PANEL_WIDTH : 0), height));
-        revalidate();
-    }
-
     private void setButtonSize(JButton button, Dimension size) {
         button.setMaximumSize(size);
         button.setPreferredSize(size);
         button.setMinimumSize(size);
+    }
+
+    private void updateSize() {
+        this.setPreferredSize(new Dimension(FIXED_PANEL_WIDTH + (isExpanded() ? DYNAMIC_PANEL_WIDTH : 0), height));
+        revalidate();
     }
 
     public boolean isExpanded() {
@@ -212,13 +225,15 @@ public class MainMenu extends JPanel {
     }
 
     public void addListener(MenuExpandingListener listener) {
-        if (!listeners.contains(listener))
+        if (!listeners.contains(listener)) {
             listeners.add(listener);
+        }
     }
 
     public void notifyListeners() {
-        for (var v : listeners)
-            v.doAction();
+        for (MenuExpandingListener listener : listeners) {
+            listener.doAction();
+        }
     }
 
     public void setHeight(int height) {

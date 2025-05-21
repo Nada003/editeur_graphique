@@ -1,5 +1,10 @@
 package ui.main_app.main_menu;
 
+import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import ui.custom_graphics.uml_components.UMLComponent;
 import ui.custom_graphics.uml_components.shapes.*;
 import ui.custom_graphics.uml_components.use_case_diagrame.ActorModel;
@@ -9,12 +14,7 @@ import ui.custom_graphics.uml_components.use_case_diagrame.use_case.UseCaseRende
 import ui.main_app.history.UserAction;
 import utils.UML_diagrame;
 import utils.custom_list.WatchedList;
-
-import javax.swing.*;
-import javax.swing.border.EmptyBorder;
-import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import utils.models.JButtonHelper;
 public class DynamicPanelContainers extends JPanel {
     private static final Color PRIMARY_COLOR = new Color(66, 133, 244);
     private static final Color SECONDARY_COLOR = new Color(241, 243, 244);
@@ -27,10 +27,7 @@ public class DynamicPanelContainers extends JPanel {
     private final JButton circleButton;
     private final JButton rectangleButton;
     private final JButton actorButton;
-<<<<<<< HEAD
 
-=======
->>>>>>> 995fbf5f0380f1016723ed3ed9ad69e3e9343074
 
 
     public DynamicPanelContainers(WatchedList<UMLComponent> components, WatchedList<UserAction> mainFlow, UML_diagrame currentDiagramme) {
@@ -38,7 +35,7 @@ public class DynamicPanelContainers extends JPanel {
         setBackground(Color.WHITE);
         setBorder(new EmptyBorder(15, 10, 15, 10));
 
-        JLabel titleLabel = new JLabel("Container Elements");
+        JLabel titleLabel = new JLabel("Conteneurs");
         titleLabel.setFont(new Font("Segoe UI", Font.BOLD, 16));
         titleLabel.setForeground(TEXT_COLOR);
         titleLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
@@ -51,16 +48,19 @@ public class DynamicPanelContainers extends JPanel {
         rectangleButton = createShapeButton("Rectangle", "src/assets/rectangle.png", "Ajouter une forme triangulaire");
         actorButton = createShapeButton("Acteur", "src/assets/actor.png", "Ajouter un acteur");
 
+        JButtonHelper[] buttons = {new JButtonHelper(ovalButton, UML_diagrame.diagrameCasUtilisation),
+            new JButtonHelper(rectangleButton, UML_diagrame.diagrameSequence),
+            new JButtonHelper(rectangleButton, UML_diagrame.diagrameCasUtilisation),
+            new JButtonHelper(circleButton, UML_diagrame.diagrameCasUtilisation),
+        new JButtonHelper(ovalButton, UML_diagrame.diagrameClass)};
+         
+            for (JButtonHelper button : buttons) {
+            if (button.umlDiagrame == currentDiagramme )  {
+                add(button.button);
+                add(Box.createRigidArea(new Dimension(0, 10)));
+            }
+        }
 
-        add(ovalButton);
-        add(Box.createRigidArea(new Dimension(0, 10)));
-        add(circleButton);
-        add(Box.createRigidArea(new Dimension(0, 10)));
-        add(rectangleButton);
-        add(Box.createRigidArea(new Dimension(0, 10)));
-        add(triangleButton);
-        add(actorButton);
-        add(Box.createRigidArea(new Dimension(0, 10)));
 
         add(Box.createVerticalGlue());
 
@@ -93,7 +93,7 @@ public class DynamicPanelContainers extends JPanel {
         });
 
         actorButton.addActionListener(e -> {
-            ActorModel model = new ActorModel("Actor");
+            ActorModel model = new ActorModel("Actor", new String[]{}, new String[]{});
             ActorRender actor = new ActorRender(model);
             mainFlow.addElement(new UserAction("Add actor", actor));
             components.addElement(actor);

@@ -1,10 +1,8 @@
 package ui.custom_graphics.uml_components.shapes;
 
-import ui.custom_graphics.uml_components.UMLComponent;
-import ui.custom_graphics.uml_components.connect_components.DrawingSpecification;
-
 import java.awt.*;
 import java.awt.event.MouseEvent;
+import ui.custom_graphics.uml_components.UMLComponent;
 
 public class RectangleRender extends UMLComponent {
 
@@ -26,8 +24,7 @@ public class RectangleRender extends UMLComponent {
         int width = getWidth();
         int height = getHeight();
 
-        g2d.setColor(Color.WHITE); // fond
-        g2d.fillRect(0, 0, width - 1, height - 1);
+       
 
         g2d.setColor(Color.BLACK); // bordure
         g2d.setStroke(new BasicStroke(2));

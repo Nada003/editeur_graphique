@@ -3,7 +3,6 @@ package ui.custom_graphics.uml_components.shapes;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import ui.custom_graphics.uml_components.UMLComponent;
-import ui.custom_graphics.uml_components.connect_components.DrawingSpecification;
 
 public class CircleRender extends UMLComponent {
 
@@ -26,8 +25,7 @@ protected void paintComponent(Graphics g) {
     int x = (getWidth() - size) / 2;
     int y = (getHeight() - size) / 2;
 
-    g2d.setColor(Color.WHITE); // fond
-    g2d.fillOval(x, y, size - 1, size - 1);
+    
 
     g2d.setColor(Color.BLACK); // bordure
     g2d.setStroke(new BasicStroke(2));
