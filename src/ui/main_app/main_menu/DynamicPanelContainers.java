@@ -1,10 +1,5 @@
 package ui.main_app.main_menu;
 
-import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import javax.swing.*;
-import javax.swing.border.EmptyBorder;
 import ui.custom_graphics.uml_components.UMLComponent;
 import ui.custom_graphics.uml_components.shapes.*;
 import ui.custom_graphics.uml_components.use_case_diagrame.ActorModel;
@@ -15,6 +10,12 @@ import ui.main_app.history.UserAction;
 import utils.UML_diagrame;
 import utils.custom_list.WatchedList;
 import utils.models.JButtonHelper;
+
+import javax.swing.*;
+import javax.swing.border.EmptyBorder;
+import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 public class DynamicPanelContainers extends JPanel {
     private static final Color PRIMARY_COLOR = new Color(66, 133, 244);
     private static final Color SECONDARY_COLOR = new Color(241, 243, 244);
@@ -48,11 +49,14 @@ public class DynamicPanelContainers extends JPanel {
         rectangleButton = createShapeButton("Rectangle", "src/assets/rectangle.png", "Ajouter une forme triangulaire");
         actorButton = createShapeButton("Acteur", "src/assets/actor.png", "Ajouter un acteur");
 
-        JButtonHelper[] buttons = {new JButtonHelper(ovalButton, UML_diagrame.diagrameCasUtilisation),
+        JButtonHelper[] buttons = {
+                new JButtonHelper(ovalButton, UML_diagrame.diagrameCasUtilisation),
             new JButtonHelper(rectangleButton, UML_diagrame.diagrameSequence),
             new JButtonHelper(rectangleButton, UML_diagrame.diagrameCasUtilisation),
             new JButtonHelper(circleButton, UML_diagrame.diagrameCasUtilisation),
-        new JButtonHelper(ovalButton, UML_diagrame.diagrameClass)};
+            new JButtonHelper(ovalButton, UML_diagrame.diagrameClass),
+                new JButtonHelper(actorButton, UML_diagrame.diagrameCasUtilisation),
+                new JButtonHelper(actorButton, UML_diagrame.diagrameSequence)};
          
             for (JButtonHelper button : buttons) {
             if (button.umlDiagrame == currentDiagramme )  {

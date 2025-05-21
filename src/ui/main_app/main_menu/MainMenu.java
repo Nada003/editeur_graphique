@@ -1,16 +1,17 @@
 package ui.main_app.main_menu;
 
-import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.util.LinkedList;
-import javax.swing.*;
-import javax.swing.border.MatteBorder;
 import ui.custom_graphics.uml_components.UMLComponent;
 import ui.main_app.history.UserAction;
 import utils.UML_diagrame;
 import utils.custom_list.WatchedList;
 import utils.models.JButtonHelper;
+
+import javax.swing.*;
+import javax.swing.border.MatteBorder;
+import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.util.LinkedList;
 
 public class MainMenu extends JPanel {
     // Modern color scheme
@@ -49,6 +50,7 @@ public class MainMenu extends JPanel {
         fixedMenu.setBorder(new MatteBorder(0, 0, 0, 1, BORDER_COLOR));
         setPanelSize(fixedMenu, FIXED_PANEL_WIDTH);
 
+        // Initialize dynamic panels
         dynamicMenu = new DynamicMenu(components, mainFlow, currentDiagramme);
         dynamicMenu.setBorder(new MatteBorder(0, 0, 0, 1, BORDER_COLOR));
         dynamicMenu.setBackground(Color.WHITE);
@@ -68,12 +70,12 @@ public class MainMenu extends JPanel {
 
         // Initialize buttons with modern icons and styling
         actorButton = createModernButton(
-                currentDiagramme == UML_diagrame.diagrameCasUtilisation ? "acteurs" : "",
+                currentDiagramme.equals(UML_diagrame.diagrameCasUtilisation) ? "Acteurs" : "Acteur",
                 "src/assets/actor.png",
                 "Ajouter des acteurs"
         );
         classButton = createModernButton(
-                currentDiagramme == UML_diagrame.diagrameClass ? "diagrammes" : "",
+                currentDiagramme.equals(UML_diagrame.diagrameClass) ? "Diagrammes" : "Diagramme",
                 "src/assets/containers2.png",
                 "Créer et modifier des diagrammes"
         );
@@ -88,28 +90,31 @@ public class MainMenu extends JPanel {
                 "Ajouter des conteneurs pour votre diagramme"
         );
 
+        // Create button helpers array for conditional adding
         JButtonHelper[] buttons = {
-                new JButtonHelper(actorButton, UML_diagrame.diagrameCasUtilisation),
-                new JButtonHelper(actorButton, UML_diagrame.diagrameSequence),
                 new JButtonHelper(connectButton, UML_diagrame.diagrameCasUtilisation),
                 new JButtonHelper(connectButton, UML_diagrame.diagrameSequence),
                 new JButtonHelper(connectButton, UML_diagrame.diagrameClass),
                 new JButtonHelper(classButton, UML_diagrame.diagrameClass),
-                new JButtonHelper(containersButton, UML_diagrame.diagrameClass)
+                new JButtonHelper(containersButton, UML_diagrame.diagrameClass),
+                new JButtonHelper(containersButton, UML_diagrame.diagrameCasUtilisation)
         };
 
+        // Add buttons to fixed menu only if their diagram type matches the current
         for (JButtonHelper buttonHelper : buttons) {
-            if (buttonHelper.umlDiagrame == currentDiagramme) {
+            if (buttonHelper.umlDiagrame != null && buttonHelper.umlDiagrame.equals(currentDiagramme)) {
                 fixedMenu.add(buttonHelper.button);
                 fixedMenu.add(Box.createRigidArea(new Dimension(0, 10)));
             }
         }
 
+        // Set up button listeners to toggle dynamic panels
         actorButton.addActionListener(e -> togglePanel(dynamicMenu, actorButton));
         classButton.addActionListener(e -> togglePanel(dynamicMenu, classButton));
         connectButton.addActionListener(e -> togglePanel(dynamicPanelConnect, connectButton));
         containersButton.addActionListener(e -> togglePanel(dynamicPanelContainers, containersButton));
-        
+
+        // Add fixed menu and dynamic panels to the main panel
         this.add(fixedMenu);
         this.add(dynamicMenu);
         this.add(dynamicPanelConnect);
@@ -122,26 +127,28 @@ public class MainMenu extends JPanel {
         resetButtonStyles();
     }
 
-    private JButton createModernButton(String tooltip, String iconPath, String description) {
+    // Create buttons with icon and tooltip with modern style
+    private JButton createModernButton(String text, String iconPath, String tooltip) {
         JButton button = new JButton();
         button.setFocusPainted(false);
         button.setBorderPainted(false);
         button.setContentAreaFilled(false);
+        button.setToolTipText("<html><b>" + text + "</b><br>" + tooltip + "</html>");
+        setButtonSize(button, new Dimension(FIXED_PANEL_WIDTH, BUTTON_HEIGHT));
 
+        // Try loading icon
         try {
             ImageIcon originalIcon = new ImageIcon(iconPath);
             Image scaledImage = originalIcon.getImage().getScaledInstance(24, 24, Image.SCALE_SMOOTH);
             button.setIcon(new ImageIcon(scaledImage));
         } catch (Exception e) {
-            if (!tooltip.isEmpty()) {
-                button.setText(tooltip.substring(0, 1).toUpperCase());
+            // If icon loading failed, show first letter of tooltip as fallback
+            if (text != null && !text.isEmpty()) {
+                button.setText(text.substring(0, 1).toUpperCase());
                 button.setFont(new Font("Segoe UI", Font.BOLD, 16));
                 button.setForeground(PRIMARY_COLOR);
             }
         }
-
-        button.setToolTipText("<html><b>" + tooltip + "</b><br>" + description + "</html>");
-        setButtonSize(button, new Dimension(FIXED_PANEL_WIDTH, BUTTON_HEIGHT));
 
         button.addMouseListener(new MouseAdapter() {
             @Override
@@ -163,6 +170,7 @@ public class MainMenu extends JPanel {
         return button;
     }
 
+    // Toggle visibility of the panel linked with the button
     private void togglePanel(JPanel panel, JButton button) {
         resetButtonStyles();
 
@@ -183,6 +191,7 @@ public class MainMenu extends JPanel {
         revalidate();
     }
 
+    // Reset all buttons to default unselected style
     private void resetButtonStyles() {
         classButton.setContentAreaFilled(false);
         classButton.putClientProperty("selected", false);
@@ -197,47 +206,56 @@ public class MainMenu extends JPanel {
         actorButton.putClientProperty("selected", false);
     }
 
+    // Set visibility for all dynamic panels simultaneously
     private void setAllDynamicPanelsVisibility(boolean isVisible) {
         dynamicMenu.setVisible(isVisible);
         dynamicPanelConnect.setVisible(isVisible);
         dynamicPanelContainers.setVisible(isVisible);
     }
 
+    // Set fixed size for panels
     private void setPanelSize(JPanel panel, int width) {
         panel.setMaximumSize(new Dimension(width, height));
         panel.setPreferredSize(new Dimension(width, height));
         panel.setMinimumSize(new Dimension(width, height));
     }
 
+    // Set fixed size for buttons
     private void setButtonSize(JButton button, Dimension size) {
         button.setMaximumSize(size);
         button.setPreferredSize(size);
         button.setMinimumSize(size);
     }
 
+    // Update the preferred size of this MainMenu based on whether any panel is expanded
     private void updateSize() {
         this.setPreferredSize(new Dimension(FIXED_PANEL_WIDTH + (isExpanded() ? DYNAMIC_PANEL_WIDTH : 0), height));
         revalidate();
     }
 
+    // Return true if any dynamic panel is visible
     public boolean isExpanded() {
         return dynamicMenu.isVisible() || dynamicPanelConnect.isVisible() || dynamicPanelContainers.isVisible();
     }
 
+    // Add a listener to listen menu expanding events
     public void addListener(MenuExpandingListener listener) {
         if (!listeners.contains(listener)) {
             listeners.add(listener);
         }
     }
 
+    // Notify all listeners of a menu expanding event
     public void notifyListeners() {
         for (MenuExpandingListener listener : listeners) {
             listener.doAction();
         }
     }
 
+    // Set panel height and update layout
     public void setHeight(int height) {
         MainMenu.height = height;
         revalidate();
     }
 }
+
