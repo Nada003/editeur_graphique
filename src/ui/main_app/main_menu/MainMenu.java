@@ -97,7 +97,8 @@ public class MainMenu extends JPanel {
                 new JButtonHelper(connectButton, UML_diagrame.diagrameClass),
                 new JButtonHelper(classButton, UML_diagrame.diagrameClass),
                 new JButtonHelper(containersButton, UML_diagrame.diagrameClass),
-                new JButtonHelper(containersButton, UML_diagrame.diagrameCasUtilisation)
+                new JButtonHelper(containersButton, UML_diagrame.diagrameCasUtilisation),
+                new JButtonHelper(containersButton, UML_diagrame.diagrameSequence)
         };
 
         // Add buttons to fixed menu only if their diagram type matches the current

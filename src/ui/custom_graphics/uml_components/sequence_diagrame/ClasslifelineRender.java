@@ -2,10 +2,11 @@
 
 package ui.custom_graphics.uml_components.sequence_diagrame;
 
-import java.awt.*;
-import java.awt.event.MouseEvent;
 import ui.custom_graphics.uml_components.UMLComponent;
 import ui.custom_graphics.uml_components.connect_components.DrawingSpecification;
+
+import java.awt.*;
+import java.awt.event.MouseEvent;
 
 public class ClasslifelineRender extends UMLComponent implements DrawingSpecification {
 
@@ -23,8 +24,8 @@ public class ClasslifelineRender extends UMLComponent implements DrawingSpecific
         Graphics2D g2d = (Graphics2D) g;
         g2d.setColor(Color.BLACK);
 
-        // Définir un style de trait pointillé
-        float[] dashPattern = {10, 10}; // 10px ligne, 10px vide
+
+        float[] dashPattern = {10, 10};
         Stroke dashed = new BasicStroke(2, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER,
                 10.0f, dashPattern, 0);
         g2d.setStroke(dashed);
@@ -33,7 +34,7 @@ public class ClasslifelineRender extends UMLComponent implements DrawingSpecific
         int yStart = 0;
         int yEnd = getHeight();
 
-        // Dessiner une ligne verticale en pointillés
+
         g2d.drawLine(x, yStart, x, yEnd);
     }
 
