@@ -10,8 +10,12 @@ import ui.custom_graphics.uml_components.connect_components.composition.Composit
 import ui.custom_graphics.uml_components.connect_components.composition.CompositionRender;
 import ui.custom_graphics.uml_components.connect_components.dependency.DependencyModel;
 import ui.custom_graphics.uml_components.connect_components.dependency.DependencyRender;
+import ui.custom_graphics.uml_components.connect_components.extend.ExtendModel;
+import ui.custom_graphics.uml_components.connect_components.extend.ExtendRender;
 import ui.custom_graphics.uml_components.connect_components.generalization.GeneralizationModel;
 import ui.custom_graphics.uml_components.connect_components.generalization.GeneralizationRender;
+import ui.custom_graphics.uml_components.connect_components.include.IncludeModel;
+import ui.custom_graphics.uml_components.connect_components.include.IncludeRender;
 import ui.custom_graphics.uml_components.connect_components.realization.RealizationModel;
 import ui.custom_graphics.uml_components.connect_components.realization.RealizationRender;
 import ui.custom_graphics.uml_components.sequence_diagrame.*;
@@ -209,8 +213,8 @@ public class DynamicPanelConnect extends JPanel {
         extendButton.addActionListener(e -> {
             resetButtonStates();
             extendButton.setBackground(ACTIVE_COLOR);
-            RealizationModel model = new RealizationModel("");
-            RealizationRender render = new RealizationRender(model);
+            ExtendModel model = new ExtendModel("", "");
+            ExtendRender render = new ExtendRender(model);
             mainFlow.addElement(new UserAction("Ajouter extend", render));
             components.addElement(render);
         });
@@ -218,8 +222,8 @@ public class DynamicPanelConnect extends JPanel {
         includeButton.addActionListener(e -> {
             resetButtonStates();
             includeButton.setBackground(ACTIVE_COLOR);
-            RealizationModel model = new RealizationModel("");
-            RealizationRender render = new RealizationRender(model);
+            IncludeModel model = new IncludeModel(new Point(10, 20), new Point(30, 40));
+            IncludeRender render = new IncludeRender(model);
             mainFlow.addElement(new UserAction("Ajouter include", render));
             components.addElement(render);
         });
