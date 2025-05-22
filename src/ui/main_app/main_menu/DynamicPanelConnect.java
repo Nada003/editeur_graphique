@@ -1,5 +1,10 @@
 package ui.main_app.main_menu;
 
+import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import ui.custom_graphics.uml_components.UMLComponent;
 import ui.custom_graphics.uml_components.connect_components.Relation;
 import ui.custom_graphics.uml_components.connect_components.aggregations.AggregationModel;
@@ -16,6 +21,10 @@ import ui.custom_graphics.uml_components.connect_components.realization.Realizat
 import ui.custom_graphics.uml_components.connect_components.realization.RealizationRender;
 import ui.custom_graphics.uml_components.sequence_diagrame.ClasslifelineModel;
 import ui.custom_graphics.uml_components.sequence_diagrame.ClasslifelineRender;
+import ui.custom_graphics.uml_components.sequence_diagrame.MsgretourModel;
+import ui.custom_graphics.uml_components.sequence_diagrame.MsgretourRender;
+import ui.custom_graphics.uml_components.sequence_diagrame.MsgsynchroneModel;
+import ui.custom_graphics.uml_components.sequence_diagrame.MsgsynchroneRender;
 import ui.custom_graphics.uml_components.shapes.RectangleModel;
 import ui.custom_graphics.uml_components.shapes.RectangleRender;
 import ui.main_app.history.UserAction;
@@ -23,12 +32,6 @@ import ui.main_app.main_board.MainBoard;
 import utils.UML_diagrame;
 import utils.custom_list.WatchedList;
 import utils.models.JButtonHelper;
-
-import javax.swing.*;
-import javax.swing.border.EmptyBorder;
-import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 
 public class DynamicPanelConnect extends JPanel {
     private static final Color PRIMARY_COLOR = new Color(66, 133, 244);
@@ -48,6 +51,8 @@ public class DynamicPanelConnect extends JPanel {
     private final JButton includeButton;
     private final JButton lifelineButton;
     private final JButton activationbarButton;
+     private final JButton msgsynchroneButton;
+      private final JButton msgretourButton;
 
 
     public DynamicPanelConnect(WatchedList<UMLComponent> components, WatchedList<UserAction> mainFlow, UML_diagrame currentDiagramme) {
@@ -65,15 +70,13 @@ public class DynamicPanelConnect extends JPanel {
         associationButton = createRelationshipButton(currentDiagramme == UML_diagrame.diagrameCasUtilisation ? "Association" :
                 (currentDiagramme == UML_diagrame.diagrameClass ? "Relation" : ""), "src/assets/association.png", "Connecter les classes avec une simple association");
 
-        generalizationButton = createRelationshipButton("héritage", "src/assets/generalization.png", "Créer une relation d'héritage");
+        generalizationButton=createRelationshipButton(currentDiagramme == UML_diagrame.diagrameClass ? "héritage" : 
+        (currentDiagramme == UML_diagrame.diagrameSequence ? "Message Asynchronisé" : ""), "src/assets/generalization.png", "Créer une relation d'héritage");
         aggregationButton = createRelationshipButton("Agrégation", "src/assets/aggregation.png", "créer une relation 'a-un'");
         compositionButton = createRelationshipButton("Composition", "src/assets/composition.png", "Créer une forte 'contient' relation");
         dependencyButton = createRelationshipButton("Dépendence", "src/assets/dependency.png", "Créer une 'dépend de' relation");
 
-        realizationButton = createRelationshipButton(currentDiagramme == UML_diagrame.diagrameClass ? "Réalisation"
-                        : (currentDiagramme == UML_diagrame.diagrameSequence ? "Medssage De Retour" : ""),
-                "src/assets/realization.png",
-                "Connecter la classe à l'implémentation de l'interface");
+        realizationButton = createRelationshipButton(currentDiagramme == UML_diagrame.diagrameClass ? "Réalisation" : "", "src/assets/realization.png", "Connecter la classe à l'implémentation de l'interface");
 
         extendButton = createRelationshipButton(currentDiagramme == UML_diagrame.diagrameCasUtilisation ? "Extend <<extend>>" : "", "src/assets/realization.png", "Connecter la classe à l'implémentation de l'interface");
 
@@ -81,9 +84,15 @@ public class DynamicPanelConnect extends JPanel {
 
         lifelineButton = createRelationshipButton("Lingne De Vie", "src/assets/lifeline.png", "Connecter la classe à l'implémentation de l'interface");
         activationbarButton = createRelationshipButton("Barre d'Activation", "src/assets/rectangle.png","");
+        msgretourButton = createRelationshipButton("Message De Retour", "src/assets/msgderetour.png", "retourner un message");
+        msgsynchroneButton = createRelationshipButton("Message Synchronisé", "src/assets/msgsynchrone.png", "");
+        
         JButtonHelper[] buttons = {new JButtonHelper(associationButton, UML_diagrame.diagrameClass),
                 new JButtonHelper(associationButton, UML_diagrame.diagrameCasUtilisation),
-                new JButtonHelper(associationButton, UML_diagrame.diagrameSequence),
+                new JButtonHelper(generalizationButton, UML_diagrame.diagrameSequence),
+                new JButtonHelper(msgretourButton, UML_diagrame.diagrameSequence),
+                new JButtonHelper(msgsynchroneButton, UML_diagrame.diagrameSequence),
+
                 new JButtonHelper(generalizationButton, UML_diagrame.diagrameClass),
                 new JButtonHelper(aggregationButton, UML_diagrame.diagrameClass),
                 new JButtonHelper(compositionButton, UML_diagrame.diagrameClass),
@@ -92,7 +101,7 @@ public class DynamicPanelConnect extends JPanel {
                 new JButtonHelper(extendButton, UML_diagrame.diagrameCasUtilisation),
                 new JButtonHelper(includeButton, UML_diagrame.diagrameCasUtilisation),
 
-                new JButtonHelper(realizationButton, UML_diagrame.diagrameSequence),
+                
                 new JButtonHelper(lifelineButton, UML_diagrame.diagrameSequence),
                 new JButtonHelper(activationbarButton, UML_diagrame.diagrameSequence),
         };
@@ -106,9 +115,18 @@ public class DynamicPanelConnect extends JPanel {
 
         add(Box.createVerticalGlue());
 
+         msgsynchroneButton.addActionListener(e -> {
+            resetButtonStates();
+            msgsynchroneButton.setBackground(ACTIVE_COLOR);
+            MsgsynchroneModel model = new MsgsynchroneModel("");
+            MsgsynchroneRender render = new MsgsynchroneRender(model);
+            mainFlow.addElement(new UserAction("Ajouter message synchrone", render));
+            components.addElement(render);
+        });
+
         activationbarButton.addActionListener(e -> {
             resetButtonStates();
-            lifelineButton.setBackground(ACTIVE_COLOR);
+            activationbarButton.setBackground(ACTIVE_COLOR);
             RectangleModel model = new RectangleModel("");
             RectangleRender render = new RectangleRender(model);
             mainFlow.addElement(new UserAction("Ajouter rectangle", render));
@@ -121,6 +139,14 @@ public class DynamicPanelConnect extends JPanel {
             ClasslifelineModel model = new ClasslifelineModel("");
             ClasslifelineRender render = new ClasslifelineRender(model);
             MainBoard.setRelation(new Relation(render, components));
+        });
+         msgretourButton.addActionListener(e -> {
+            resetButtonStates();
+            msgretourButton.setBackground(ACTIVE_COLOR);
+            MsgretourModel model = new MsgretourModel("");
+            MsgretourRender render = new MsgretourRender(model);
+            mainFlow.addElement(new UserAction("Ajouter message de retour", render));
+            components.addElement(render);
         });
 
         associationButton.addActionListener(e -> {
@@ -198,6 +224,10 @@ public class DynamicPanelConnect extends JPanel {
         dependencyButton.setBackground(Color.WHITE);
         realizationButton.setBackground(Color.WHITE);
         extendButton.setBackground(Color.WHITE);
+        activationbarButton.setBackground(Color.white);
+        msgretourButton.setBackground(Color.white);
+        msgsynchroneButton.setBackground(Color.white);
+        lifelineButton.setBackground(Color.white);
     }
 
     private JButton createRelationshipButton(String text, String iconPath, String tooltip) {
