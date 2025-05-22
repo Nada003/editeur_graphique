@@ -1,6 +1,8 @@
 package ui.main_app.main_menu;
 
 import ui.custom_graphics.uml_components.UMLComponent;
+import ui.custom_graphics.uml_components.sequence_diagrame.SequenceDiagramFrameModel;
+import ui.custom_graphics.uml_components.sequence_diagrame.SequenceDiagramFrameRender;
 import ui.custom_graphics.uml_components.shapes.*;
 import ui.custom_graphics.uml_components.use_case_diagrame.ActorModel;
 import ui.custom_graphics.uml_components.use_case_diagrame.ActorRender;
@@ -28,6 +30,8 @@ public class DynamicPanelContainers extends JPanel {
     private final JButton circleButton;
     private final JButton rectangleButton;
     private final JButton actorButton;
+    private final JButton sequenceFrameButton;
+
 
 
 
@@ -48,6 +52,7 @@ public class DynamicPanelContainers extends JPanel {
         circleButton = createShapeButton("Cercle", "src/assets/circle.png", "Ajouter une forme ronde");
         rectangleButton = createShapeButton("Rectangle", "src/assets/rectangle.png", "Ajouter une forme triangulaire");
         actorButton = createShapeButton("Acteur", "src/assets/actor.png", "Ajouter un acteur");
+        sequenceFrameButton = createShapeButton("Sequence Frame", "src/assets/sequence_frame.png", "Ajouter un cadre de diagramme de séquence");
 
         JButtonHelper[] buttons = {
                 new JButtonHelper(ovalButton, UML_diagrame.diagrameCasUtilisation),
@@ -56,7 +61,10 @@ public class DynamicPanelContainers extends JPanel {
             new JButtonHelper(circleButton, UML_diagrame.diagrameCasUtilisation),
             new JButtonHelper(ovalButton, UML_diagrame.diagrameClass),
                 new JButtonHelper(actorButton, UML_diagrame.diagrameCasUtilisation),
-                new JButtonHelper(actorButton, UML_diagrame.diagrameSequence)};
+                new JButtonHelper(actorButton, UML_diagrame.diagrameSequence),
+                new JButtonHelper(sequenceFrameButton, UML_diagrame.diagrameSequence),
+
+        };
          
             for (JButtonHelper button : buttons) {
             if (button.umlDiagrame == currentDiagramme )  {
@@ -103,7 +111,15 @@ public class DynamicPanelContainers extends JPanel {
             components.addElement(actor);
         });
 
-       
+        sequenceFrameButton.addActionListener(e -> {
+            SequenceDiagramFrameModel model = new SequenceDiagramFrameModel("InteractionName", "AttributExample");
+            SequenceDiagramFrameRender render = new SequenceDiagramFrameRender(model);
+            mainFlow.addElement(new UserAction("Ajouter cadre diagramme de séquence", render));
+            components.addElement(render);
+        });
+
+
+
     }
 
     private void showFeedback(String message) {
