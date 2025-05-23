@@ -11,7 +11,7 @@ public class ActorRender extends UMLComponent {
         super.setId(UMLComponent.getCount());
         this.model = model;
         this.setPreferredSize(new Dimension(100, 150));
-        this.setOpaque(false);
+        this.setOpaque(true);
     }
 
     @Override

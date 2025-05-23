@@ -18,6 +18,7 @@ import java.awt.dnd.DropTargetDropEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionAdapter;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Set;
@@ -49,6 +50,12 @@ public class MainBoard extends JPanel implements UMLComponentMovementListener {
 
     private static class PanelDropListener extends DropTargetAdapter {
         private final MainBoard targetPanel;
+        private static final int RESIZE_MARGIN = 10;
+        private boolean resizing = false;
+        private Point resizeClickPoint;
+        private int resizeCursor = Cursor.DEFAULT_CURSOR;
+        private Point lastMousePressLocation;
+
 
         public PanelDropListener(MainBoard targetPanel) {
             this.targetPanel = targetPanel;

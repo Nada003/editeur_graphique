@@ -14,8 +14,9 @@ public class ClasslifelineRender extends UMLComponent implements DrawingSpecific
 
     public ClasslifelineRender(ClasslifelineModel model) {
         super.setId(UMLComponent.getCount());
-        this.setOpaque(false);
+        this.setOpaque(true);
         this.model = model;
+        
     }
 
     @Override
