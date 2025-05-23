@@ -1,12 +1,13 @@
 package ui.custom_graphics.uml_components.connect_components.associations;
 
+import ui.custom_graphics.uml_components.ResizableUMComponent;
 import ui.custom_graphics.uml_components.UMLComponent;
 import ui.custom_graphics.uml_components.connect_components.DrawingSpecification;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
 
-public class AssociationRender extends UMLComponent implements DrawingSpecification {
+public class AssociationRender extends ResizableUMComponent implements DrawingSpecification {
 
     AssociationModel model;
     public AssociationRender(AssociationModel model) {
