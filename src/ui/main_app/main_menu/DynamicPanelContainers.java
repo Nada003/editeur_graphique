@@ -52,7 +52,7 @@ public class DynamicPanelContainers extends JPanel {
         circleButton = createShapeButton("Cercle", "src/assets/circle.png", "Ajouter une forme ronde");
         rectangleButton = createShapeButton("Rectangle", "src/assets/rectangle.png", "Ajouter une forme triangulaire");
         actorButton = createShapeButton("Acteur", "src/assets/actor.png", "Ajouter un acteur");
-        sequenceFrameButton = createShapeButton("Sequence Frame", "src/assets/sequence_frame.png", "Ajouter un cadre de diagramme de séquence");
+        sequenceFrameButton = createShapeButton("Sequence Frame", "src/assets/ffolder.png", "Ajouter un cadre de diagramme de séquence");
 
         JButtonHelper[] buttons = {
                 new JButtonHelper(ovalButton, UML_diagrame.diagrameCasUtilisation),

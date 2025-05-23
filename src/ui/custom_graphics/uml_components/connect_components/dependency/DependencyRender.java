@@ -1,11 +1,13 @@
 package ui.custom_graphics.uml_components.connect_components.dependency;
 
-import java.awt.*;
-import java.awt.event.MouseEvent;
+import ui.custom_graphics.uml_components.ResizableUMComponent;
 import ui.custom_graphics.uml_components.UMLComponent;
 import ui.custom_graphics.uml_components.connect_components.DrawingSpecification;
 
-public class DependencyRender extends UMLComponent implements DrawingSpecification {
+import java.awt.*;
+import java.awt.event.MouseEvent;
+
+public class DependencyRender extends ResizableUMComponent implements DrawingSpecification {
 
     DependencyModel model;
 

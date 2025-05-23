@@ -1,12 +1,13 @@
 package ui.custom_graphics.uml_components.connect_components.generalization;
 
+import ui.custom_graphics.uml_components.ResizableUMComponent;
 import ui.custom_graphics.uml_components.UMLComponent;
 import ui.custom_graphics.uml_components.connect_components.DrawingSpecification;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
 
-public class GeneralizationRender extends UMLComponent implements DrawingSpecification {
+public class GeneralizationRender extends ResizableUMComponent implements DrawingSpecification {
 
     GeneralizationModel model;
 

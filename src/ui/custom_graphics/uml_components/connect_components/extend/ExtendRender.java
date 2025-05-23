@@ -1,12 +1,13 @@
 package ui.custom_graphics.uml_components.connect_components.extend;
 
+import ui.custom_graphics.uml_components.ResizableUMComponent;
 import ui.custom_graphics.uml_components.UMLComponent;
 import ui.custom_graphics.uml_components.connect_components.DrawingSpecification;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
 
-public class ExtendRender extends UMLComponent implements DrawingSpecification {
+public class ExtendRender extends ResizableUMComponent implements DrawingSpecification {
 
     private ExtendModel model;  // référence au modèle (à créer/importer)
 

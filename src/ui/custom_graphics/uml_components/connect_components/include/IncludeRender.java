@@ -1,12 +1,13 @@
 package ui.custom_graphics.uml_components.connect_components.include;
 
+import ui.custom_graphics.uml_components.ResizableUMComponent;
 import ui.custom_graphics.uml_components.UMLComponent;
 import ui.custom_graphics.uml_components.connect_components.DrawingSpecification;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
 
-public class IncludeRender extends UMLComponent implements DrawingSpecification {
+public class IncludeRender extends ResizableUMComponent implements DrawingSpecification {
 
     private IncludeModel model;
 

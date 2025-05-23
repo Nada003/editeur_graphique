@@ -1,11 +1,13 @@
 package ui.custom_graphics.uml_components.sequence_diagrame;
 
-import java.awt.*;
-import java.awt.event.MouseEvent;
+import ui.custom_graphics.uml_components.ResizableUMComponent;
 import ui.custom_graphics.uml_components.UMLComponent;
 import ui.custom_graphics.uml_components.connect_components.DrawingSpecification;
 
-public class MsgretourRender extends UMLComponent implements DrawingSpecification {
+import java.awt.*;
+import java.awt.event.MouseEvent;
+
+public class MsgretourRender extends ResizableUMComponent implements DrawingSpecification {
     MsgretourModel model;
 
     public MsgretourRender(MsgretourModel model) {

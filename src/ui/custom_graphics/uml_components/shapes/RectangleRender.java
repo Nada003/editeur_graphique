@@ -1,5 +1,6 @@
 package ui.custom_graphics.uml_components.shapes;
 
+import ui.custom_graphics.uml_components.ResizableUMComponent;
 import ui.custom_graphics.uml_components.UMLComponent;
 
 import javax.swing.*;
@@ -7,7 +8,7 @@ import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
-public class RectangleRender extends UMLComponent implements MouseListener {
+public class RectangleRender extends ResizableUMComponent implements MouseListener {
 
     private final RectangleModel model;
     private JTextField textField;

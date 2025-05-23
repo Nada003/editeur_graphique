@@ -1,6 +1,6 @@
 package ui.custom_graphics.uml_components.sequence_diagrame;
 
-import ui.custom_graphics.uml_components.UMLComponent;
+import ui.custom_graphics.uml_components.ResizableUMComponent;
 
 import javax.swing.*;
 import java.awt.*;
@@ -9,7 +9,7 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
-public class SequenceDiagramFrameRender extends UMLComponent implements MouseListener, KeyListener {
+public class SequenceDiagramFrameRender extends ResizableUMComponent implements MouseListener, KeyListener {
 
     private final SequenceDiagramFrameModel model;
     private JTextField nameInput;

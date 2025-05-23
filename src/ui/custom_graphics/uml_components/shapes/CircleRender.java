@@ -1,12 +1,13 @@
 package ui.custom_graphics.uml_components.shapes;
 
+import ui.custom_graphics.uml_components.ResizableUMComponent;
 import ui.custom_graphics.uml_components.UMLComponent;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 
-public class CircleRender extends UMLComponent {
+public class CircleRender extends ResizableUMComponent  {
 
     private final CircleModel model;
     private JTextField textField;
