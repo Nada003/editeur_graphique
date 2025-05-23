@@ -2,21 +2,23 @@
 
 package ui.custom_graphics.uml_components.sequence_diagrame;
 
+import ui.custom_graphics.uml_components.ResizableUMComponent;
 import ui.custom_graphics.uml_components.UMLComponent;
 import ui.custom_graphics.uml_components.connect_components.DrawingSpecification;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
 
-public class ClasslifelineRender extends UMLComponent implements DrawingSpecification {
+public class ClasslifelineRender extends ResizableUMComponent implements DrawingSpecification {
 
     ClasslifelineModel model;
 
     public ClasslifelineRender(ClasslifelineModel model) {
+        super();
         super.setId(UMLComponent.getCount());
         this.setOpaque(true);
         this.model = model;
-        
+
     }
 
     @Override
