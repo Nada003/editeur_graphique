@@ -1,6 +1,6 @@
 package ui.custom_graphics.uml_components.use_case_diagrame.use_case;
 
-import ui.custom_graphics.uml_components.UMLComponent;
+import ui.custom_graphics.uml_components.ResizableUMComponent;
 
 import javax.swing.*;
 import java.awt.*;
@@ -9,7 +9,7 @@ import java.awt.event.MouseEvent;
 
 import static utils.TextUtils.getTextWidth;
 
-public class UseCaseRender extends UMLComponent {
+public class UseCaseRender extends ResizableUMComponent {
 
     private UseCaseModel model;
     private JTextField textField;

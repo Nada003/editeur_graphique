@@ -1,5 +1,6 @@
 package ui.custom_graphics.uml_components.shapes;
 
+import ui.custom_graphics.uml_components.ResizableUMComponent;
 import ui.custom_graphics.uml_components.UMLComponent;
 
 import javax.swing.*;
@@ -7,7 +8,7 @@ import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
-public class RectangleRender extends UMLComponent implements MouseListener {
+public class RectangleRender extends ResizableUMComponent implements MouseListener {
 
     private final RectangleModel model;
     private JTextField textField;
@@ -29,7 +30,6 @@ public class RectangleRender extends UMLComponent implements MouseListener {
             textField.setBorder(null);
             textField.setOpaque(false);
             textField.setForeground(Color.BLACK);
-            textField.setBounds(10, getHeight() / 2 - 10, getWidth() - 20, 20);
             textField.addActionListener(evt -> {
                 model.setLabel(textField.getText());
                 textField.setVisible(false);
@@ -43,7 +43,7 @@ public class RectangleRender extends UMLComponent implements MouseListener {
         textField.requestFocusInWindow();
     }
 
-    @Override public void mousePressed(MouseEvent e) {}
+
     @Override public void mouseReleased(MouseEvent e) {}
     @Override public void mouseEntered(MouseEvent e) {}
     @Override public void mouseExited(MouseEvent e) {}

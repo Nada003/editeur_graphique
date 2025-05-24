@@ -41,6 +41,7 @@ public class ClasslifelineRender extends ResizableUMComponent implements Drawing
         g2d.drawLine(x, yStart, x, yEnd);
     }
 
+
     @Override
     public void mouseClicked(MouseEvent e) {
         

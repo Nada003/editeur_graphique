@@ -31,6 +31,7 @@ public class DynamicPanelContainers extends JPanel {
     private final JButton rectangleButton;
     private final JButton actorButton;
     private final JButton sequenceFrameButton;
+    private final JButton cadreMochButton;
 
 
 
@@ -50,9 +51,10 @@ public class DynamicPanelContainers extends JPanel {
         ovalButton = createShapeButton("Oval", "src/assets/oval.png", "Ajouter une for,e oval ");
         triangleButton = createShapeButton("Triangle", "src/assets/triangle.png", "Ajouter une forme triangulaire");
         circleButton = createShapeButton("Cercle", "src/assets/circle.png", "Ajouter une forme ronde");
-        rectangleButton = createShapeButton("Rectangle", "src/assets/rectangle.png", "Ajouter une forme triangulaire");
+        rectangleButton = createShapeButton("Rectangle", "src/assets/rectangle.png", "Ajouter une forme rectangle");
         actorButton = createShapeButton("Acteur", "src/assets/actor.png", "Ajouter un acteur");
-        sequenceFrameButton = createShapeButton("Sequence Frame", "src/assets/sequence_frame.png", "Ajouter un cadre de diagramme de séquence");
+        sequenceFrameButton = createShapeButton("fenetre", "src/assets/ffolder.png", "Ajouter une fenetre de diagramme de séquence");
+        cadreMochButton = createShapeButton("Cadre", "src/assets/cadre.png", "Ajouter un cadre personnalisé");
 
         JButtonHelper[] buttons = {
                 new JButtonHelper(ovalButton, UML_diagrame.diagrameCasUtilisation),
@@ -63,6 +65,8 @@ public class DynamicPanelContainers extends JPanel {
                 new JButtonHelper(actorButton, UML_diagrame.diagrameCasUtilisation),
                 new JButtonHelper(actorButton, UML_diagrame.diagrameSequence),
                 new JButtonHelper(sequenceFrameButton, UML_diagrame.diagrameSequence),
+                new JButtonHelper(cadreMochButton, UML_diagrame.diagrameCasUtilisation),
+
 
         };
          
@@ -118,6 +122,12 @@ public class DynamicPanelContainers extends JPanel {
             components.addElement(render);
         });
 
+        cadreMochButton.addActionListener(e -> {
+            CadreMochModel model = new CadreMochModel(100, 100, 200, 150);
+            CadreMochRender render = new CadreMochRender(model);
+            mainFlow.addElement(new UserAction("Ajouter cadre personnalisé", render));
+            components.addElement(render);
+        });
 
 
     }

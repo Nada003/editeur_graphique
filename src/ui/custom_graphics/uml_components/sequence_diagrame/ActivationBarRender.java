@@ -1,12 +1,12 @@
 package ui.custom_graphics.uml_components.sequence_diagrame;
 
-import ui.custom_graphics.uml_components.UMLComponent;
+import ui.custom_graphics.uml_components.ResizableUMComponent;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
-public class ActivationBarRender extends UMLComponent implements MouseListener {
+public class ActivationBarRender extends ResizableUMComponent implements MouseListener {
     private final ActivationBarModel model;
 
     public ActivationBarRender(ActivationBarModel model) {

@@ -11,7 +11,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
 import java.io.IOException;
 
-public abstract class ResizableUMComponent extends UMLComponent implements MouseMotionListener{
+public abstract class ResizableUMComponent extends UMLComponent implements MouseMotionListener {
     private Integer maxWidth, maxHeight;
     private final ResizableUMComponent instance;
 
@@ -21,11 +21,18 @@ public abstract class ResizableUMComponent extends UMLComponent implements Mouse
     private int resizeCursor = Cursor.DEFAULT_CURSOR;
     private Point lastMousePressLocation;
 
-    protected ResizableUMComponent(){
+    protected ResizableUMComponent() {
         this.addMouseMotionListener(this);
         instance = this;
+        setOpaque(false);
+        setBackground(new Color(0, 0, 0, 0));
+        setBorder(null);
     }
 
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+    }
 
     @Override
     public void mouseMoved(MouseEvent e) {
@@ -35,7 +42,6 @@ public abstract class ResizableUMComponent extends UMLComponent implements Mouse
             resizeCursor = Cursor.HAND_CURSOR;
         }
         setCursor(Cursor.getPredefinedCursor(resizeCursor));
-        System.out.println(resizeCursor);
     }
 
     @Override
@@ -48,7 +54,6 @@ public abstract class ResizableUMComponent extends UMLComponent implements Mouse
     @Override
     public void mousePressed(MouseEvent e) {
         lastMousePressLocation = e.getPoint();
-
         if (isInResizeCorner(lastMousePressLocation)) {
             resizing = true;
             resizeClickPoint = lastMousePressLocation;
@@ -58,36 +63,25 @@ public abstract class ResizableUMComponent extends UMLComponent implements Mouse
     @Override
     public void dragGestureRecognized(DragGestureEvent dge) {
         if (lastMousePressLocation != null && isInResizeCorner(lastMousePressLocation)) {
-            return; // Cancel drag if press was in resize corner
+            return;
         }
-
         Transferable transferable = new Transferable() {
             @Override
             public DataFlavor[] getTransferDataFlavors() {
-                return new DataFlavor[]{new DataFlavor(UMLComponent.class, "UMLComponent")};
+                return new DataFlavor[] { new DataFlavor(UMLComponent.class, "UMLComponent") };
             }
-
             @Override
             public boolean isDataFlavorSupported(DataFlavor flavor) {
                 return flavor.equals(new DataFlavor(UMLComponent.class, "UMLComponent"));
             }
-
             @Override
             public Object getTransferData(DataFlavor flavor) throws UnsupportedFlavorException, IOException {
                 return instance;
             }
         };
-
-        super.dragSource.startDrag(
-                dge,
-                DragSource.DefaultMoveDrop,
-                transferable,
-                new DragSourceAdapter() {}
-        );
-
+        super.dragSource.startDrag(dge, DragSource.DefaultMoveDrop, transferable, new DragSourceAdapter() {});
         instance.getParent().remove(instance);
     }
-
 
     @Override
     public void mouseReleased(MouseEvent e) {
@@ -95,13 +89,12 @@ public abstract class ResizableUMComponent extends UMLComponent implements Mouse
     }
 
     enum ResizeZone {
-        NONE, NORTH, SOUTH, EAST, WEST,
-        NORTH_EAST, NORTH_WEST, SOUTH_EAST, SOUTH_WEST
+        NONE, NORTH, SOUTH, EAST, WEST, NORTH_EAST, NORTH_WEST, SOUTH_EAST, SOUTH_WEST
     }
+
     private boolean isInResizeCorner(Point p) {
         return getResizeZone(p) != ResizeZone.NONE;
     }
-
 
     private ResizeZone getResizeZone(Point p) {
         boolean left = p.x <= RESIZE_MARGIN;
@@ -121,62 +114,47 @@ public abstract class ResizableUMComponent extends UMLComponent implements Mouse
         return ResizeZone.NONE;
     }
 
-
     private void resizeComponent(MouseEvent e) {
         int dx = e.getX() - resizeClickPoint.x;
         int dy = e.getY() - resizeClickPoint.y;
-
         int newX = getX();
         int newY = getY();
         int newWidth = getWidth();
         int newHeight = getHeight();
 
-        // Left edge or top-left corner
         if (resizeClickPoint.x < RESIZE_MARGIN) {
             newX += dx;
             newWidth -= dx;
         }
-
-        // Top edge or top-left corner
         if (resizeClickPoint.y < RESIZE_MARGIN) {
             newY += dy;
             newHeight -= dy;
         }
-
-        // Right edge or bottom-right corner
         if (resizeClickPoint.x > getWidth() - RESIZE_MARGIN) {
             newWidth += dx;
         }
-
-        // Bottom edge or bottom-right corner
         if (resizeClickPoint.y > getHeight() - RESIZE_MARGIN) {
             newHeight += dy;
         }
-
-        // Enforce minimum dimensions
         if (newWidth < 50) {
-            newX = getX(); // cancel position shift
+            newX = getX();
             newWidth = 50;
         }
         if (newHeight < 50) {
             newY = getY();
             newHeight = 50;
         }
-
-        if  (maxWidth == null || newWidth <= maxWidth){
+        if (maxWidth == null || newWidth <= maxWidth) {
             setWidth(newWidth);
             setPositionX(newX);
         }
-
-        if  (maxHeight == null || newHeight <= maxHeight){
+        if (maxHeight == null || newHeight <= maxHeight) {
             setHeight(newHeight);
             setPositionY(newY);
         }
-
         revalidate();
         repaint();
-
-        resizeClickPoint = e.getPoint(); // Update for continuous resizing
+        resizeClickPoint = e.getPoint();
     }
 
     public Integer getMaxWidth() {

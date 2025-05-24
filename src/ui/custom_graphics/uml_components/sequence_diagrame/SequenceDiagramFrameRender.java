@@ -1,6 +1,6 @@
 package ui.custom_graphics.uml_components.sequence_diagrame;
 
-import ui.custom_graphics.uml_components.UMLComponent;
+import ui.custom_graphics.uml_components.ResizableUMComponent;
 
 import javax.swing.*;
 import java.awt.*;
@@ -9,7 +9,7 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
-public class SequenceDiagramFrameRender extends UMLComponent implements MouseListener, KeyListener {
+public class SequenceDiagramFrameRender extends ResizableUMComponent implements MouseListener, KeyListener {
 
     private final SequenceDiagramFrameModel model;
     private JTextField nameInput;
@@ -19,7 +19,7 @@ public class SequenceDiagramFrameRender extends UMLComponent implements MouseLis
         this.model = model;
 
         setLayout(null);
-        setBounds(model.getX(), model.getY(), Math.max(model.getWidth(), 600), Math.max(model.getHeight(), 400));
+
         setOpaque(false);
         addMouseListener(this);
     }
@@ -113,7 +113,7 @@ public class SequenceDiagramFrameRender extends UMLComponent implements MouseLis
     @Override public void keyReleased(KeyEvent e) {}
     @Override public void keyTyped(KeyEvent e) {}
 
-    @Override public void mousePressed(MouseEvent e) {}
+
     @Override public void mouseReleased(MouseEvent e) {}
     @Override public void mouseEntered(MouseEvent e) {}
     @Override public void mouseExited(MouseEvent e) {}

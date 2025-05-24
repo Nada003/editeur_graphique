@@ -1,12 +1,13 @@
 package ui.custom_graphics.uml_components.shapes;
 
+import ui.custom_graphics.uml_components.ResizableUMComponent;
 import ui.custom_graphics.uml_components.UMLComponent;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 
-public class CircleRender extends UMLComponent {
+public class CircleRender extends ResizableUMComponent  {
 
     private final CircleModel model;
     private JTextField textField;
@@ -76,7 +77,6 @@ public class CircleRender extends UMLComponent {
         textField.requestFocusInWindow();
     }
 
-    @Override public void mousePressed(MouseEvent e) {}
     @Override public void mouseReleased(MouseEvent e) {}
     @Override public void mouseEntered(MouseEvent e) {}
     @Override public void mouseExited(MouseEvent e) {}

@@ -1,20 +1,21 @@
 package ui.custom_graphics.uml_components.sequence_diagrame;
 
-import ui.custom_graphics.uml_components.UMLComponent;
+import ui.custom_graphics.uml_components.ResizableUMComponent;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 
-public class DestroyMessageRender extends UMLComponent implements MouseListener, MouseMotionListener {
+public class DestroyMessageRender extends ResizableUMComponent implements MouseListener, MouseMotionListener {
     private final DestroyMessageModel model;
     private Point initialClick;
 
     public DestroyMessageRender(DestroyMessageModel model) {
         this.model = model;
         setOpaque(false);
-        setBounds(100, 100, 40, 40);
+
+        addMouseListener(this);
         addMouseMotionListener(this);
     }
 
@@ -34,21 +35,14 @@ public class DestroyMessageRender extends UMLComponent implements MouseListener,
         int centerX = width / 2;
         int centerY = height / 2;
 
-        // dessiner la croix X au centre, plus petite
         g2.drawLine(centerX - crossSize, centerY - crossSize, centerX + crossSize, centerY + crossSize);
         g2.drawLine(centerX + crossSize, centerY - crossSize, centerX - crossSize, centerY + crossSize);
     }
-
 
     public DestroyMessageModel getModel() {
         return model;
     }
 
-    // MouseListener
-    @Override
-    public void mousePressed(MouseEvent e) {
-        initialClick = e.getPoint();
-    }
 
     @Override
     public void mouseClicked(MouseEvent e) {}
@@ -62,17 +56,13 @@ public class DestroyMessageRender extends UMLComponent implements MouseListener,
     @Override
     public void mouseExited(MouseEvent e) {}
 
-    // MouseMotionListener
     @Override
     public void mouseDragged(MouseEvent e) {
-        int thisX = getX();
-        int thisY = getY();
+        int deltaX = e.getX() - initialClick.x;
+        int deltaY = e.getY() - initialClick.y;
 
-        int xMoved = e.getX() - initialClick.x;
-        int yMoved = e.getY() - initialClick.y;
-
-        int newX = thisX + xMoved;
-        int newY = thisY + yMoved;
+        int newX = getX() + deltaX;
+        int newY = getY() + deltaY;
 
         setLocation(newX, newY);
     }

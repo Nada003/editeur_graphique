@@ -175,6 +175,7 @@ public class DynamicPanelConnect extends JPanel {
             associationButton.setBackground(ACTIVE_COLOR);
             AssociationModel model = new AssociationModel("");
             AssociationRender render = new AssociationRender(model);
+            mainFlow.addElement(new UserAction("Ajouter association", render));
             MainBoard.setRelation(new Relation(render, components));
         });
 
@@ -183,6 +184,7 @@ public class DynamicPanelConnect extends JPanel {
             generalizationButton.setBackground(ACTIVE_COLOR);
             GeneralizationModel model = new GeneralizationModel("");
             GeneralizationRender render = new GeneralizationRender(model);
+            mainFlow.addElement(new UserAction("Ajouter heritage", render));
             MainBoard.setRelation(new Relation(render, components));
         });
 
@@ -191,6 +193,7 @@ public class DynamicPanelConnect extends JPanel {
             aggregationButton.setBackground(ACTIVE_COLOR);
             AggregationModel model = new AggregationModel("");
             AggregationRender render = new AggregationRender(model);
+            mainFlow.addElement(new UserAction("Ajouter aggregation", render));
             MainBoard.setRelation(new Relation(render, components));
         });
 
@@ -199,6 +202,7 @@ public class DynamicPanelConnect extends JPanel {
             compositionButton.setBackground(ACTIVE_COLOR);
             CompositionModel model = new CompositionModel("");
             CompositionRender render = new CompositionRender(model);
+            mainFlow.addElement(new UserAction("Ajouter composition", render));
             MainBoard.setRelation(new Relation(render, components));
         });
 
@@ -207,6 +211,7 @@ public class DynamicPanelConnect extends JPanel {
             dependencyButton.setBackground(ACTIVE_COLOR);
             DependencyModel model = new DependencyModel("");
             DependencyRender render = new DependencyRender(model);
+            mainFlow.addElement(new UserAction("Ajouter dependence", render));
             MainBoard.setRelation(new Relation(render, components));
         });
 
@@ -233,6 +238,7 @@ public class DynamicPanelConnect extends JPanel {
             realizationButton.setBackground(ACTIVE_COLOR);
             RealizationModel model = new RealizationModel("");
             RealizationRender render = new RealizationRender(model);
+            mainFlow.addElement(new UserAction("Ajouter Réalisation ", render));
             MainBoard.setRelation(new Relation(render, components));
         });
         destroyMessageButton.addActionListener(e -> {
