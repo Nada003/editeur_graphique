@@ -8,27 +8,29 @@ import java.awt.event.MouseListener;
 
 public class ActivationBarRender extends ResizableUMComponent implements MouseListener {
     private final ActivationBarModel model;
-
+    private static final int FIXED_WIDTH = 20;
     public ActivationBarRender(ActivationBarModel model) {
         super();
         this.model = model;
         setOpaque(false);
-        setWidth(20);
+        setWidth(FIXED_WIDTH);
         setHeight(80);
+        setMaxWidth(FIXED_WIDTH); // empêche redimensionnement horizontal
         addMouseListener(this);
     }
 
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        Graphics2D g2d = (Graphics2D) g;
-
-        g2d.setColor(new Color(255, 255, 255));
+        Graphics2D g2d = (Graphics2D) g.create();
+        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        g2d.setColor(Color.WHITE);
         g2d.fillRect(0, 0, getWidth(), getHeight());
-
         g2d.setColor(Color.BLACK);
-        g2d.drawRect(0, 0, getWidth(), getHeight());
+        g2d.drawRect(0, 0, getWidth() - 1, getHeight() - 1);
+        g2d.dispose();
     }
+
 
     @Override
     public boolean contains(int x, int y) {
