@@ -39,7 +39,7 @@ public class MsgsynchroneRender extends ResizableUMComponent implements DrawingS
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        
+
     }
 
     @Override

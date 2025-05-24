@@ -224,7 +224,7 @@ public class DynamicPanelConnect extends JPanel {
             IncludeModel model = new IncludeModel(new Point(10, 20), new Point(30, 40));
             IncludeRender render = new IncludeRender(model);
             mainFlow.addElement(new UserAction("Ajouter include", render));
-            components.addElement(render);
+            MainBoard.setRelation(new Relation(render, components));
         });
 
         realizationButton.addActionListener(e -> {
