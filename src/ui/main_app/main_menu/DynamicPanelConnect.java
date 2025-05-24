@@ -132,7 +132,7 @@ public class DynamicPanelConnect extends JPanel {
             MsgsynchroneModel model = new MsgsynchroneModel("");
             MsgsynchroneRender render = new MsgsynchroneRender(model);
             mainFlow.addElement(new UserAction("Ajouter message synchrone", render));
-            components.addElement(render);
+            MainBoard.setRelation(new Relation(render, components));
         });
 
         msgretourButton.addActionListener(e -> {
@@ -141,7 +141,7 @@ public class DynamicPanelConnect extends JPanel {
             MsgretourModel model = new MsgretourModel("");
             MsgretourRender render = new MsgretourRender(model);
             mainFlow.addElement(new UserAction("Ajouter message de retour", render));
-            components.addElement(render);
+            MainBoard.setRelation(new Relation(render, components));
         });
 
         activationbarButton.addActionListener(e -> {
