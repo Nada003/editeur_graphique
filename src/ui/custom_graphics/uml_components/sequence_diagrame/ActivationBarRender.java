@@ -13,7 +13,8 @@ public class ActivationBarRender extends ResizableUMComponent implements MouseLi
         super();
         this.model = model;
         setOpaque(false);
-        setBounds(model.getX(), model.getY(), model.getWidth(), model.getHeight());
+        setWidth(20);
+        setHeight(80);
         addMouseListener(this);
     }
 
@@ -23,16 +24,16 @@ public class ActivationBarRender extends ResizableUMComponent implements MouseLi
         Graphics2D g2d = (Graphics2D) g;
 
         g2d.setColor(new Color(255, 255, 255));
-        g2d.fillRect(0, 0, model.getWidth(), model.getHeight());
+        g2d.fillRect(0, 0, getWidth(), getHeight());
 
         g2d.setColor(Color.BLACK);
-        g2d.drawRect(0, 0, model.getWidth(), model.getHeight());
+        g2d.drawRect(0, 0, getWidth(), getHeight());
     }
 
     @Override
     public boolean contains(int x, int y) {
-        return x >= 0 && x <= model.getWidth()
-                && y >= 0 && y <= model.getHeight();
+        return x >= 0 && x <= getWidth()
+                && y >= 0 && y <= getHeight();
     }
 
     public ActivationBarModel getModel() {
@@ -43,15 +44,4 @@ public class ActivationBarRender extends ResizableUMComponent implements MouseLi
     @Override
     public void mouseClicked(MouseEvent e) {}
 
-    @Override
-    public void mousePressed(MouseEvent e) {}
-
-    @Override
-    public void mouseReleased(MouseEvent e) {}
-
-    @Override
-    public void mouseEntered(MouseEvent e) {}
-
-    @Override
-    public void mouseExited(MouseEvent e) {}
 }

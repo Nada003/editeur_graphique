@@ -147,15 +147,9 @@ public class DynamicPanelConnect extends JPanel {
         activationbarButton.addActionListener(e -> {
             resetButtonStates();
             activationbarButton.setBackground(ACTIVE_COLOR);
-
             // Crée un modèle par défaut avec une position initiale
             ActivationBarModel model = new ActivationBarModel("Activation");
-            model.setX(150);
-            model.setY(100);
-
             ActivationBarRender render = new ActivationBarRender(model);
-            render.setLocation(model.getX(), model.getY());
-
             mainFlow.addElement(new UserAction("Ajouter barre d'activation", render));
             components.addElement(render);
         });
