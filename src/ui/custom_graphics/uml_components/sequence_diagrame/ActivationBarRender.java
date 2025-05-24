@@ -13,7 +13,7 @@ public class ActivationBarRender extends ResizableUMComponent implements MouseLi
         super();
         this.model = model;
         setOpaque(false);
-        setBounds(model.getX(), model.getY(), model.getWidth(), model.getHeight());
+
         addMouseListener(this);
     }
 
@@ -43,8 +43,6 @@ public class ActivationBarRender extends ResizableUMComponent implements MouseLi
     @Override
     public void mouseClicked(MouseEvent e) {}
 
-    @Override
-    public void mousePressed(MouseEvent e) {}
 
     @Override
     public void mouseReleased(MouseEvent e) {}
