@@ -16,14 +16,7 @@ public class AssociationRender extends ResizableUMComponent implements DrawingSp
         this.setOpaque(false);
     }
 
-    @Override
-    protected void paintComponent(Graphics g) {
-        super.paintComponent(g);
-        Graphics2D g2d = (Graphics2D) g;
-        g2d.setColor(Color.black);
-        g2d.setStroke(new BasicStroke(3));
-        g2d.drawLine(2, 2, this.getWidth(), this.getHeight());
-    }
+
 
     @Override
     public void mouseClicked(MouseEvent e) {
@@ -31,12 +24,38 @@ public class AssociationRender extends ResizableUMComponent implements DrawingSp
     }
 
     @Override
-    public void drawHead(Graphics2D graphics2D, Point... point) {
+    public void drawHead(Graphics2D graphics2D, Point... points) {
+        if (points.length < 2) return;
+
+        Point from = points[0];
+        Point to = points[1];
+        int arrowSize = 10;
+
+        int translateX = Math.max(0, -Math.min(from.x, to.x));
+        int translateY = Math.max(0, -Math.min(from.y, to.y));
+
+        Point p1 = new Point(from.x + translateX, from.y + translateY);
+        Point p2 = new Point(to.x + translateX, to.y + translateY);
+
+        double angle = Math.atan2(p2.y - p1.y, p2.x - p1.x);
+
+        graphics2D = lineStyle(graphics2D);
+        graphics2D.setColor(Color.BLACK);
+        graphics2D.setStroke(new BasicStroke(2));
+
+        graphics2D.drawLine(p1.x, p1.y, p2.x, p2.y);
+
 
     }
 
+
+
+
+
     @Override
     public Graphics2D lineStyle(Graphics2D graphics2D) {
-        return null;
+        float[] dash = {5f};
+        graphics2D.setStroke(new BasicStroke(2, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0, dash, 0));
+        return graphics2D;
     }
 }

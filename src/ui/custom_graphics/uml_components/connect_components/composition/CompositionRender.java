@@ -17,19 +17,6 @@ public class CompositionRender extends ResizableUMComponent implements DrawingSp
         this.setOpaque(false);
     }
 
-    @Override
-    protected void paintComponent(Graphics g) {
-        super.paintComponent(g);
-        Graphics2D g2d = (Graphics2D) g;
-        g2d.setColor(Color.black);
-        g2d.setStroke(new BasicStroke(3));
-
-        int x1 = 10, y1 = getHeight() / 2;
-        int x2 = getWidth() - 20, y2 = getHeight() / 2;
-
-        g2d.drawLine(x1, y1, x2 - 10, y2);
-        drawFilledDiamond(g2d, x2, y2);
-    }
 
     private void drawFilledDiamond(Graphics2D g2d, int x, int y) {
         int size = 20;
@@ -44,12 +31,55 @@ public class CompositionRender extends ResizableUMComponent implements DrawingSp
     public void mouseClicked(MouseEvent e) {}
 
     @Override
-    public void drawHead(Graphics2D g2d, Point... point) {
-        drawFilledDiamond(g2d, point[0].x, point[0].y);
+    public void drawHead(Graphics2D graphics2D, Point... points) {
+        if (points.length < 2) return;
+
+        Point from = points[0];
+        Point to = points[1];
+        int arrowSize = 20;
+
+        int translateX = Math.max(0, -Math.min(from.x, to.x));
+        int translateY = Math.max(0, -Math.min(from.y, to.y));
+
+        Point p1 = new Point(from.x + translateX, from.y + translateY);
+        Point p2 = new Point(to.x + translateX, to.y + translateY);
+
+        double angle = Math.atan2(p2.y - p1.y, p2.x - p1.x);
+
+        graphics2D = lineStyle(graphics2D);
+        graphics2D.setColor(Color.BLACK);
+        graphics2D.setStroke(new BasicStroke(2));
+
+        // Ligne principale
+        graphics2D.drawLine(p1.x, p1.y, p2.x, p2.y);
+
+        // Construction du losange (4 points)
+        int diamondSize = arrowSize;
+        Polygon diamond = new Polygon();
+
+        double sin = Math.sin(angle);
+        double cos = Math.cos(angle);
+
+        // Centre du losange : p2 (extrémité de la flèche)
+        int x = p2.x;
+        int y = p2.y;
+
+        diamond.addPoint(x, y); // pointe avant
+        diamond.addPoint((int) (x - diamondSize * cos + (diamondSize / 2.0) * sin),
+                (int) (y - diamondSize * sin - (diamondSize / 2.0) * cos)); // coin bas
+        diamond.addPoint((int) (x - 2 * diamondSize * cos),
+                (int) (y - 2 * diamondSize * sin)); // arrière
+        diamond.addPoint((int) (x - diamondSize * cos - (diamondSize / 2.0) * sin),
+                (int) (y - diamondSize * sin + (diamondSize / 2.0) * cos)); // coin haut
+
+        graphics2D.fillPolygon(diamond);
     }
+
 
     @Override
     public Graphics2D lineStyle(Graphics2D graphics2D) {
-        return null;
+        float[] dash = {5f};
+        graphics2D.setStroke(new BasicStroke(2, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0, dash, 0));
+        return graphics2D;
     }
 }

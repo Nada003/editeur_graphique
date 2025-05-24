@@ -16,28 +16,6 @@ public class MsgretourRender extends ResizableUMComponent implements DrawingSpec
         this.model = model;
     }
 
-    @Override
-    protected void paintComponent(Graphics g) {
-        super.paintComponent(g);
-        Graphics2D g2d = (Graphics2D) g;
-        g2d.setColor(Color.BLACK);
-
-        // Style de trait pointillé
-        float[] dashPattern = {10, 10};
-        Stroke dashed = new BasicStroke(2, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER,
-                10.0f, dashPattern, 0);
-        g2d.setStroke(dashed);
-
-        int x1 = getWidth() - 10; // droite
-        int x2 = 10;              // gauche
-        int y = getHeight() / 2;
-
-        // Dessiner la ligne horizontale pointillée
-        g2d.drawLine(x1, y, x2 + 10, y);
-
-        // Dessiner la flèche pleine à gauche
-        drawArrow(g2d, x2 + 10, y, x2, y);
-    }
 
     private void drawArrow(Graphics2D g2d, int x1, int y1, int x2, int y2) {
         int size = 6;
@@ -54,9 +32,37 @@ public class MsgretourRender extends ResizableUMComponent implements DrawingSpec
     }
 
     @Override
-    public void drawHead(Graphics2D graphics2D, Point... point) {
-        // Optionnel : dessiner la flèche manuellement si nécessaire
+    public void drawHead(Graphics2D g2d, Point... points) {
+        if (points.length < 2) return;
+
+        Point from = points[0]; // origine
+        Point to = points[1];   // destination (extrémité arrière dans ce cas)
+
+        // On veut dessiner la tête de flèche vers le point "from"
+        double angle = Math.atan2(from.y - to.y, from.x - to.x);
+        int arrowLength = 15;
+        int arrowWidth = 10;
+
+        // Position du sommet de la flèche (donc "from" maintenant)
+        int x1 = from.x;
+        int y1 = from.y;
+
+        int x2 = (int) (x1 - arrowLength * Math.cos(angle - Math.PI / 6));
+        int y2 = (int) (y1 - arrowLength * Math.sin(angle - Math.PI / 6));
+
+        int x3 = (int) (x1 - arrowLength * Math.cos(angle + Math.PI / 6));
+        int y3 = (int) (y1 - arrowLength * Math.sin(angle + Math.PI / 6));
+
+        Polygon triangle = new Polygon();
+        triangle.addPoint(x1, y1); // pointe
+        triangle.addPoint(x2, y2); // coin 1
+        triangle.addPoint(x3, y3); // coin 2
+
+        g2d.setColor(Color.BLACK);
+        g2d.fill(triangle);
+        g2d.draw(triangle);
     }
+
 
     @Override
     public Graphics2D lineStyle(Graphics2D graphics2D) {
