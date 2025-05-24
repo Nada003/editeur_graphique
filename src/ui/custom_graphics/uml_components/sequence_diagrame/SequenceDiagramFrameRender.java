@@ -19,7 +19,7 @@ public class SequenceDiagramFrameRender extends ResizableUMComponent implements 
         this.model = model;
 
         setLayout(null);
-        setBounds(model.getX(), model.getY(), Math.max(model.getWidth(), 600), Math.max(model.getHeight(), 400));
+
         setOpaque(false);
         addMouseListener(this);
     }
@@ -113,7 +113,7 @@ public class SequenceDiagramFrameRender extends ResizableUMComponent implements 
     @Override public void keyReleased(KeyEvent e) {}
     @Override public void keyTyped(KeyEvent e) {}
 
-    @Override public void mousePressed(MouseEvent e) {}
+
     @Override public void mouseReleased(MouseEvent e) {}
     @Override public void mouseEntered(MouseEvent e) {}
     @Override public void mouseExited(MouseEvent e) {}

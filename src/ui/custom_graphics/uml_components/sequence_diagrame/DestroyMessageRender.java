@@ -14,7 +14,7 @@ public class DestroyMessageRender extends ResizableUMComponent implements MouseL
     public DestroyMessageRender(DestroyMessageModel model) {
         this.model = model;
         setOpaque(false);
-        setBounds(100, 100, 40, 40);
+
         addMouseListener(this);
         addMouseMotionListener(this);
     }
@@ -43,10 +43,6 @@ public class DestroyMessageRender extends ResizableUMComponent implements MouseL
         return model;
     }
 
-    @Override
-    public void mousePressed(MouseEvent e) {
-        initialClick = e.getPoint();
-    }
 
     @Override
     public void mouseClicked(MouseEvent e) {}

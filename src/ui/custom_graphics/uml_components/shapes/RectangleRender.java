@@ -30,7 +30,6 @@ public class RectangleRender extends ResizableUMComponent implements MouseListen
             textField.setBorder(null);
             textField.setOpaque(false);
             textField.setForeground(Color.BLACK);
-            textField.setBounds(10, getHeight() / 2 - 10, getWidth() - 20, 20);
             textField.addActionListener(evt -> {
                 model.setLabel(textField.getText());
                 textField.setVisible(false);
@@ -44,7 +43,7 @@ public class RectangleRender extends ResizableUMComponent implements MouseListen
         textField.requestFocusInWindow();
     }
 
-    @Override public void mousePressed(MouseEvent e) {}
+
     @Override public void mouseReleased(MouseEvent e) {}
     @Override public void mouseEntered(MouseEvent e) {}
     @Override public void mouseExited(MouseEvent e) {}

@@ -9,12 +9,15 @@ import ui.main_app.main_topmenu.TopToolBar;
 import utils.custom_list.ListListener;
 import utils.custom_list.WatchedList;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.event.MenuEvent;
 import javax.swing.event.MenuListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
 
 public class Application extends JFrame implements ListListener {
     private static final WatchedList<UMLComponent> components = new WatchedList<>();
@@ -28,14 +31,23 @@ public class Application extends JFrame implements ListListener {
 
 
     public Application() {
-        this.setTitle("UML Editor");
+        this.setTitle("UMLdesign");
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         this.setMinimumSize(new Dimension(900, 600));
         this.setLocationRelativeTo(null);
         this.setLayout(new BorderLayout());
-        mainFlow.addListener(this);
 
+        try {
+            BufferedImage originalImage = ImageIO.read(new File("src/assets/logo.jpg"));
+            Image scaledImage = originalImage.getScaledInstance(300, 300, Image.SCALE_SMOOTH);
+            this.setIconImage(scaledImage);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        mainFlow.addListener(this);
         home = new Home(this::navigateToMainBord);
+
         main = home;
         this.add(home);
         this.pack();
