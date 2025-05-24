@@ -28,9 +28,8 @@ public class Relation extends UMLComponent implements RolationPointMovedListner 
         super.paintComponent(g);
         if (start == null || end == null) return;
 
-        Graphics2D g2 = (Graphics2D) g;
-        g2.setStroke(new BasicStroke(3));
-        g2.setColor(Color.BLACK);
+        Graphics2D g2 = drawingSpecification != null ? drawingSpecification.lineStyle((Graphics2D) g) :  (Graphics2D)g;
+
 
         boolean isSpec = drawingSpecification != null;
         int offset = isSpec ? 8 : 0;

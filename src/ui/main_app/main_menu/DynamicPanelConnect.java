@@ -215,7 +215,7 @@ public class DynamicPanelConnect extends JPanel {
             ExtendModel model = new ExtendModel("", "");
             ExtendRender render = new ExtendRender(model);
             mainFlow.addElement(new UserAction("Ajouter extend", render));
-            components.addElement(render);
+            MainBoard.setRelation(new Relation(render, components));
         });
 
         includeButton.addActionListener(e -> {
